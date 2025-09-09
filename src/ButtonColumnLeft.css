@@ -1,0 +1,59 @@
+img {
+    width: 100%;
+    height: 100%;
+    image-rendering: optimizeSpeed;
+    
+}
+
+.marginTop {
+    margin-top: 5%;
+}
+
+.marginBot {
+    margin-bottom: 5%;
+}
+
+.borderTop {
+    border-top: 3px solid black;
+}
+
+.borderBot {
+    border-bottom: 3px solid black;
+}
+
+.borderDotted {
+    width: 100%;
+    border-top: none;
+    border-bottom: 2px dotted black;
+}
+
+.borderInvisible {
+    width: 100%;
+    border: 2px none black;
+}
+
+.button {
+    background-color: #A0A0A0;
+    height: 7.5%;
+    aspect-ratio: 1 / 1;
+    margin-left: auto;
+    margin-right: auto;
+    image-rendering: pixelated;
+}
+
+.button:hover {
+    background-color: #808080;
+    cursor: default;
+}
+
+.roundTopLeft {
+    border-top-left-radius: 4px;
+}
+
+.buttonColumn {
+    background-color: greenyellow;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4px;
+}
