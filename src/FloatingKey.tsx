@@ -30,7 +30,6 @@ function FloatingKey(props: any) {
         },
 
         setImg: (src: string, size: number) => {
-            console.log("SetImgVisible");
             setLabelVisible(false);
             setImgVisible(true);
             setImgSrc(src);
@@ -40,7 +39,6 @@ function FloatingKey(props: any) {
         apply: () => {
             // Draw value of FloatingKey onto canvas.
             if(labelVisible) {
-                console.log("PROPS", props);
                 props.canvasRef.current.drawText(labelValue, posX, posY);
             } else if(imgVisible) {
 

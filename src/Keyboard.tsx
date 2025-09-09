@@ -65,9 +65,6 @@ function Keyboard(props: any) {
         setMouseDown(false);
 
         props.floatingKeyRef.current.apply();
-        console.log("MOUSEUP");
-
-        // Call function of Canvas with position and value.
     }
 
     function window_mousemove(event: MouseEvent) {

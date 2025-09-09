@@ -1,29 +1,6 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
 
-// BIG TODO:
-//  Store all Canvas draw-commands in a queue.
-//  Separate by: Line-strokes, writing text and FloatingKeys.
-//  Values that get stored: ID(e.g. A-38, whereas 'A' stands for the chatroom), Type(see above), start+end-positions, keyValue/srcPath, creator-name.
-//  Preserve the order of the draw-commands!
-//  Finally, do a single POST to the backend with all the data.
-//   Other frontends receive the message (via hook or polling) and reconstruct that image.
-//   Creator that accidentally also receives this message can ignore it when comparing the creator-names.
-//   CAUTION: Different resolutions may look weird because of pixel-values.
-//       FIX: Convert all the absolute pixel-values into normalized coordinates between 0.0 and 1.0.
-//  Users can "pull" the latest image on their end. This makes a GET request with the image-id.
-//    Can also act as a safety-net if a message that was supposed to be received got lost.
-//  Fluff: 
-//   On drawing/erasing an image, do some funny effects by constructing the commands slowly line by line.
-//   Embed creator-name(+container) into canvas? When opening image in new tab this will then show too. Otherwise that part might be blank (can still draw there tho).
-//     Maybe add option to enable/disable this. 
-
-// Follow-up:
-//  Images that are displayed on the upper screen can be a smaller height.
-//  Minimum height is until the first stripe (including the name).
-//  Maximum height is the total canvas height.
-//  Normalization ofc has to happen here as well!
-
 const stripeColor = "green";
 
 const stripeStyle: React.CSSProperties = {
@@ -43,21 +20,12 @@ const colorBackground = "#AAA";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
 const sizeLarge = 3.0;
-//let mouseDown: boolean = false;
-//let prevX: number | null = null;
-//let prevY: number | null = null;
 let colorPen = colorForeground;
 let sizePen = sizeSmall;
 let isRainbow = false;
 
-// TODO: Make relative instead of px.
 const canvasTextPosXOffset = 5;
 
-// TODO: Implement backspace on canvas
-//  Idea: Redraw canvas (with all lines and chars) and fill text anew.
-
-
-// TODO: Callback to keyboard, make button press visible 
 function Canvas(props: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
@@ -127,8 +95,6 @@ function Canvas(props: any) {
     useEffect(() => {
         const canvasContext = canvasRef?.current?.getContext("2d");
         const maxWidth : number = canvasRef.current?.width!;
-
-        // TODO: If position is outside of canvas, do nothing.
 
         // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
         //  resulting in a "pop effect". This offset makes the position accurate again.
