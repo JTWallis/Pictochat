@@ -1,5 +1,8 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
+import { Message } from './Message';
+import { Vector2 } from './Vector2';
+import { DrawCommand, DrawingCommandType } from './DrawCommand';
 
 const stripeColor = "green";
 
@@ -26,6 +29,8 @@ let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
+const message: Message = new Message([]);
+
 function Canvas(props: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
@@ -41,29 +46,30 @@ function Canvas(props: any) {
     const [canvasWidth, setCanvasWidth] = useState(300);
     const [canvasHeight, setCanvasHeight] = useState(150);
 
-    const [canvasTextPosX, setCanvasTextPosX] = useState(0);
-    const [canvasTextPosY, setCanvasTextPosY] = useState(0);
+    const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
+    const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
 
-    const [outerText, setOuterText] = useState("");
-    const [outerPos, setOuterPos] = useState({
-       x: 0,
-       y: 0
+    const [floatingKeyValue, setFloatingKeyValue] = useState("");
+    const [floatingKeyPos, setFloatingKeyPos] = useState({
+        x: 0,
+        y: 0
     });
+
 
     useImperativeHandle(props.canvasRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
-            setOuterPos({
+            setFloatingKeyPos({
                 x: screenX,
                 y: screenY
             })
-            setOuterText(text);
+            setFloatingKeyValue(text);
         }
     }));
 
     useEffect(() => {
         const w = canvasContainerRef.current?.clientWidth!;
         const h = canvasContainerRef.current?.clientHeight!;
-        
+
         addEventListener("resize", () => setCanvasSize(w, h));
 
         return () => {
@@ -78,14 +84,7 @@ function Canvas(props: any) {
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
-        const canvasContext = canvasRef?.current?.getContext("2d");
-        const offsetTop = canvasRef.current?.offsetTop;
-        const offsetLeft = canvasRef.current?.offsetLeft;
-
-        if(canvasContext) {
-            draw(canvasContext, offsetTop!, offsetLeft!);
-        }
-
+        handleStrokePosChange();
     }, [posX, posY]);
 
     useEffect(() => {
@@ -93,29 +92,55 @@ function Canvas(props: any) {
     }, [props.canvasText]);
 
     useEffect(() => {
-        const canvasContext = canvasRef?.current?.getContext("2d");
-        const maxWidth : number = canvasRef.current?.width!;
+        handleFloatingKeyAttachment();
+    }, [floatingKeyValue, floatingKeyPos]);
 
+    function getCanvasWidth(): number {
+        return canvasRef.current?.width!;
+    }
+
+    function getCanvasContext(): CanvasRenderingContext2D | null | undefined {
+        return canvasRef?.current?.getContext("2d");
+    }
+
+    function handleStrokePosChange() {
+        const offsetTop = canvasRef.current?.offsetTop!;
+        const offsetLeft = canvasRef.current?.offsetLeft!;
+
+        const drawDot = prevPosX < 0;
+
+        const posPrev: Vector2 = new Vector2(prevPosX - offsetLeft, prevPosY - offsetTop);
+        const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
+        const posFirst: Vector2 = drawDot ? pos : posPrev;
+
+        drawStroke(posFirst, pos, drawDot);
+    }
+
+    function handleFloatingKeyAttachment() {
         // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
         //  resulting in a "pop effect". This offset makes the position accurate again.
         const offsetPopFixY = -13;
         const offsetTop = canvasRef.current?.offsetTop! + offsetPopFixY;
         const offsetLeft = canvasRef.current?.offsetLeft!;
-        canvasContext!.font = "16px Courier New";
-        canvasContext!.fillText(outerText, outerPos.x - offsetLeft, outerPos.y - offsetTop, maxWidth);
-    }, [outerText, outerPos]);
+
+        const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
+        const value: string = floatingKeyValue;
+
+        drawText(DrawingCommandType.FLOATING_KEY, pos, value);
+    }
 
     function handleCanvasTextChange() {
-        const canvasContext = canvasRef?.current?.getContext("2d");
+        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
+        const value: string = props.canvasText.charAt(props.canvasText.length - 1);
 
-        const maxWidth : number = canvasRef.current?.width!;
+        drawText(DrawingCommandType.TEXT, pos, value);
 
-        canvasContext!.font = "16px Courier New";
-        canvasContext!.fillText(props.canvasText.charAt(props.canvasText.length-1), canvasTextPosX, canvasTextPosY, maxWidth);
+        const maxWidth = getCanvasWidth();
+
         setCanvasTextPosX(prev => prev + 8);
-        if(canvasTextPosX >= (maxWidth - canvasTextPosXOffset)) {
+        if (canvasTextPosX >= (maxWidth - canvasTextPosXOffset)) {
             setCanvasTextPosX(canvasTextPosXOffset);
-            setCanvasTextPosY(prev => prev + canvasRef?.current?.height! / (stripeCount+1));
+            setCanvasTextPosY(prev => prev + canvasRef?.current?.height! / (stripeCount + 1));
         }
     }
 
@@ -127,7 +152,7 @@ function Canvas(props: any) {
         const h = height / (stripeCount + 1);
         const w = nameContainerRef.current?.clientWidth!;
         setCanvasTextPosX(w + canvasTextPosXOffset);
-        setCanvasTextPosY(h - h/2);
+        setCanvasTextPosY(h - h / 2);
     }
 
     function resetPos() {
@@ -152,6 +177,13 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
+
+
+        console.log("DrawCommands:");
+        const commands = message.getCommands();
+        for (let i = 0; i < commands.length; i++) {
+            console.log("  ", commands[i].debugPrintString());
+        }
     }
 
     function canvas_mouseenter(event: any) {
@@ -170,23 +202,36 @@ function Canvas(props: any) {
         //prevY = null;
     }
 
-    function draw(context: CanvasRenderingContext2D, offsetTop: number, offsetLeft: number) {
+    function drawText(drawingCommandType: number, pos: Vector2, value: string) {
+        const context = getCanvasContext();
+        if (!context) return;
 
+        const maxWidth = getCanvasWidth();
 
-        if (prevPosX >= 0) {
+        context.font = "16px Courier New";
+        context.fillText(value, pos.x, pos.y, maxWidth);
 
+        message.pushCommand(drawingCommandType, pos, pos, value, sizePen, colorPen);
+    }
+
+    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean) {
+        const context = getCanvasContext();
+        if (!context) return;
+
+        if (drawDot) {
+            context.fillStyle = colorPen;
+            context.fillRect(posSrc.x, posSrc.y, sizePen, sizePen);
+        } else {
             context.beginPath();
-            context.moveTo(prevPosX - offsetLeft, prevPosY - offsetTop);
-            context.lineTo(posX - offsetLeft, posY - offsetTop);
+            context.moveTo(posSrc.x, posSrc.y);
+            context.lineTo(posDst.x, posDst.y);
             context.lineWidth = sizePen;
             context.strokeStyle = colorPen;
             context.lineCap = "square";
             context.stroke();
-
-        } else {
-            context.fillStyle = colorPen;
-            context.fillRect(posX - offsetLeft, posY - offsetTop, sizePen, sizePen);
         }
+
+        message.pushCommand(DrawingCommandType.LINE_STROKE, posSrc, posDst, "", sizePen, colorPen);
 
         setPrevPosX(posX);
         setPrevPosY(posY);
@@ -194,7 +239,7 @@ function Canvas(props: any) {
 
     return (
         <div className="screen" ref={canvasContainerRef}>
-            <div className="canvasBackground"> 
+            <div className="canvasBackground">
 
             </div>
             <label className="text">{/*props.canvasText*/}</label>
