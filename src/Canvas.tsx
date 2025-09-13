@@ -1,5 +1,8 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
+import { Message } from './Message';
+import { Vector2 } from './Vector2';
+import { DrawCommand, DrawingCommandType } from './DrawCommand';
 
 const stripeColor = "green";
 
@@ -26,6 +29,8 @@ let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
+const message: Message = new Message([]);
+
 function Canvas(props: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
@@ -49,6 +54,8 @@ function Canvas(props: any) {
        x: 0,
        y: 0
     });
+
+    
 
     useImperativeHandle(props.canvasRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
@@ -101,14 +108,21 @@ function Canvas(props: any) {
         const offsetPopFixY = -13;
         const offsetTop = canvasRef.current?.offsetTop! + offsetPopFixY;
         const offsetLeft = canvasRef.current?.offsetLeft!;
+
+        const pos: Vector2 = new Vector2(outerPos.x - offsetLeft, outerPos.y - offsetTop);
+        message.pushCommand(DrawingCommandType.FLOATING_KEY, pos, pos, outerText, sizePen, colorPen);
+
         canvasContext!.font = "16px Courier New";
-        canvasContext!.fillText(outerText, outerPos.x - offsetLeft, outerPos.y - offsetTop, maxWidth);
+        canvasContext!.fillText(outerText, pos.x, pos.y, maxWidth);
     }, [outerText, outerPos]);
 
     function handleCanvasTextChange() {
         const canvasContext = canvasRef?.current?.getContext("2d");
 
         const maxWidth : number = canvasRef.current?.width!;
+
+        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
+        message.pushCommand(DrawingCommandType.TEXT, pos, pos, props.canvasText.charAt(props.canvasText.length-1), sizePen, colorPen);
 
         canvasContext!.font = "16px Courier New";
         canvasContext!.fillText(props.canvasText.charAt(props.canvasText.length-1), canvasTextPosX, canvasTextPosY, maxWidth);
@@ -152,6 +166,13 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
+
+
+        console.log("DrawCommands:");
+        const commands = message.getCommands();
+        for(let i = 0; i < commands.length; i++) {
+            console.log("  ", commands[i].debugPrintString());
+        }
     }
 
     function canvas_mouseenter(event: any) {
@@ -175,17 +196,24 @@ function Canvas(props: any) {
 
         if (prevPosX >= 0) {
 
+            const posSrc: Vector2 = new Vector2(prevPosX - offsetLeft, prevPosY - offsetTop);
+            const posDst: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
+            message.pushCommand(DrawingCommandType.LINE_STROKE, posSrc, posDst, "", sizePen, colorPen);
+
             context.beginPath();
-            context.moveTo(prevPosX - offsetLeft, prevPosY - offsetTop);
-            context.lineTo(posX - offsetLeft, posY - offsetTop);
+            context.moveTo(posSrc.x, posSrc.y);
+            context.lineTo(posDst.x, posDst.y);
             context.lineWidth = sizePen;
             context.strokeStyle = colorPen;
             context.lineCap = "square";
             context.stroke();
 
         } else {
+            const posSrc: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
+            message.pushCommand(DrawingCommandType.LINE_STROKE, posSrc, posSrc, "", sizePen, colorPen);
+
             context.fillStyle = colorPen;
-            context.fillRect(posX - offsetLeft, posY - offsetTop, sizePen, sizePen);
+            context.fillRect(posSrc.x, posSrc.y, sizePen, sizePen);
         }
 
         setPrevPosX(posX);
