@@ -212,6 +212,13 @@ function Canvas(props: any) {
         //prevY = null;
     }
 
+    function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
+        const width = getCanvasWidth();
+        const height = canvasRef.current?.height!;
+
+        return new Vector2(canvasPos.x / width, canvasPos.y / height);
+    }
+
     function drawText(drawingCommandType: number, pos: Vector2, value: string) {
         const context = getCanvasContext();
         if (!context) return;
@@ -221,7 +228,9 @@ function Canvas(props: any) {
         context.font = "16px Courier New";
         context.fillText(value, pos.x, pos.y, maxWidth);
 
-        message.pushCommand(drawingCommandType, pos, pos, value, sizePen, colorPen);
+        const normalizedPos = normalizeCanvasPos(pos);
+
+        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, sizePen, colorPen);
     }
 
     function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean) {
@@ -241,7 +250,7 @@ function Canvas(props: any) {
             context.stroke();
         }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, posSrc, posDst, "", sizePen, colorPen);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", sizePen, colorPen);
 
         setPrevPosX(posX);
         setPrevPosY(posY);
