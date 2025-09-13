@@ -103,6 +103,9 @@ function Canvas(props: any) {
         return canvasRef?.current?.getContext("2d");
     }
 
+    /**
+     * Draws a stroke onto the Canvas based on the previous and current cursor position.
+     */
     function handleStrokePosChange() {
         const offsetTop = canvasRef.current?.offsetTop!;
         const offsetLeft = canvasRef.current?.offsetLeft!;
@@ -116,6 +119,9 @@ function Canvas(props: any) {
         drawStroke(posFirst, pos, drawDot);
     }
 
+    /**
+     * Draws the dragged Floating Key onto the Canvas.
+     */
     function handleFloatingKeyAttachment() {
         // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
         //  resulting in a "pop effect". This offset makes the position accurate again.
@@ -129,6 +135,10 @@ function Canvas(props: any) {
         drawText(DrawingCommandType.FLOATING_KEY, pos, value);
     }
 
+    /**
+     * Draws a char onto the Canvas upon pressing a Button on the Virtual Keyboard 
+     *  or typing a key on the physical keyboard.
+     */
     function handleCanvasTextChange() {
         const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
         const value: string = props.canvasText.charAt(props.canvasText.length - 1);
