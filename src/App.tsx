@@ -104,7 +104,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} />
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
