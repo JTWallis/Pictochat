@@ -16,7 +16,7 @@ function isAlpha(char: string): boolean {
 }
 
 function isNumeric(char: string): boolean {
-  return char >= "1" && char <= "0";
+  return char >= "0" && char <= "9";
 }
 
 function isSpecialSupported(char: string): boolean {
