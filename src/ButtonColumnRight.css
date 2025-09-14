@@ -1,0 +1,46 @@
+.buttonColumnRight {
+    height: 100%;
+    width: 20%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonLarge {
+    background-color: #808080;
+    width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+    image-rendering: pixelated;
+}
+
+.buttonLarge:hover {
+    filter: opacity(0.75);
+    cursor: default;
+}
+
+.buttonSend {
+    height: 38%;
+}
+
+.buttonCopy {
+    height: 31%;
+}
+
+.buttonDiscard {
+    height: 31%;
+}
+
+.borderHorizontal {
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+}
+
+.roundStrongTopLeft {
+    border-top-left-radius: 12px;
+}
+
+.roundStrongBotLeft {
+    border-bottom-left-radius: 12px;
+}
