@@ -4,10 +4,12 @@ import type { Vector2 } from "./Vector2";
 export class Message {
 
     public commands: DrawCommand[];
+    private creatorName: string;
     private lastTextCommandIndex: number = -1;
 
-    constructor(commands: DrawCommand[]) {
+    constructor(commands: DrawCommand[], creatorName: string) {
         this.commands = commands;
+        this.creatorName = creatorName;
     }
     
     private pushDrawCommand(command: DrawCommand): void {
@@ -39,6 +41,10 @@ export class Message {
 
     public getCommands(): DrawCommand[] {
         return this.commands;
+    }
+
+    public getUsername(): string {
+        return this.creatorName;
     }
 
     private resetLastTextCommandIndex(): void {
