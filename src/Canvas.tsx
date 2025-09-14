@@ -196,7 +196,6 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
-        sendCurrentMessage();
 
         console.log("DrawCommands:");
         const commands = message.getCommands();
