@@ -53,7 +53,7 @@ function Canvas(props: any) {
         y: 0
     });
 
-    const [message, setMessage] = useState(new Message([]));
+    const [message, setMessage] = useState(new Message([], props.username));
 
 
     useImperativeHandle(props.canvasRef, () => ({
@@ -106,7 +106,7 @@ function Canvas(props: any) {
         props.addMessage(message);
         await postMessage(message);
         clearCanvas();
-        setMessage(new Message([]));
+        setMessage(new Message([], props.username));
     }
 
     /**
