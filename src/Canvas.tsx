@@ -131,7 +131,7 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
-        drawStroke(posFirst, pos, drawDot);
+        drawStroke(posFirst, pos, drawDot, sizePen, colorPen);
     }
 
     /**
@@ -256,24 +256,24 @@ function Canvas(props: any) {
         message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, sizePen, colorPen);
     }
 
-    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean) {
+    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, penSize: number, penColor: string) {
         const context = getCanvasContext();
         if (!context) return;
 
         if (drawDot) {
-            context.fillStyle = colorPen;
-            context.fillRect(posSrc.x, posSrc.y, sizePen, sizePen);
+            context.fillStyle = penColor;
+            context.fillRect(posSrc.x, posSrc.y, penSize, penSize);
         } else {
             context.beginPath();
             context.moveTo(posSrc.x, posSrc.y);
             context.lineTo(posDst.x, posDst.y);
-            context.lineWidth = sizePen;
-            context.strokeStyle = colorPen;
+            context.lineWidth = penSize;
+            context.strokeStyle = penColor;
             context.lineCap = "square";
             context.stroke();
         }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", sizePen, colorPen);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
 
         setPrevPosX(posX);
         setPrevPosY(posY);
