@@ -7,9 +7,8 @@
 }
 
 .buttonLarge {
-    background-color: #A0A0A0;
-    height: 33%;
-    aspect-ratio: 1 / 1;
+    background-color: #808080;
+    width: 100%;
 
     margin-left: auto;
     margin-right: auto;
@@ -17,8 +16,20 @@
 }
 
 .buttonLarge:hover {
-    background-color: #808080;
+    filter: opacity(0.75);
     cursor: default;
+}
+
+.buttonSend {
+    height: 38%;
+}
+
+.buttonCopy {
+    height: 31%;
+}
+
+.buttonDiscard {
+    height: 31%;
 }
 
 .borderHorizontal {
