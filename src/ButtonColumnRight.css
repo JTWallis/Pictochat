@@ -1,0 +1,35 @@
+.buttonColumnRight {
+    height: 100%;
+    width: 20%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonLarge {
+    background-color: #A0A0A0;
+    height: 33%;
+    aspect-ratio: 1 / 1;
+
+    margin-left: auto;
+    margin-right: auto;
+    image-rendering: pixelated;
+}
+
+.buttonLarge:hover {
+    background-color: #808080;
+    cursor: default;
+}
+
+.borderHorizontal {
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+}
+
+.roundStrongTopLeft {
+    border-top-left-radius: 12px;
+}
+
+.roundStrongBotLeft {
+    border-bottom-left-radius: 12px;
+}
