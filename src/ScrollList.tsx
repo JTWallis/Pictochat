@@ -1,7 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './ScrollList.css';
 
-function ScrollList( {scrollListRef, children}: any ) {
+function ScrollList( {scrollListRef, scrollListElements}: any ) {
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [indexTop, setIndexTop] = useState(0);
@@ -48,14 +48,14 @@ function ScrollList( {scrollListRef, children}: any ) {
      *  on each render-update or window-resize.
      */
     function initScrollIndex() {
-        const children = scrollContainerRef.current!.children;
+        const scrollChildren = scrollContainerRef.current!.children;
         const boundTop = 0;
         const boundBot = scrollContainerRef.current!.clientHeight;
         let setCount = 0;
         const maxIndexCount = 2;
 
-        for(let i = 0; i < children.length; i++) {
-            const rect = children[i].getBoundingClientRect();
+        for(let i = 0; i < scrollChildren.length; i++) {
+            const rect = scrollChildren[i].getBoundingClientRect();
 
             if(isInBoundThreshold(rect.top, boundTop)) {
                 setIndexTop(i);
@@ -72,7 +72,7 @@ function ScrollList( {scrollListRef, children}: any ) {
 
         // Not enough children to touch bottom boundary.
         if(setCount < maxIndexCount) {
-            setIndexBot(children.length - 1);
+            setIndexBot(scrollChildren.length - 1);
         }
     }
 
@@ -84,9 +84,9 @@ function ScrollList( {scrollListRef, children}: any ) {
      * @param updateTopBound If true, check the element of indexTop and update its index. Otherwise check for indexBot.
      */
     function updateIndexBound(updateTopBound: boolean) {
-        const children = scrollContainerRef.current!.children;
+        const scrollChildren = scrollContainerRef.current!.children;
         const checkIndex = updateTopBound ? indexTop : indexBot;
-        const checkRect = children[checkIndex].getBoundingClientRect();
+        const checkRect = scrollChildren[checkIndex].getBoundingClientRect();
 
         const bound = updateTopBound ? 0 : scrollContainerRef.current!.clientHeight;
 
@@ -103,13 +103,13 @@ function ScrollList( {scrollListRef, children}: any ) {
      */
     function scrollToNeighbor(scrollDown: boolean) {
         if(!scrollContainerRef) return;
-        const children = scrollContainerRef.current!.children;
+        const scrollChildren = scrollContainerRef.current!.children;
 
         let indexNext;
         let setTopBound;
         if(scrollDown) {
             indexNext = indexBot + 1;
-            if(indexNext >= children.length) return;
+            if(indexNext >= scrollChildren.length) return;
             setIndexBot(indexNext);
             setTopBound = true;
         } else {
@@ -119,14 +119,14 @@ function ScrollList( {scrollListRef, children}: any ) {
             setTopBound = false;
         }
 
-        const target = children[indexNext];
+        const target = scrollChildren[indexNext];
         target.scrollIntoView({ block: scrollDown ? "end" : "start" });
         updateIndexBound(setTopBound);
     }
 
     return (
         <div ref={scrollContainerRef} className="scrollList">
-            {children}
+            {scrollListElements}
         </div>
     );
 }
