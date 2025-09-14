@@ -101,6 +101,7 @@ function Canvas(props: any) {
     async function sendMessage() {
         props.addMessage(message);
         await postMessage(message);
+        clearCanvas();
         setMessage(new Message([]));
     }
 
@@ -221,6 +222,12 @@ function Canvas(props: any) {
         const height = canvasRef.current?.height!;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
+    }
+
+    function clearCanvas() {
+        const context = getCanvasContext();
+        const height = canvasRef.current?.height!;
+        context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
     function drawText(drawingCommandType: number, pos: Vector2, value: string) {
