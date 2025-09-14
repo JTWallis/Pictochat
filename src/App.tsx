@@ -33,6 +33,7 @@ function isKeyValidChar(char: string) {
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
+  const [username, setUsername] = useState("Unknown");
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
@@ -103,7 +104,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} />
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
