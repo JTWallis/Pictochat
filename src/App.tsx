@@ -5,6 +5,8 @@ import FloatingKey from './FloatingKey';
 import Keyboard from './Keyboard'
 import { useEffect, useRef, useState } from 'react';
 import type { Props } from './Props';
+import MessageDisplay from './MessageDisplay';
+import ScrollList from './ScrollList';
 
 
 function isAlpha(char: string): boolean {
@@ -31,6 +33,7 @@ function App() {
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
+  const scrollListRef = useRef(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -76,7 +79,14 @@ function App() {
           </div>
         </div>
         <div className="topRight">
-          <div className="screen">
+          <div className="totalMessagesScreen">
+            <ScrollList scrollListRef={scrollListRef}> 
+              <MessageDisplay />
+              <MessageDisplay />
+              <MessageDisplay />
+              <MessageDisplay />
+              <MessageDisplay />
+            </ScrollList>
           </div>
         </div>
 
@@ -84,7 +94,7 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft />
+          <ButtonColumnLeft scrollListRef={scrollListRef}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
