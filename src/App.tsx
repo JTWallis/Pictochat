@@ -3,8 +3,11 @@ import ButtonColumnLeft from './ButtonColumnLeft';
 import Canvas from './Canvas'
 import FloatingKey from './FloatingKey';
 import Keyboard from './Keyboard'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
+import MessageDisplay from './MessageDisplay';
+import ScrollList from './ScrollList';
+import type { Message } from './Message';
 
 
 function isAlpha(char: string): boolean {
@@ -28,9 +31,11 @@ function isKeyValidChar(char: string) {
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
+  const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
+  const scrollListRef = useRef(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -57,6 +62,14 @@ function App() {
     }
   }
 
+  function addMessage(message: Message) {
+    const m = (
+      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
+    );
+
+    setMessageDisplays((prev) => [...prev, m]);
+  }
+
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
@@ -76,7 +89,8 @@ function App() {
           </div>
         </div>
         <div className="topRight">
-          <div className="screen">
+          <div className="totalMessagesScreen">
+            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} /> 
           </div>
         </div>
 
@@ -84,11 +98,11 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft />
+          <ButtonColumnLeft scrollListRef={scrollListRef}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} />
           </div>
           <div className="botRightBot">
             <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} />

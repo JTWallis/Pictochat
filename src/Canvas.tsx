@@ -29,8 +29,6 @@ let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
-const message: Message = new Message([]);
-
 function Canvas(props: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
@@ -55,6 +53,8 @@ function Canvas(props: any) {
         y: 0
     });
 
+    const [message, setMessage] = useState(new Message([]));
+
 
     useImperativeHandle(props.canvasRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
@@ -67,20 +67,15 @@ function Canvas(props: any) {
     }));
 
     useEffect(() => {
-        const w = canvasContainerRef.current?.clientWidth!;
-        const h = canvasContainerRef.current?.clientHeight!;
-
-        addEventListener("resize", () => setCanvasSize(w, h));
+        addEventListener("resize", setCanvasSize);
 
         return () => {
-            removeEventListener("resize", () => setCanvasSize(w, h));
+            removeEventListener("resize", setCanvasSize);
         }
     }, []);
 
     useEffect(() => {
-        const w = canvasContainerRef.current?.clientWidth!;
-        const h = canvasContainerRef.current?.clientHeight!;
-        setCanvasSize(w, h);
+        setCanvasSize();
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
@@ -101,6 +96,13 @@ function Canvas(props: any) {
 
     function getCanvasContext(): CanvasRenderingContext2D | null | undefined {
         return canvasRef?.current?.getContext("2d");
+    }
+
+    async function sendMessage() {
+        props.addMessage(message);
+        await postMessage(message);
+        clearCanvas();
+        setMessage(new Message([]));
     }
 
     /**
@@ -154,8 +156,11 @@ function Canvas(props: any) {
         }
     }
 
-    function setCanvasSize(width: number, height: number) {
+    function setCanvasSize() {
         console.log("CanvasSize");
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
+
         setCanvasWidth(width);
         setCanvasHeight(height);
 
@@ -187,7 +192,7 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
-
+        sendMessage();
 
         console.log("DrawCommands:");
         const commands = message.getCommands();
@@ -217,6 +222,12 @@ function Canvas(props: any) {
         const height = canvasRef.current?.height!;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
+    }
+
+    function clearCanvas() {
+        const context = getCanvasContext();
+        const height = canvasRef.current?.height!;
+        context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
     function drawText(drawingCommandType: number, pos: Vector2, value: string) {
