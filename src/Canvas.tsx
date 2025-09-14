@@ -67,6 +67,10 @@ function Canvas(props: any) {
 
         sendMessage() {
             sendCurrentMessage();
+        },
+
+        copyMessage() {
+            copyOnCanvas();
         }
     }));
 
@@ -109,6 +113,35 @@ function Canvas(props: any) {
         setMessage(new Message([], props.username));
     }
 
+    function copyOnCanvas() {
+        const message = props.getBottomScrollMessage() as Message;
+        reconstructMessage(message);
+    }
+
+    function unNormalizePos(pos: Vector2): Vector2 {
+        const height = canvasRef.current?.height!;
+        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
+    }
+
+    function reconstructMessage(msg: Message) {
+        if(!msg) return;
+
+        const drawingCommands = msg.getCommands();
+        for(let i = 0; i < drawingCommands.length; i++) {
+            const command = drawingCommands[i];
+            const posStart = unNormalizePos(command.getStartPos());
+
+            if(command.getType() === DrawingCommandType.LINE_STROKE) {
+                const posEnd = unNormalizePos(command.getEndPos());
+                const drawDot = posStart.equals(posEnd);
+                drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else {
+                drawText(command.getType(), posStart, command.getValue());
+            }
+        }
+    }
+    
+
     /**
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
@@ -122,7 +155,7 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
-        drawStroke(posFirst, pos, drawDot);
+        drawStroke(posFirst, pos, drawDot, sizePen, colorPen);
     }
 
     /**
@@ -247,24 +280,24 @@ function Canvas(props: any) {
         message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, sizePen, colorPen);
     }
 
-    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean) {
+    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, penSize: number, penColor: string) {
         const context = getCanvasContext();
         if (!context) return;
 
         if (drawDot) {
-            context.fillStyle = colorPen;
-            context.fillRect(posSrc.x, posSrc.y, sizePen, sizePen);
+            context.fillStyle = penColor;
+            context.fillRect(posSrc.x, posSrc.y, penSize, penSize);
         } else {
             context.beginPath();
             context.moveTo(posSrc.x, posSrc.y);
             context.lineTo(posDst.x, posDst.y);
-            context.lineWidth = sizePen;
-            context.strokeStyle = colorPen;
+            context.lineWidth = penSize;
+            context.strokeStyle = penColor;
             context.lineCap = "square";
             context.stroke();
         }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", sizePen, colorPen);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
 
         setPrevPosX(posX);
         setPrevPosY(posY);

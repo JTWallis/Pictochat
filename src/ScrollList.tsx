@@ -16,6 +16,10 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         scrollUp: () => {
             const scrollDown = false;
             scrollToNeighbor(scrollDown);
+        },
+
+        getBottomMessageIndex: () => {
+            return indexBot;
         }
     }));
 

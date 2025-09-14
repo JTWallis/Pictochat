@@ -33,11 +33,12 @@ function isKeyValidChar(char: string) {
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("Unknown");
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
-  const scrollListRef = useRef(null);
+  const scrollListRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -64,7 +65,14 @@ function App() {
     }
   }
 
+  function getBottomScrollMessage() {
+    const index = scrollListRef.current.getBottomMessageIndex();
+    return messages[index];
+  }
+
   function addMessage(message: Message) {
+    setMessages(prev => [...prev, message]);
+
     const m = (
       <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
     );
@@ -104,7 +112,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage}/>
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
