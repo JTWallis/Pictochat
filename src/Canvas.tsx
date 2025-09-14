@@ -98,8 +98,10 @@ function Canvas(props: any) {
         return canvasRef?.current?.getContext("2d");
     }
 
-    function sendMessage() {
+    async function sendMessage() {
         props.addMessage(message);
+        await postMessage(message);
+        setMessage(new Message([]));
     }
 
     /**
