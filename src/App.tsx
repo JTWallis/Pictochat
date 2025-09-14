@@ -33,6 +33,7 @@ function isKeyValidChar(char: string) {
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("Unknown");
 
   const floatingKeyRef = useRef(null);
@@ -65,6 +66,8 @@ function App() {
   }
 
   function addMessage(message: Message) {
+    setMessages(prev => [...prev, message]);
+
     const m = (
       <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
     );
