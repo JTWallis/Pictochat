@@ -38,7 +38,7 @@ function App() {
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
-  const scrollListRef = useRef(null);
+  const scrollListRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -63,6 +63,11 @@ function App() {
           break;
       }
     }
+  }
+
+  function getBottomScrollMessage() {
+    const index = scrollListRef.current.getBottomMessageIndex();
+    return messages[index];
   }
 
   function addMessage(message: Message) {
@@ -107,7 +112,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage}/>
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
