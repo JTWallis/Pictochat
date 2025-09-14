@@ -67,20 +67,15 @@ function Canvas(props: any) {
     }));
 
     useEffect(() => {
-        const w = canvasContainerRef.current?.clientWidth!;
-        const h = canvasContainerRef.current?.clientHeight!;
-
-        addEventListener("resize", () => setCanvasSize(w, h));
+        addEventListener("resize", setCanvasSize);
 
         return () => {
-            removeEventListener("resize", () => setCanvasSize(w, h));
+            removeEventListener("resize", setCanvasSize);
         }
     }, []);
 
     useEffect(() => {
-        const w = canvasContainerRef.current?.clientWidth!;
-        const h = canvasContainerRef.current?.clientHeight!;
-        setCanvasSize(w, h);
+        setCanvasSize();
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
@@ -158,8 +153,11 @@ function Canvas(props: any) {
         }
     }
 
-    function setCanvasSize(width: number, height: number) {
+    function setCanvasSize() {
         console.log("CanvasSize");
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
+
         setCanvasWidth(width);
         setCanvasHeight(height);
 
