@@ -63,6 +63,10 @@ function Canvas(props: any) {
                 y: screenY
             })
             setFloatingKeyValue(text);
+        },
+
+        sendMessage() {
+            sendCurrentMessage();
         }
     }));
 
@@ -98,7 +102,7 @@ function Canvas(props: any) {
         return canvasRef?.current?.getContext("2d");
     }
 
-    async function sendMessage() {
+    async function sendCurrentMessage() {
         props.addMessage(message);
         await postMessage(message);
         clearCanvas();
@@ -192,7 +196,7 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
-        sendMessage();
+        sendCurrentMessage();
 
         console.log("DrawCommands:");
         const commands = message.getCommands();
