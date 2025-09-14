@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Props } from './Props';
 import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
+import type { Message } from './Message';
 
 
 function isAlpha(char: string): boolean {
@@ -30,6 +31,10 @@ function isKeyValidChar(char: string) {
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
+  const [messageDisplays, setMessageDisplays] = useState([
+    <MessageDisplay />,
+    <MessageDisplay />
+  ]);
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
@@ -60,6 +65,14 @@ function App() {
     }
   }
 
+  function addMessage(message: Message) {
+    const m = (
+      <MessageDisplay />
+    );
+
+    setMessageDisplays((prev) => [...prev, m]);
+  }
+
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
@@ -80,11 +93,7 @@ function App() {
         </div>
         <div className="topRight">
           <div className="totalMessagesScreen">
-            <ScrollList scrollListRef={scrollListRef}> 
-              <MessageDisplay />
-              <MessageDisplay />
-              <MessageDisplay />
-              <MessageDisplay />
+            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays}> 
               <MessageDisplay />
             </ScrollList>
           </div>
@@ -98,7 +107,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} />
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} />
           </div>
           <div className="botRightBot">
             <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} />
