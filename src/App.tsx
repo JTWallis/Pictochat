@@ -8,6 +8,7 @@ import type { Props } from './Props';
 import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
 import type { Message } from './Message';
+import ButtonColumnRight from './ButtonColumnRight';
 
 
 function isAlpha(char: string): boolean {
@@ -105,7 +106,13 @@ function App() {
             <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} />
           </div>
           <div className="botRightBot">
-            <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} />
+            <div className="emptyLeftKeyboardContainer"></div>
+            <div className="keyboardContainer">
+              <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} className="keyboardComponent"/>
+            </div>
+            <div className="buttonColumnRightContainer">
+              <ButtonColumnRight />
+            </div>
           </div>
         </div>
       </div>

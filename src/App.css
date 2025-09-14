@@ -72,16 +72,22 @@ button {
     background-color: aqua;
     width: 100%;
     height: 50%;
+
+    display: flex;
+    justify-content: center;
 }
 
-.keyboard {
-    background-color: gray;
+.emptyLeftKeyboardContainer {
+    width: 25%;
+}
+
+.keyboardContainer {
     width: 50%;
-    height: 100%;
-    margin: 0 auto 0 auto;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+}
+
+.buttonColumnRightContainer {
+    background-color: blueviolet;
+    width: 25%;
 }
 
 .keyboardRow {
@@ -134,4 +140,8 @@ button {
 
 .ratio {
     aspect-ratio: 3 / 2;
+}
+
+.backgroundDark {
+    background-color: #606060;
 }
