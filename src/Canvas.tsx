@@ -29,8 +29,6 @@ let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
-const message: Message = new Message([]);
-
 function Canvas(props: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
@@ -54,6 +52,8 @@ function Canvas(props: any) {
         x: 0,
         y: 0
     });
+
+    const [message, setMessage] = useState(new Message([]));
 
 
     useImperativeHandle(props.canvasRef, () => ({
