@@ -32,8 +32,8 @@ function isKeyValidChar(char: string) {
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState([
-    <MessageDisplay />,
-    <MessageDisplay />
+    <MessageDisplay key="MessageDisplay-1"/>,
+    <MessageDisplay key="MessageDisplay-2"/>
   ]);
 
   const floatingKeyRef = useRef(null);
@@ -67,7 +67,7 @@ function App() {
 
   function addMessage(message: Message) {
     const m = (
-      <MessageDisplay />
+      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length}/>
     );
 
     setMessageDisplays((prev) => [...prev, m]);
