@@ -7,11 +7,3 @@
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
 }
-
-.scrollList > * {
-    scroll-snap-align: start;
-}
-
-.scrollRow {
-
-}
