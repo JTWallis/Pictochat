@@ -103,7 +103,7 @@ function MessageDisplay( {message}: any ) {
             </canvas>
             <div className="borderContainer">
                 <div className="nameContainer" ref={nameContainerRef}>
-                    <label>Sample Name</label>
+                    <label>{message.getUsername()}</label>
                 </div>
             </div>
         </div>

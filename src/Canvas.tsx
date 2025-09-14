@@ -291,7 +291,7 @@ function Canvas(props: any) {
             </canvas>
             <div className="borderContainer">
                 <div className="nameContainer" ref={nameContainerRef}>
-                    <label>Sample Name</label>
+                    <label>{props.username}</label>
                 </div>
             </div>
         </div>
