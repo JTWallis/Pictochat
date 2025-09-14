@@ -103,6 +103,10 @@ function Canvas(props: any) {
         return canvasRef?.current?.getContext("2d");
     }
 
+    function sendMessage() {
+        props.addMessage(message);
+    }
+
     /**
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
@@ -187,7 +191,7 @@ function Canvas(props: any) {
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
-
+        sendMessage();
 
         console.log("DrawCommands:");
         const commands = message.getCommands();
