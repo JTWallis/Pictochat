@@ -111,7 +111,7 @@ function App() {
               <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} className="keyboardComponent"/>
             </div>
             <div className="buttonColumnRightContainer">
-              <ButtonColumnRight />
+              <ButtonColumnRight canvasRef={canvasRef} />
             </div>
           </div>
         </div>
