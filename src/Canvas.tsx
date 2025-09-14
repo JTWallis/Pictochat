@@ -115,6 +115,30 @@ function Canvas(props: any) {
 
     function copyOnCanvas() {
         const message = props.getBottomScrollMessage() as Message;
+        reconstructMessage(message);
+    }
+
+    function unNormalizePos(pos: Vector2): Vector2 {
+        const height = canvasRef.current?.height!;
+        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
+    }
+
+    function reconstructMessage(msg: Message) {
+        if(!msg) return;
+
+        const drawingCommands = msg.getCommands();
+        for(let i = 0; i < drawingCommands.length; i++) {
+            const command = drawingCommands[i];
+            const posStart = unNormalizePos(command.getStartPos());
+
+            if(command.getType() === DrawingCommandType.LINE_STROKE) {
+                const posEnd = unNormalizePos(command.getEndPos());
+                const drawDot = posStart.equals(posEnd);
+                drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else {
+                drawText(command.getType(), posStart, command.getValue());
+            }
+        }
     }
     
 
