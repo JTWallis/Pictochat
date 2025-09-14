@@ -67,6 +67,10 @@ function Canvas(props: any) {
 
         sendMessage() {
             sendCurrentMessage();
+        },
+
+        copyMessage() {
+            copyOnCanvas();
         }
     }));
 
@@ -108,6 +112,11 @@ function Canvas(props: any) {
         clearCanvas();
         setMessage(new Message([], props.username));
     }
+
+    function copyOnCanvas() {
+        const message = props.getBottomScrollMessage() as Message;
+    }
+    
 
     /**
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
