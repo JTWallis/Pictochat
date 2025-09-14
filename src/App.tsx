@@ -3,7 +3,7 @@ import ButtonColumnLeft from './ButtonColumnLeft';
 import Canvas from './Canvas'
 import FloatingKey from './FloatingKey';
 import Keyboard from './Keyboard'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
@@ -31,10 +31,7 @@ function isKeyValidChar(char: string) {
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
-  const [messageDisplays, setMessageDisplays] = useState([
-    <MessageDisplay key="MessageDisplay-1"/>,
-    <MessageDisplay key="MessageDisplay-2"/>
-  ]);
+  const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
