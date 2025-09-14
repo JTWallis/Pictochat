@@ -5,8 +5,8 @@ import ImagePen from './assets/img_button_pen.png';
 function ButtonColumnLeft( {scrollListRef}: any ) {
     return (
         <div className="buttonColumn">
-            <button className="button marginTop borderBot" onClick={() => scrollListRef.current.scrollPrev()}></button>
-            <button className="button marginTop borderTop" onClick={() => scrollListRef.current.scrollNext()}></button>
+            <button className="button marginTop borderBot" onClick={() => scrollListRef.current.scrollUp()}></button>
+            <button className="button marginTop borderTop" onClick={() => scrollListRef.current.scrollDown()}></button>
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
