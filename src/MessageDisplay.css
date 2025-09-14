@@ -1,0 +1,37 @@
+.displayScreen {
+    height: 50%;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto 0 auto;
+    display: grid;
+}
+
+.canvasBackground {
+    background-color: white;
+    height: 99%;
+    width: 100%;
+    grid-area: 1/1;
+    border-radius: 8px;
+}
+
+.borderContainer {
+    width: 99.5%;
+    height: 98%;
+    display: flex;
+    border: 2px solid green;
+    border-radius: 8px;
+    grid-area: 1 / 1;
+    pointer-events: none;
+}
+
+.nameContainer {
+    background-color: #00F000;
+    height: 17%;
+    width: 28%;
+    border-right: 2px solid green;
+    border-bottom: 2px solid green;
+    border-top-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
