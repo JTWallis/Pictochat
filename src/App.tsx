@@ -64,7 +64,7 @@ function App() {
 
   function addMessage(message: Message) {
     const m = (
-      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length}/>
+      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
     );
 
     setMessageDisplays((prev) => [...prev, m]);
