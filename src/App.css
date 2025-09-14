@@ -116,7 +116,7 @@ button {
     overflow: hidden;
 }
 
-.screen {
+.totalMessagesScreen {
     background-color: #222;
     height: 100%;
     aspect-ratio: 16 / 9;
