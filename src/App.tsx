@@ -67,6 +67,7 @@ function App() {
 
   function getBottomScrollMessage() {
     const index = scrollListRef.current.getBottomMessageIndex();
+    if(index < 0 || index >= messages.length) return null;
     return messages[index];
   }
 
