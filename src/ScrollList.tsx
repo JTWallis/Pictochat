@@ -130,6 +130,7 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
 
     return (
         <div ref={scrollContainerRef} className="scrollList">
+            <div className="scrollPadding" />
             {scrollListElements}
         </div>
     );
