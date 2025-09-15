@@ -23,9 +23,9 @@ const colorBackground = "#AAA";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
 const sizeLarge = 3.0;
-let colorPen = colorForeground;
-let sizePen = sizeSmall;
-let isRainbow = false;
+//let colorPen = colorForeground;
+//let sizePen = sizeSmall;
+//let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
@@ -54,6 +54,10 @@ function Canvas(props: any) {
     });
 
     const [message, setMessage] = useState(new Message([], props.username));
+
+    const [penSize, setPenSize] = useState(sizeLarge);
+    const [penColor, setPenColor] = useState(colorForeground);
+    const [penRainbow, setPenRainbow] = useState(false);
 
 
     useImperativeHandle(props.canvasRef, () => ({
@@ -175,7 +179,7 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
-        drawStroke(posFirst, pos, drawDot, sizePen, colorPen);
+        drawStroke(posFirst, pos, drawDot, penSize, penColor);
     }
 
     /**
@@ -313,7 +317,7 @@ function Canvas(props: any) {
 
         const normalizedPos = normalizeCanvasPos(pos);
 
-        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, sizePen, colorPen);
+        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
     function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, penSize: number, penColor: string) {
