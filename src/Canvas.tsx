@@ -32,6 +32,11 @@ const rainbowPhaseB = 4;
 
 const canvasTextPosXOffset = 5;
 
+/**
+ * Takes a single value between 0 and 255 and turns it into a 2-digit hex representation.
+ * @param b Color value between 0 and 255.
+ * @returns 2-digit hex-representation of that value.
+ */
 function byteToHex(b: number): string {
     const str = "0123456789ABCDEF";
     const subStrFirst = (b >> 4) & 0x0F;
@@ -39,6 +44,13 @@ function byteToHex(b: number): string {
     return str.substring(subStrFirst, subStrFirst+1) + str.substring(subStrSecond, subStrSecond+1);
 }
 
+/**
+ * Takes three RGB values between 0 and 255 and turns them in a 6-digit hex-representation.
+ * @param r Red color value.
+ * @param g Green color value.
+ * @param b Blue color value.
+ * @returns 6-digit hex-representation of the RGB values, with '#' as the prefix. E.g. #12ABCD
+ */
 function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
@@ -278,6 +290,10 @@ function Canvas(props: any) {
         setPenColor(colorBackground);
     }
 
+    /**
+     * Increments the rainbow ticks and returns an RGB value of the current ticks color.
+     * @returns Hex-representation of the RGB values for the current color of the rainbow.
+     */
     function tickRainbow(): string {
         const freq = 0.31415;
         const maxTicks = 32;
