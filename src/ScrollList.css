@@ -7,3 +7,9 @@
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
 }
+
+.scrollPadding {
+    background-color:aquamarine;
+    width: 100%;
+    height: 100%;
+}
