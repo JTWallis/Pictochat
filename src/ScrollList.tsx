@@ -51,13 +51,6 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
     }
 
     /**
-     * Scrolls downwards, so the last element in the ScrollList is touching the bottom screen border.
-     */
-    function scrollToLast() {
-        scrollTo(scrollContainerRef.current!.children.length - 1);
-    }
-
-    /**
      * Init the indexTop and indexBot states based on the current scroll position
      *  on each render-update or window-resize.
      */
@@ -82,6 +75,13 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         const target = scrollChildren[index];
         target.scrollIntoView({ block: "end" });
         setIndex(index);
+    }
+
+    /**
+     * Scrolls downwards, so the last element in the ScrollList is touching the bottom screen border.
+     */
+    function scrollToLast() {
+        scrollTo(scrollContainerRef.current!.children.length - 1);
     }
 
     /**
