@@ -28,6 +28,7 @@ function MessageDisplay( {message}: any ) {
     const [drawnHeight, setDrawnHeight] = useState(150);
     const [drawnLowest, setDrawnLowest] = useState(0.0);
     const [drawnStripeOffset, setDrawnStripeOffset] = useState(0);
+    const [showStripes, setShowStripes] = useState(true);
 
     useEffect(() => {
         initHeight();
@@ -137,6 +138,7 @@ function MessageDisplay( {message}: any ) {
         setDrawnLowest(lowest);
         setDrawnHeight(stripeHeight);
         setDrawnStripeOffset(lowest - lowestStripePos);
+        setShowStripes(false);
 
         // Needs to be called here, no guarantee that setDrawnHeight finished after this function.
         applySizeStyles(stripeHeight);
@@ -208,9 +210,13 @@ function MessageDisplay( {message}: any ) {
             <div className="canvasBackground">
 
             </div>
-            <div className="stripes" ref={stripesContainerRef}>
-                {stripes}
-            </div>
+            { showStripes ? (
+                <div className="stripes" ref={stripesContainerRef}>
+                    {stripes}
+                </div>
+            ) : (
+                <></>
+            )}
             <canvas
                 width={canvasWidth}
                 height={canvasHeight}
