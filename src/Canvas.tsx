@@ -23,11 +23,25 @@ const colorBackground = "#AAA";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
 const sizeLarge = 3.0;
+const rainbowPhaseR = 0;
+const rainbowPhaseG = 2;
+const rainbowPhaseB = 4;
 //let colorPen = colorForeground;
 //let sizePen = sizeSmall;
 //let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
+
+function byteToHex(b: number): string {
+    const str = "0123456789ABCDEF";
+    const subStrFirst = (b >> 4) & 0x0F;
+    const subStrSecond = b & 0x0F;
+    return str.substring(subStrFirst, subStrFirst+1) + str.substring(subStrSecond, subStrSecond+1);
+}
+
+function rgbToColor(r: number, g: number, b: number): string {
+    return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
+}
 
 function Canvas(props: any) {
 
@@ -58,6 +72,7 @@ function Canvas(props: any) {
     const [penSize, setPenSize] = useState(sizeLarge);
     const [penColor, setPenColor] = useState(colorForeground);
     const [penRainbow, setPenRainbow] = useState(false);
+    const [rainbowTick, setRainbowTick] = useState(0);
 
 
     useImperativeHandle(props.canvasRef, () => ({
@@ -179,6 +194,10 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
+        if(penRainbow && !isPenErase()) {
+            setPenColor(tickRainbow());
+        }
+
         drawStroke(posFirst, pos, drawDot, penSize, penColor);
     }
 
@@ -231,6 +250,10 @@ function Canvas(props: any) {
         setCanvasTextPosY(h - h / 2);
     }
 
+    function isPenErase() {
+        return penColor === colorBackground;
+    }
+
     function setPenSmall() {
         setPenSize(sizeSmall);
     }
@@ -240,11 +263,31 @@ function Canvas(props: any) {
     }
 
     function setPenDraw() {
-        setPenColor(colorForeground);
+        if(penColor === colorForeground) {
+            setPenRainbow(true);
+        } else {
+            setPenColor(colorForeground);
+
+            if(!isPenErase()) {
+                setPenRainbow(false);
+            }
+        }
     }
 
     function setPenErase() {
         setPenColor(colorBackground);
+    }
+
+    function tickRainbow(): string {
+        const freq = 0.31415;
+        const maxTicks = 32;
+        setRainbowTick(prev => prev >= maxTicks ? 0 : prev + 1);
+
+        const r = Math.sin(freq * rainbowTick + rainbowPhaseR) * 127 + 128;
+        const g = Math.sin(freq * rainbowTick + rainbowPhaseG) * 127 + 128;
+        const b = Math.sin(freq * rainbowTick + rainbowPhaseB) * 127 + 128;
+
+        return rgbToColor(r, g, b);
     }
 
     function resetPos() {
