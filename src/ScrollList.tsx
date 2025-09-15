@@ -54,12 +54,7 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
      * Scrolls downwards, so the last element in the ScrollList is touching the bottom screen border.
      */
     function scrollToLast() {
-        const scrollChildren = scrollContainerRef.current!.children;
-        const targetIndex = scrollChildren.length - 1;
-        const target = scrollChildren[targetIndex];
-        target.scrollIntoView({ block: "end" });
-
-        setIndex(targetIndex);
+        scrollTo(scrollContainerRef.current!.children.length - 1);
     }
 
     /**
@@ -80,6 +75,15 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         }
     }
 
+    function scrollTo(index: number) {
+        const scrollChildren = scrollContainerRef.current!.children;
+        if(index < 0 || index >= scrollChildren.length) return;
+
+        const target = scrollChildren[index];
+        target.scrollIntoView({ block: "end" });
+        setIndex(index);
+    }
+
     /**
      * Scrolls upwards/downwards and snaps the scrollbar onto the previous/next child element of the ScrollList.
      * @param scrollDown If true, scroll downwards and snap onto the next element. Otherwise, scroll upwards.
@@ -97,9 +101,8 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
             indexNext = index - 1;
             if(indexNext < boundLower) return;
         }
-        setIndex(indexNext);
-        const target = scrollChildren[indexNext];
-        target.scrollIntoView({ block: "end" });
+        
+        scrollTo(indexNext);
     }
 
     return (
