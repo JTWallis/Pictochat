@@ -25,6 +25,7 @@ function MessageDisplay( {message}: any ) {
     const [canvasWidth, setCanvasWidth] = useState(300);
     const [canvasHeight, setCanvasHeight] = useState(150);
     const [drawnHeight, setDrawnHeight] = useState(150);
+    const [drawnLowest, setDrawnLowest] = useState(0.0);
     const [drawnStripeOffset, setDrawnStripeOffset] = useState(0);
 
     useEffect(() => {
@@ -83,7 +84,7 @@ function MessageDisplay( {message}: any ) {
         positions = [0.0, ...positions, 1.0];
         let lowestStripePos = 0;
         let highestStripePos = 1.0;
-        
+
         for(let i = 0; i < positions.length; i++) {
             if(lowest >= positions[i]) {
                 lowestStripePos = positions[i];
@@ -100,6 +101,7 @@ function MessageDisplay( {message}: any ) {
             }
         }
 
+        setDrawnLowest(lowest);
         setDrawnHeight(highestStripePos - lowestStripePos);
         setDrawnStripeOffset(lowest - lowestStripePos);
     }
@@ -123,10 +125,13 @@ function MessageDisplay( {message}: any ) {
         const drawingCommands = (message as Message).getCommands();
         for(let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
-            const posStart = unNormalizePos(command.getStartPos());
+            const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - drawnLowest + drawnStripeOffset);
+            const posStart = unNormalizePos(offsetStart);
+            
 
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const posEnd = unNormalizePos(command.getEndPos());
+                const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - drawnLowest + drawnStripeOffset);
+                const posEnd = unNormalizePos(offsetEnd);
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
             } else {
