@@ -19,16 +19,13 @@ for (let i = 0; i < stripeCount; i++) {
     )
 }
 
-const colorBackground = "#AAA";
+const colorBackground = "#FFF";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
 const sizeLarge = 3.0;
 const rainbowPhaseR = 0;
 const rainbowPhaseG = 2;
 const rainbowPhaseB = 4;
-//let colorPen = colorForeground;
-//let sizePen = sizeSmall;
-//let isRainbow = false;
 
 const canvasTextPosXOffset = 5;
 
