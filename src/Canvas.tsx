@@ -232,19 +232,19 @@ function Canvas(props: any) {
     }
 
     function setPenSmall() {
-
+        setPenSize(sizeSmall);
     }
 
     function setPenBig() {
-
+        setPenSize(sizeLarge);
     }
 
     function setPenDraw() {
-
+        setPenColor(colorForeground);
     }
 
     function setPenErase() {
-
+        setPenColor(colorBackground);
     }
 
     function resetPos() {
