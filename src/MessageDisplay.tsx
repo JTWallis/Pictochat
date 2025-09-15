@@ -4,15 +4,32 @@ import { Vector2 } from './Vector2';
 import type { Message } from './Message';
 import { DrawingCommandType } from './DrawCommand';
 
+const stripeStyle: React.CSSProperties = {
+    color: "red"
+};
+
+const stripeCount = 4;
+
+const stripes: any = [];
+for (let i = 0; i < stripeCount; i++) {
+    stripes.push(
+        <hr key={"Stripe-" + i} className="stripe" style={stripeStyle} />
+    )
+}
+
 function MessageDisplay( {message}: any ) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
     const [canvasWidth, setCanvasWidth] = useState(300);
     const [canvasHeight, setCanvasHeight] = useState(150);
+    const [drawnHeight, setDrawnHeight] = useState(150);
+    const [drawnStripeOffset, setDrawnStripeOffset] = useState(0);
 
     useEffect(() => {
         addEventListener("resize", setCanvasSize);
+        initDrawnHeight();
 
         return () => {
             removeEventListener("resize", setCanvasSize);
@@ -30,6 +47,61 @@ function MessageDisplay( {message}: any ) {
         setCanvasHeight(height);
 
         reconstructMessage();
+    }
+
+    function initDrawnHeight() {
+        if(!message) return;
+        let lowest = 1.0;
+        let highest = 0.0;
+        const drawingCommands = (message as Message).getCommands();
+
+        // Find normalized, lowest and highest drawn position. 
+        for(let i = 0; i < drawingCommands.length; i++) {
+            const command = drawingCommands[i];
+            const startY = command.getStartPos().y;
+            const endY = command.getEndPos().y;
+            if(startY >= 0.0) lowest = Math.min(lowest, command.getStartPos().y);
+            if(endY >= 0.0) lowest = Math.min(lowest, command.getEndPos().y);
+            if(startY <= 1.0) highest = Math.max(highest, command.getStartPos().y);
+            if(endY <= 1.0) highest = Math.max(highest, command.getEndPos().y);
+        }
+
+        // Find normalized stripe positions.
+        const stripeContainerChildren = stripesContainerRef.current!.children;
+        const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
+        const canvasTop = canvasRect.top;
+        const canvasHeight = canvasRect.height;
+        let positions: number[] = [];
+        for(let i = 0; i < stripeContainerChildren.length; i++) {
+            const stripe = stripeContainerChildren[i];
+            const rect = stripe.getBoundingClientRect();
+            positions.push((rect.bottom - canvasTop) / canvasHeight);
+        }
+
+        // Find lowest stripe pos that the lowest drawing pos exceeds
+        //   and highest stripe pos that the highest drawing pos subceeds.
+        positions = [0.0, ...positions, 1.0];
+        let lowestStripePos = 0;
+        let highestStripePos = 1.0;
+        
+        for(let i = 0; i < positions.length; i++) {
+            if(lowest >= positions[i]) {
+                lowestStripePos = positions[i];
+            } else {
+                break;
+            }
+        }
+
+        for(let i = positions.length - 1; i >= 0; i--) {
+            if(highest <= positions[i]) {
+                highestStripePos = positions[i];
+            } else {
+                break;
+            }
+        }
+
+        setDrawnHeight(highestStripePos - lowestStripePos);
+        setDrawnStripeOffset(lowest - lowestStripePos);
     }
 
     function getCanvasWidth(): number {
@@ -95,6 +167,9 @@ function MessageDisplay( {message}: any ) {
         <div className="displayScreen" ref={canvasContainerRef}>
             <div className="canvasBackground">
 
+            </div>
+            <div className="stripes" ref={stripesContainerRef}>
+                {stripes}
             </div>
             <canvas
                 width={canvasWidth}
