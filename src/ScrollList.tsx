@@ -4,8 +4,7 @@ import './ScrollList.css';
 function ScrollList( {scrollListRef, scrollListElements}: any ) {
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [indexTop, setIndexTop] = useState(0);
-    const [indexBot, setIndexBot] = useState(0);
+    const [index, setIndex] = useState(0);
 
     useImperativeHandle(scrollListRef, () => ({
         scrollDown: () => {
@@ -19,7 +18,7 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         },
 
         getBottomMessageIndex: () => {
-            return indexBot;
+            return index - 1;
         }
     }));
 
@@ -53,51 +52,15 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
      */
     function initScrollIndex() {
         const scrollChildren = scrollContainerRef.current!.children;
-        const boundTop = 0;
         const boundBot = scrollContainerRef.current!.clientHeight;
-        let setCount = 0;
-        const maxIndexCount = 2;
 
         for(let i = 0; i < scrollChildren.length; i++) {
             const rect = scrollChildren[i].getBoundingClientRect();
 
-            if(isInBoundThreshold(rect.top, boundTop)) {
-                setIndexTop(i);
-                setCount++;
-            }
-
             if(isInBoundThreshold(rect.bottom, boundBot)) {
-                setIndexBot(i);
-                setCount++;
+                setIndex(i);
+                break;
             }
-
-            if(setCount >= maxIndexCount) break;
-        }
-
-        // Not enough children to touch bottom boundary.
-        if(setCount < maxIndexCount) {
-            setIndexBot(scrollChildren.length - 1);
-        }
-    }
-
-    /**
-     * Either increment indexTop on a scroll-down or decrement indexBot on a scroll-up,
-     *  if the respective element is well outside that boundary side.
-     * Sometimes messages are short enough that on a scroll, the checked element has not overflown,
-     *  in that case, do nothing.
-     * @param updateTopBound If true, check the element of indexTop and update its index. Otherwise check for indexBot.
-     */
-    function updateIndexBound(updateTopBound: boolean) {
-        const scrollChildren = scrollContainerRef.current!.children;
-        const checkIndex = updateTopBound ? indexTop : indexBot;
-        const checkRect = scrollChildren[checkIndex].getBoundingClientRect();
-
-        const bound = updateTopBound ? 0 : scrollContainerRef.current!.clientHeight;
-
-        if(updateTopBound && !isInBoundThreshold(checkRect.top, bound)) {
-            setIndexTop(prev => prev + 1);
-        } else if(!updateTopBound && !isInBoundThreshold(checkRect.bottom, bound)) {
-            setIndexBot(prev => prev - 1);
         }
     }
 
@@ -108,24 +71,19 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
     function scrollToNeighbor(scrollDown: boolean) {
         if(!scrollContainerRef) return;
         const scrollChildren = scrollContainerRef.current!.children;
+        const boundLower = 1;   // Prevent scrolling to pad element (index 0)
 
         let indexNext;
-        let setTopBound;
         if(scrollDown) {
-            indexNext = indexBot + 1;
+            indexNext = index + 1;
             if(indexNext >= scrollChildren.length) return;
-            setIndexBot(indexNext);
-            setTopBound = true;
         } else {
-            indexNext = indexTop - 1;
-            if(indexNext < 0) return;
-            setIndexTop(indexNext);
-            setTopBound = false;
+            indexNext = index - 1;
+            if(indexNext < boundLower) return;
         }
-
+        setIndex(indexNext);
         const target = scrollChildren[indexNext];
-        target.scrollIntoView({ block: scrollDown ? "end" : "start" });
-        updateIndexBound(setTopBound);
+        target.scrollIntoView({ block: "end" });
     }
 
     return (
