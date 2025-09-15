@@ -65,6 +65,22 @@ function Canvas(props: any) {
             setFloatingKeyValue(text);
         },
 
+        usePenDraw() {
+            setPenDraw();
+        },
+
+        usePenErase() {
+            setPenErase();
+        },
+
+        usePenSmall() {
+            setPenSmall();
+        },
+
+        usePenBig() {
+            setPenBig();
+        },
+
         sendMessage() {
             sendCurrentMessage();
         },
@@ -209,6 +225,22 @@ function Canvas(props: any) {
         const w = nameContainerRef.current?.clientWidth!;
         setCanvasTextPosX(w + canvasTextPosXOffset);
         setCanvasTextPosY(h - h / 2);
+    }
+
+    function setPenSmall() {
+        
+    }
+
+    function setPenBig() {
+
+    }
+
+    function setPenDraw() {
+
+    }
+
+    function setPenErase() {
+
     }
 
     function resetPos() {
