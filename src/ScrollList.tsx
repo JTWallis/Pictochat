@@ -31,6 +31,10 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         }
     }, []);
 
+    useEffect(() => {
+        scrollToLast();
+    }, [scrollListElements]);
+
     /**
      * Helper function, to check if a child-rect-boundary touches a ScrollList-boundary
      *  and factors in a few pixels of boundary-area.
@@ -44,6 +48,18 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
     function isInBoundThreshold(pos: number, bound: number): boolean {
         const boundThreshold = 2;
         return pos >= (bound - boundThreshold) && pos <= (bound + boundThreshold);
+    }
+
+    /**
+     * Scrolls downwards, so the last element in the ScrollList is touching the bottom screen border.
+     */
+    function scrollToLast() {
+        const scrollChildren = scrollContainerRef.current!.children;
+        const targetIndex = scrollChildren.length - 1;
+        const target = scrollChildren[targetIndex];
+        target.scrollIntoView({ block: "end" });
+
+        setIndex(targetIndex);
     }
 
     /**
