@@ -68,6 +68,11 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         }
     }
 
+    /**
+     * Scrolls to an element in the ScrollList, so it is touching the bottom screen border.
+     * If the passed index is invalid, do nothing.
+     * @param index Element index of scroll container children.
+     */
     function scrollTo(index: number) {
         const scrollChildren = scrollContainerRef.current!.children;
         if(index < 0 || index >= scrollChildren.length) return;
