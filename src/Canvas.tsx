@@ -71,6 +71,10 @@ function Canvas(props: any) {
 
         copyMessage() {
             copyOnCanvas();
+        },
+
+        discardMessage() {
+            clearCanvas();
         }
     }));
 
