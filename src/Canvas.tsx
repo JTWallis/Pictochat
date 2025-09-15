@@ -19,15 +19,38 @@ for (let i = 0; i < stripeCount; i++) {
     )
 }
 
-const colorBackground = "#AAA";
+const colorBackground = "#FFF";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
 const sizeLarge = 3.0;
-let colorPen = colorForeground;
-let sizePen = sizeSmall;
-let isRainbow = false;
+const rainbowPhaseR = 0;
+const rainbowPhaseG = 2;
+const rainbowPhaseB = 4;
 
 const canvasTextPosXOffset = 5;
+
+/**
+ * Takes a single value between 0 and 255 and turns it into a 2-digit hex representation.
+ * @param b Color value between 0 and 255.
+ * @returns 2-digit hex-representation of that value.
+ */
+function byteToHex(b: number): string {
+    const str = "0123456789ABCDEF";
+    const subStrFirst = (b >> 4) & 0x0F;
+    const subStrSecond = b & 0x0F;
+    return str.substring(subStrFirst, subStrFirst+1) + str.substring(subStrSecond, subStrSecond+1);
+}
+
+/**
+ * Takes three RGB values between 0 and 255 and turns them in a 6-digit hex-representation.
+ * @param r Red color value.
+ * @param g Green color value.
+ * @param b Blue color value.
+ * @returns 6-digit hex-representation of the RGB values, with '#' as the prefix. E.g. #12ABCD
+ */
+function rgbToColor(r: number, g: number, b: number): string {
+    return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
+}
 
 function Canvas(props: any) {
 
@@ -55,6 +78,11 @@ function Canvas(props: any) {
 
     const [message, setMessage] = useState(new Message([], props.username));
 
+    const [penSize, setPenSize] = useState(sizeLarge);
+    const [penColor, setPenColor] = useState(colorForeground);
+    const [penRainbow, setPenRainbow] = useState(false);
+    const [rainbowTick, setRainbowTick] = useState(0);
+
 
     useImperativeHandle(props.canvasRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
@@ -63,6 +91,22 @@ function Canvas(props: any) {
                 y: screenY
             })
             setFloatingKeyValue(text);
+        },
+
+        usePenDraw() {
+            setPenDraw();
+        },
+
+        usePenErase() {
+            setPenErase();
+        },
+
+        usePenSmall() {
+            setPenSmall();
+        },
+
+        usePenBig() {
+            setPenBig();
         },
 
         sendMessage() {
@@ -159,7 +203,11 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
-        drawStroke(posFirst, pos, drawDot, sizePen, colorPen);
+        if(penRainbow && !isPenErase()) {
+            setPenColor(tickRainbow());
+        }
+
+        drawStroke(posFirst, pos, drawDot, penSize, penColor);
     }
 
     /**
@@ -209,6 +257,50 @@ function Canvas(props: any) {
         const w = nameContainerRef.current?.clientWidth!;
         setCanvasTextPosX(w + canvasTextPosXOffset);
         setCanvasTextPosY(h - h / 2);
+    }
+
+    function isPenErase() {
+        return penColor === colorBackground;
+    }
+
+    function setPenSmall() {
+        setPenSize(sizeSmall);
+    }
+
+    function setPenBig() {
+        setPenSize(sizeLarge);
+    }
+
+    function setPenDraw() {
+        if(penColor === colorForeground) {
+            setPenRainbow(true);
+        } else {
+            setPenColor(colorForeground);
+
+            if(!isPenErase()) {
+                setPenRainbow(false);
+            }
+        }
+    }
+
+    function setPenErase() {
+        setPenColor(colorBackground);
+    }
+
+    /**
+     * Increments the rainbow ticks and returns an RGB value of the current ticks color.
+     * @returns Hex-representation of the RGB values for the current color of the rainbow.
+     */
+    function tickRainbow(): string {
+        const freq = 0.31415;
+        const maxTicks = 32;
+        setRainbowTick(prev => prev >= maxTicks ? 0 : prev + 1);
+
+        const r = Math.sin(freq * rainbowTick + rainbowPhaseR) * 127 + 128;
+        const g = Math.sin(freq * rainbowTick + rainbowPhaseG) * 127 + 128;
+        const b = Math.sin(freq * rainbowTick + rainbowPhaseB) * 127 + 128;
+
+        return rgbToColor(r, g, b);
     }
 
     function resetPos() {
@@ -281,27 +373,27 @@ function Canvas(props: any) {
 
         const normalizedPos = normalizeCanvasPos(pos);
 
-        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, sizePen, colorPen);
+        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
-    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, penSize: number, penColor: string) {
+    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
         const context = getCanvasContext();
         if (!context) return;
 
         if (drawDot) {
-            context.fillStyle = penColor;
-            context.fillRect(posSrc.x, posSrc.y, penSize, penSize);
+            context.fillStyle = color;
+            context.fillRect(posSrc.x, posSrc.y, size, size);
         } else {
             context.beginPath();
             context.moveTo(posSrc.x, posSrc.y);
             context.lineTo(posDst.x, posDst.y);
-            context.lineWidth = penSize;
-            context.strokeStyle = penColor;
+            context.lineWidth = size;
+            context.strokeStyle = color;
             context.lineCap = "square";
             context.stroke();
         }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", size, color);
 
         setPrevPosX(posX);
         setPrevPosY(posY);

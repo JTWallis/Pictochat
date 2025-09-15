@@ -109,7 +109,7 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef}/>
+          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
