@@ -12,7 +12,7 @@ import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 
-function ButtonColumnLeft( {scrollListRef}: any ) {
+function ButtonColumnLeft( {scrollListRef, canvasRef}: any ) {
     return (
         <div className="buttonColumn">
             <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
@@ -20,11 +20,11 @@ function ButtonColumnLeft( {scrollListRef}: any ) {
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop" src={ImagePenDraw} />
-            <input type="image" className="button marginTop" src={ImagePenErase} ></input>
+            <input type="image" className="button marginTop" src={ImagePenDraw} onClick={() => canvasRef.current.usePenDraw()} />
+            <input type="image" className="button marginTop" src={ImagePenErase} onClick={() => canvasRef.current.usePenErase()} ></input>
             <hr className="borderInvisible marginTop marginBot"></hr>
-            <input type="image" className="button marginTop" src={ImagePenBig} ></input>
-            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} ></input>
+            <input type="image" className="button marginTop" src={ImagePenBig} onClick={() => canvasRef.current.usePenBig()} ></input>
+            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} onClick={() => canvasRef.current.usePenSmall()} ></input>
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
