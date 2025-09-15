@@ -31,6 +31,10 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         }
     }, []);
 
+    useEffect(() => {
+        scrollToLast();
+    }, [scrollListElements]);
+
     /**
      * Helper function, to check if a child-rect-boundary touches a ScrollList-boundary
      *  and factors in a few pixels of boundary-area.
@@ -65,6 +69,27 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
     }
 
     /**
+     * Scrolls to an element in the ScrollList, so it is touching the bottom screen border.
+     * If the passed index is invalid, do nothing.
+     * @param index Element index of scroll container children.
+     */
+    function scrollTo(index: number) {
+        const scrollChildren = scrollContainerRef.current!.children;
+        if(index < 0 || index >= scrollChildren.length) return;
+
+        const target = scrollChildren[index];
+        target.scrollIntoView({ block: "end" });
+        setIndex(index);
+    }
+
+    /**
+     * Scrolls downwards, so the last element in the ScrollList is touching the bottom screen border.
+     */
+    function scrollToLast() {
+        scrollTo(scrollContainerRef.current!.children.length - 1);
+    }
+
+    /**
      * Scrolls upwards/downwards and snaps the scrollbar onto the previous/next child element of the ScrollList.
      * @param scrollDown If true, scroll downwards and snap onto the next element. Otherwise, scroll upwards.
      */
@@ -81,9 +106,8 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
             indexNext = index - 1;
             if(indexNext < boundLower) return;
         }
-        setIndex(indexNext);
-        const target = scrollChildren[indexNext];
-        target.scrollIntoView({ block: "end" });
+        
+        scrollTo(indexNext);
     }
 
     return (
