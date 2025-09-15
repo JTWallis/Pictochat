@@ -15,8 +15,8 @@ import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 function ButtonColumnLeft( {scrollListRef}: any ) {
     return (
         <div className="buttonColumn">
-            <input type="image" className="button marginTop borderBot" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
-            <input type="image" className="button marginTop borderTop" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()}></input>
+            <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
+            <input type="image" className="button marginTop" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()}></input>
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
@@ -24,15 +24,15 @@ function ButtonColumnLeft( {scrollListRef}: any ) {
             <input type="image" className="button marginTop" src={ImagePenErase} ></input>
             <hr className="borderInvisible marginTop marginBot"></hr>
             <input type="image" className="button marginTop" src={ImagePenBig} ></input>
-            <input type="image" className="button marginTop" src={ImagePenSmall} ></input>
+            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} ></input>
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop borderBot roundTopLeft" src={ImageMapLatin} ></input>
-            <input type="image" className="button marginTop borderBot roundTopLeft" src={ImageMapAccent}></input>
-            <input type="image" className="button marginTop borderBot roundTopLeft" src={ImageMapJapan}></input>
-            <input type="image" className="button marginTop borderBot roundTopLeft" src={ImageMapSpecial}></input>
-            <input type="image" className="button marginTop borderBot roundTopLeft" src={ImageMapPicto}></input>
+            <input type="image" className="button marginTop" src={ImageMapLatin} ></input>
+            <input type="image" className="button marginTop" src={ImageMapAccent}></input>
+            <input type="image" className="button marginTop" src={ImageMapJapan}></input>
+            <input type="image" className="button marginTop" src={ImageMapSpecial}></input>
+            <input type="image" className="button marginTop marginBot" src={ImageMapPicto}></input>
         </div>
     );
 }
