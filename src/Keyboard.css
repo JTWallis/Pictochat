@@ -27,6 +27,7 @@
     margin: auto auto auto auto;
     height: 90%;
     image-rendering: pixelated;
+    filter: invert();
 }
 
 .row-button-even {
