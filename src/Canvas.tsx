@@ -93,6 +93,10 @@ function Canvas(props: any) {
             setFloatingKeyValue(text);
         },
 
+        drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
+            handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
+        },
+
         usePenDraw() {
             setPenDraw();
         },
@@ -224,6 +228,14 @@ function Canvas(props: any) {
         const value: string = floatingKeyValue;
 
         drawText(DrawingCommandType.FLOATING_KEY, pos, value);
+    }
+
+    function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
+        const offsetTop = canvasRef.current?.offsetTop!;
+        const offsetLeft = canvasRef.current?.offsetLeft!;
+        const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
+
+        drawImage(img, pos, colorFill);
     }
 
     /**
@@ -397,6 +409,24 @@ function Canvas(props: any) {
 
         setPrevPosX(posX);
         setPrevPosY(posY);
+    }
+
+    function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        const context = getCanvasContext();
+        if (!context) return;
+
+        const buffer = document.createElement("canvas");
+        buffer.width = img.width;
+        buffer.height = img.height;
+
+        const bufferContext = buffer.getContext("2d")!;
+        bufferContext.imageSmoothingEnabled = false;
+        bufferContext.drawImage(img, 0, 0, img.width, img.height);
+        bufferContext.fillStyle = colorFill;
+        bufferContext.globalCompositeOperation = "source-atop";
+        bufferContext.fillRect(0, 0, buffer.width, buffer.height);
+
+        context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
     }
 
     return (
