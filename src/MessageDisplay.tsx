@@ -164,13 +164,18 @@ function MessageDisplay( {message}: any ) {
             const command = drawingCommands[i];
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - drawnLowest + drawnStripeOffset);
             const posStart = unNormalizePos(offsetStart);
-            
+            const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - drawnLowest + drawnStripeOffset);
+            const posEnd = unNormalizePos(offsetEnd);
 
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - drawnLowest + drawnStripeOffset);
-                const posEnd = unNormalizePos(offsetEnd);
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else if(command.getType() === DrawingCommandType.FLOATING_KEY && command.getValue().length > 1) {
+                const img = document.createElement("img") as HTMLImageElement;
+                img.width = Math.abs(posEnd.x - posStart.x);
+                img.height = Math.abs(posEnd.y - posStart.y);
+                img.src = command.getValue();
+                drawImage(img, posStart, "#000");
             } else {
                 drawText(command.getType(), posStart, command.getValue());
             }
@@ -203,6 +208,24 @@ function MessageDisplay( {message}: any ) {
             context.lineCap = "square";
             context.stroke();
         }
+    }
+
+    function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        const context = getCanvasContext();
+        if (!context) return;
+
+        const buffer = document.createElement("canvas");
+        buffer.width = img.width;
+        buffer.height = img.height;
+
+        const bufferContext = buffer.getContext("2d")!;
+        bufferContext.imageSmoothingEnabled = false;
+        bufferContext.drawImage(img, 0, 0, img.width, img.height);
+        bufferContext.fillStyle = colorFill;
+        bufferContext.globalCompositeOperation = "source-atop";
+        bufferContext.fillRect(0, 0, buffer.width, buffer.height);
+
+        context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
     }
 
     return (

@@ -427,6 +427,11 @@ function Canvas(props: any) {
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
+
+        const normalizedStartPos = normalizeCanvasPos(pos);
+        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
+
+        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
     }
 
     return (
