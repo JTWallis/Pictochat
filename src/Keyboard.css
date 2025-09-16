@@ -23,6 +23,12 @@
     margin: 0 2 0 2;
 }
 
+.imageButton {
+    margin: auto auto auto auto;
+    height: 90%;
+    image-rendering: pixelated;
+}
+
 .row-button-even {
     grid-column: 1 / span 12;
     grid-row: 1;
