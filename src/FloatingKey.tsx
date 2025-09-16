@@ -73,7 +73,7 @@ function FloatingKey(props: any) {
             </label>
             <img
                 src={imgSrc}
-                className="absolute"
+                className="absolute image"
                 ref={imageRef}
                 style={{
                     visibility: imgVisible ? VISIBLE : HIDDEN,
