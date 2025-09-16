@@ -2,3 +2,7 @@
 .absolute {
     position: absolute;
 }
+
+.image {
+    filter: invert();
+}

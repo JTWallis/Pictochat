@@ -37,12 +37,14 @@ function Keyboard(props: any) {
     function button_mousedown(event: any) {
         if(mouseDown) return;
         setMouseDown(true);
-        setButtonTarget(event.target);
+        
+        const targetType = event.target.nodeName;
 
-        if(event.target.value === "BACKSPACE")
-            props.floatingKeyRef.current.setImg(ImgPen, 20);
-        else
+        if(targetType === "INPUT") {
+            props.floatingKeyRef.current.setImg(event.target.src, event.target.height);
+        } else if(targetType === "BUTTON") {
             props.floatingKeyRef.current.setChar(event.target.value);
+        }
     }
 
     function window_mouseup() {
