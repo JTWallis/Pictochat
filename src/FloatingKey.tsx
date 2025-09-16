@@ -1,5 +1,5 @@
 import './FloatingKey.css'
-import { useImperativeHandle, useState } from "react";
+import { useImperativeHandle, useRef, useState } from "react";
 
 
 const VISIBLE = "visible";
@@ -14,6 +14,9 @@ function FloatingKey(props: any) {
     const [imgSrc, setImgSrc] = useState("");
     const [imgSize, setImgSize] = useState(10);
     const [imgVisible, setImgVisible] = useState(true);
+
+    const [imgDrawColor, setImgDrawColor] = useState("#000");
+    const imageRef = useRef<HTMLImageElement>(null);
 
     useImperativeHandle(props.floatingKeyRef, () => ({
         setPos: (x: number, y: number) => {
@@ -41,7 +44,7 @@ function FloatingKey(props: any) {
             if(labelVisible) {
                 props.canvasRef.current.drawText(labelValue, posX, posY);
             } else if(imgVisible) {
-
+                props.canvasRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
             }
 
             // Hide FloatingKey
@@ -71,6 +74,7 @@ function FloatingKey(props: any) {
             <img
                 src={imgSrc}
                 className="absolute"
+                ref={imageRef}
                 style={{
                     visibility: imgVisible ? VISIBLE : HIDDEN,
                     width: imgSize,
