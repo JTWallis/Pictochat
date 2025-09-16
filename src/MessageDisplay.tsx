@@ -164,13 +164,18 @@ function MessageDisplay( {message}: any ) {
             const command = drawingCommands[i];
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - drawnLowest + drawnStripeOffset);
             const posStart = unNormalizePos(offsetStart);
-            
+            const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - drawnLowest + drawnStripeOffset);
+            const posEnd = unNormalizePos(offsetEnd);
 
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - drawnLowest + drawnStripeOffset);
-                const posEnd = unNormalizePos(offsetEnd);
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else if(command.getType() === DrawingCommandType.FLOATING_KEY && command.getValue().length > 1) {
+                const img = document.createElement("img") as HTMLImageElement;
+                img.width = Math.abs(posEnd.x - posStart.x);
+                img.height = Math.abs(posEnd.y - posStart.y);
+                img.src = command.getValue();
+                drawImage(img, posStart, "#000");
             } else {
                 drawText(command.getType(), posStart, command.getValue());
             }
