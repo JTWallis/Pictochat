@@ -205,6 +205,24 @@ function MessageDisplay( {message}: any ) {
         }
     }
 
+    function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        const context = getCanvasContext();
+        if (!context) return;
+
+        const buffer = document.createElement("canvas");
+        buffer.width = img.width;
+        buffer.height = img.height;
+
+        const bufferContext = buffer.getContext("2d")!;
+        bufferContext.imageSmoothingEnabled = false;
+        bufferContext.drawImage(img, 0, 0, img.width, img.height);
+        bufferContext.fillStyle = colorFill;
+        bufferContext.globalCompositeOperation = "source-atop";
+        bufferContext.fillRect(0, 0, buffer.width, buffer.height);
+
+        context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
+    }
+
     return (
         <div className="displayScreen" ref={canvasContainerRef}>
             <div className="canvasBackground">
