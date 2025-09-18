@@ -9,6 +9,7 @@ import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
+import Scrollbar from './Scrollbar';
 
 
 function isAlpha(char: string): boolean {
@@ -96,7 +97,7 @@ function App() {
         <div className="topLeft">
 
           <div className="scrollwheel">
-
+            <Scrollbar />
           </div>
         </div>
         <div className="topRight">
