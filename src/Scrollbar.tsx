@@ -1,12 +1,16 @@
 import { useEffect, useImperativeHandle, useState, type JSX } from 'react';
 import './Scrollbar.css';
 
-function Scrollsegment() {
+const segmentColorDefault = "#8AF";
+const segmentWidthDefault = 70;
+const segmentSelectColor = "#0A0";
 
-    const [color, setColor] = useState("#888");
+const selectIndexRadius = 1;
+
+function Scrollsegment( {color, width}: any ) {
 
     return (
-        <div className="scrollSegment" style={{backgroundColor: color}}>
+        <div className="scrollSegment" style={{backgroundColor: color, width: `${width}%`}}>
 
         </div>
     );
@@ -14,7 +18,8 @@ function Scrollsegment() {
 
 function Scrollbar( {scrollbarRef}: any ) {
 
-    const [scrollsegments, setScrollsegments] = useState<JSX.Element[]>([]);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [segmentCount, setSegmentCount] = useState(0);
 
     useImperativeHandle(scrollbarRef, () => ({
         addScrollsegment: () => {
@@ -22,27 +27,32 @@ function Scrollbar( {scrollbarRef}: any ) {
         },
 
         setScrollsegmentIndex: (index: number) => {
-            setSegmentIndex(index);
+            if(index < 0 || index >= segmentCount) return;
+            // Reverse index because of column-reverse flex-direction.
+            setSelectedIndex(segmentCount - 1 - index);
         }
     }));
 
     function addSegment() {
-        setScrollsegments(prev => [<Scrollsegment key={"Scrollsegment-" + prev.length}/>, ...prev]);
+        setSegmentCount(prev => prev + 1);
+        setSelectedIndex(0);
     }
 
-    function setSegmentIndex(index: number) {
-        if(index < 0 || index >= scrollsegments.length) return;
+    function isIndexInRange(index: number) {
+        return Math.abs(selectedIndex - index) <= selectIndexRadius;
     }
-
-    useEffect(() => {
-        addSegment();
-        addSegment();
-        addSegment();
-    }, []);
 
     return(
         <div className="scrollbar">
-            {scrollsegments}
+            {Array.from({length: segmentCount}).map( (_, index) => {
+                return (
+                    <Scrollsegment 
+                        key = {"Scrollsegment-" + index}
+                        color = {isIndexInRange(index) ? segmentSelectColor : segmentColorDefault}
+                        width = {segmentWidthDefault}
+                    />
+                );
+            })}
         </div>
     )
 }
