@@ -104,7 +104,7 @@ function App() {
         </div>
         <div className="topRight">
           <div className="totalMessagesScreen">
-            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} /> 
+            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
           </div>
         </div>
 
