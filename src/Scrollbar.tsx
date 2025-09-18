@@ -19,11 +19,19 @@ function Scrollbar( {scrollbarRef}: any ) {
     useImperativeHandle(scrollbarRef, () => ({
         addScrollsegment: () => {
             addSegment();
+        },
+
+        setScrollsegmentIndex: (index: number) => {
+            setSegmentIndex(index);
         }
     }));
 
     function addSegment() {
         setScrollsegments(prev => [<Scrollsegment key={"Scrollsegment-" + prev.length}/>, ...prev]);
+    }
+
+    function setSegmentIndex(index: number) {
+        if(index < 0 || index >= scrollsegments.length) return;
     }
 
     useEffect(() => {
