@@ -40,6 +40,7 @@ function App() {
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
   const scrollListRef = useRef<any>(null);
+  const scrollbarRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -79,6 +80,7 @@ function App() {
       <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
     );
 
+    scrollbarRef.current!.addScrollsegment();
     setMessageDisplays((prev) => [...prev, m]);
   }
 
@@ -97,7 +99,7 @@ function App() {
         <div className="topLeft">
 
           <div className="scrollwheel">
-            <Scrollbar />
+            <Scrollbar scrollbarRef={scrollbarRef}/>
           </div>
         </div>
         <div className="topRight">

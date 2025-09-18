@@ -1,4 +1,4 @@
-import { useEffect, useState, type JSX } from 'react';
+import { useEffect, useImperativeHandle, useState, type JSX } from 'react';
 import './Scrollbar.css';
 
 function Scrollsegment() {
@@ -12,18 +12,24 @@ function Scrollsegment() {
     );
 }
 
-function Scrollbar() {
+function Scrollbar( {scrollbarRef}: any ) {
 
     const [scrollsegments, setScrollsegments] = useState<JSX.Element[]>([]);
 
-    function addScrollsegment() {
-        setScrollsegments(prev => [...prev, <Scrollsegment key={"Scrollsegment-" + prev.length}/>]);
+    useImperativeHandle(scrollbarRef, () => ({
+        addScrollsegment: () => {
+            addSegment();
+        }
+    }));
+
+    function addSegment() {
+        setScrollsegments(prev => [<Scrollsegment key={"Scrollsegment-" + prev.length}/>, ...prev]);
     }
 
     useEffect(() => {
-        addScrollsegment();
-        addScrollsegment();
-        addScrollsegment();
+        addSegment();
+        addSegment();
+        addSegment();
     }, []);
 
     return(
