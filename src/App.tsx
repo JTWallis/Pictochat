@@ -9,6 +9,7 @@ import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
+import Scrollbar from './Scrollbar';
 
 
 function isAlpha(char: string): boolean {
@@ -39,6 +40,7 @@ function App() {
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
   const scrollListRef = useRef<any>(null);
+  const scrollbarRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -78,6 +80,7 @@ function App() {
       <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
     );
 
+    scrollbarRef.current!.addScrollsegment();
     setMessageDisplays((prev) => [...prev, m]);
   }
 
@@ -96,12 +99,12 @@ function App() {
         <div className="topLeft">
 
           <div className="scrollwheel">
-
+            <Scrollbar scrollbarRef={scrollbarRef}/>
           </div>
         </div>
         <div className="topRight">
           <div className="totalMessagesScreen">
-            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} /> 
+            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './ScrollList.css';
 
-function ScrollList( {scrollListRef, scrollListElements}: any ) {
+function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
@@ -80,6 +80,9 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         const target = scrollChildren[index];
         target.scrollIntoView({ block: "end" });
         setIndex(index);
+
+        // Decremented index because first padding element is not part of Scrollbar.
+        
     }
 
     /**
@@ -87,6 +90,7 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
      */
     function scrollToLast() {
         scrollTo(scrollContainerRef.current!.children.length - 1);
+        scrollbarRef.current.scrollReset();
     }
 
     /**
@@ -102,9 +106,11 @@ function ScrollList( {scrollListRef, scrollListElements}: any ) {
         if(scrollDown) {
             indexNext = index + 1;
             if(indexNext >= scrollChildren.length) return;
+            scrollbarRef.current.scrollDown();
         } else {
             indexNext = index - 1;
             if(indexNext < boundLower) return;
+            scrollbarRef.current.scrollUp();
         }
         
         scrollTo(indexNext);
