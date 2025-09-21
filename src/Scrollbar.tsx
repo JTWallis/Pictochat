@@ -40,7 +40,44 @@ function Scrollbar( {scrollbarRef}: any ) {
 
     function addSegment() {
         setSegmentCount(prev => prev + 1);
+
+    function scrollReset() {
         setSelectedIndex(0);
+        setOverflowDownCount(0);
+        setOverflowUpCount(Math.max(0, segmentCount - maxDisplayElements));
+    }
+
+    function scrollUp() {
+        const border = (maxDisplayElements - 1) - 1;
+        let newIndex = Math.min( (maxDisplayElements - 1), (selectedIndex + 1) );
+        let overflow = overflowUpCount;
+
+        if(overflow > 0 && newIndex >= border) {
+            newIndex -= 1;
+            overflow -= 1;
+
+            setOverflowUpCount(overflow);
+            setOverflowDownCount(prev => prev + 1);
+        } 
+
+        setSelectedIndex(newIndex);
+    }
+
+    function scrollDown() {
+        const border = 1;
+        let newIndex = Math.max(0, (selectedIndex - 1) );
+        let overflow = overflowDownCount;
+
+        if(overflow > 0 && newIndex <= border) {
+            newIndex += 1;
+            overflow -= 1;
+
+            setOverflowDownCount(overflow);
+            setOverflowUpCount(prev => prev + 1);
+        } 
+
+        setSelectedIndex(newIndex);
+    }
 
     function initEstimateMaxDisplaySegments() {
         const children = scrollbarContainerRef.current!.children;
