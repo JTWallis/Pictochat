@@ -39,7 +39,16 @@ function Scrollbar( {scrollbarRef}: any ) {
     }));
 
     function addSegment() {
+        if(maxDisplayElements > 0 && segmentCount + 1 > maxDisplayElements) {
+            setOverflowUpCount(prev => prev + 1);
+        }
+
+        if(maxDisplayElements < 0) {
+            initEstimateMaxDisplaySegments();
+        }
+
         setSegmentCount(prev => prev + 1);
+    }
 
     function scrollReset() {
         setSelectedIndex(0);
