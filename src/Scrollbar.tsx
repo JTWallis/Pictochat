@@ -36,6 +36,21 @@ function Scrollbar( {scrollbarRef}: any ) {
     function addSegment() {
         setSegmentCount(prev => prev + 1);
         setSelectedIndex(0);
+
+    function initEstimateMaxDisplaySegments() {
+        const children = scrollbarContainerRef.current!.children;
+        if(children.length <= 0) return;
+
+        const child = children[0];
+        const rectHeight = child.getBoundingClientRect().height;
+
+        const styles = window.getComputedStyle(child);
+        const margin = parseFloat(styles["marginTop"]) + parseFloat(styles["marginBottom"]);
+
+        const height = rectHeight + margin;
+        const maxElemsEstimate = scrollbarContainerRef.current!.scrollHeight / height;
+
+        setMaxDisplayElements(Math.floor(maxElemsEstimate));
     }
 
     function isIndexInRange(index: number) {
