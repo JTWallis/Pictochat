@@ -129,7 +129,7 @@ function Scrollbar( {scrollbarRef}: any ) {
 
     return(
         <div className="scrollbar">
-            {Array.from({length: segmentCount}).map( (_, index) => {
+            {Array.from({length: segmentCount}).slice(0, (maxDisplayElements < 0 ? undefined : maxDisplayElements)).map( (_, index) => {
                 return (
                     <Scrollsegment 
                         key = {"Scrollsegment-" + index}
