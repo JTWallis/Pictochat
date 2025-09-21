@@ -57,6 +57,23 @@ function Scrollbar( {scrollbarRef}: any ) {
         return Math.abs(selectedIndex - index) <= selectIndexRadius;
     }
 
+    function getSegmentWidth(index: number): number {
+        const borderIndexUp = maxDisplayElements > 0 ? (maxDisplayElements - 1) : (segmentCount - 1);
+        const borderIndexDown = 0;
+
+        const borderUpDiff = Math.abs(index - borderIndexUp);
+        const borderDownDiff = Math.abs(index - borderIndexDown);
+
+        const borderDiff = Math.min(borderUpDiff, borderDownDiff);
+        const overflowCount = borderDiff === borderUpDiff ? overflowUpCount : overflowDownCount;
+
+        if(overflowCount > 0) {
+            if(borderDiff === 0) return overflowCount === 1 ? segmentWidthSmall : segmentWidthSmallest;
+            if(borderDiff === 1) return overflowCount === 1 ? segmentWidthDefault : segmentWidthSmall;
+        }
+        return segmentWidthDefault;
+    }
+
     return(
         <div className="scrollbar">
             {Array.from({length: segmentCount}).map( (_, index) => {
@@ -64,7 +81,7 @@ function Scrollbar( {scrollbarRef}: any ) {
                     <Scrollsegment 
                         key = {"Scrollsegment-" + index}
                         color = {isIndexInRange(index) ? segmentSelectColor : segmentColorDefault}
-                        width = {segmentWidthDefault}
+                        width = { getSegmentWidth(index) }
                     />
                 );
             })}
