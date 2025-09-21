@@ -4,8 +4,10 @@ import './Scrollbar.css';
 const segmentColorDefault = "#8AF";
 const segmentWidthDefault = 70;
 const segmentSelectColor = "#0A0";
+const segmentWidthSmall = 50;
+const segmentWidthSmallest = 30;
 
-const selectIndexRadius = 1;
+const selectIndexRadius = 0;
 
 function Scrollsegment( {color, width}: any ) {
 
