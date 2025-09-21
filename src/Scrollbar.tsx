@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useState, type JSX } from 'react';
+import { useImperativeHandle, useRef, useState, type JSX } from 'react';
 import './Scrollbar.css';
 
 const segmentColorDefault = "#8AF";
@@ -33,10 +33,16 @@ function Scrollbar( {scrollbarRef}: any ) {
             addSegment();
         },
 
-        setScrollsegmentIndex: (index: number) => {
-            if(index < 0 || index >= segmentCount) return;
-            // Reverse index because of column-reverse flex-direction.
-            setSelectedIndex(segmentCount - 1 - index);
+        scrollReset: () => {
+            scrollReset();
+        },
+
+        scrollDown: () => {
+            scrollDown();
+        },
+
+        scrollUp: () => {
+            scrollUp();
         }
     }));
 
@@ -128,7 +134,7 @@ function Scrollbar( {scrollbarRef}: any ) {
     }
 
     return(
-        <div className="scrollbar">
+        <div className="scrollbar" ref={scrollbarContainerRef}>
             {Array.from({length: segmentCount}).slice(0, (maxDisplayElements < 0 ? undefined : maxDisplayElements)).map( (_, index) => {
                 return (
                     <Scrollsegment 
