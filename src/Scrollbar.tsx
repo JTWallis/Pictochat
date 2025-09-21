@@ -20,6 +20,11 @@ function Scrollbar( {scrollbarRef}: any ) {
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [segmentCount, setSegmentCount] = useState(0);
+    const [maxDisplayElements, setMaxDisplayElements] = useState(-1);
+    const [overflowUpCount, setOverflowUpCount] = useState(0);
+    const [overflowDownCount, setOverflowDownCount] = useState(0);
+
+    const scrollbarContainerRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(scrollbarRef, () => ({
         addScrollsegment: () => {
