@@ -82,7 +82,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
         setIndex(index);
 
         // Decremented index because first padding element is not part of Scrollbar.
-        scrollbarRef.current.setScrollsegmentIndex(index - 1);
+        
     }
 
     /**
@@ -90,6 +90,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
      */
     function scrollToLast() {
         scrollTo(scrollContainerRef.current!.children.length - 1);
+        scrollbarRef.current.scrollReset();
     }
 
     /**
@@ -105,9 +106,11 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
         if(scrollDown) {
             indexNext = index + 1;
             if(indexNext >= scrollChildren.length) return;
+            scrollbarRef.current.scrollDown();
         } else {
             indexNext = index - 1;
             if(indexNext < boundLower) return;
+            scrollbarRef.current.scrollUp();
         }
         
         scrollTo(indexNext);
