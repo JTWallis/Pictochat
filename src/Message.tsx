@@ -47,6 +47,17 @@ export class Message {
         return this.creatorName;
     }
 
+    private updateLastTextCommandIndex() {
+        for(let i = this.commands.length - 1; i >= 0; i--) {
+            if(this.commands[i].getType() === DrawingCommandType.TEXT) {
+                this.lastTextCommandIndex = i;
+                return;
+            }
+        }
+
+        this.resetLastTextCommandIndex();
+    }
+
     private resetLastTextCommandIndex(): void {
         this.lastTextCommandIndex = -1;
     }
