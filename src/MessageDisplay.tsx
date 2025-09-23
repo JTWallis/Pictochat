@@ -85,6 +85,7 @@ function MessageDisplay( {message}: any ) {
         if(!message) return;
         let lowest = 1.0;
         let highest = 0.0;
+        let lowestX = 1.0;
         const drawingCommands = (message as Message).getCommands();
 
         // Find normalized, lowest and highest drawn position. 
@@ -96,6 +97,9 @@ function MessageDisplay( {message}: any ) {
             if(endY >= 0.0) lowest = Math.min(lowest, command.getEndPos().y);
             if(startY <= 1.0) highest = Math.max(highest, command.getStartPos().y);
             if(endY <= 1.0) highest = Math.max(highest, command.getEndPos().y);
+
+            lowestX = Math.min(lowestX, command.getStartPos().x);
+            lowestX = Math.min(lowestX, command.getEndPos().x);
         }
 
         // Find normalized stripe positions.
