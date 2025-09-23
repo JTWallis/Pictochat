@@ -295,15 +295,19 @@ function Canvas(props: any) {
 
         if(pos.x < 0 || pos.y < 0) return;
 
-        drawPushText(pos, value);
-
         const maxWidth = getCanvasWidth();
 
-        setCanvasTextPosX(prev => prev + 8);
-        if (canvasTextPosX >= (maxWidth - canvasTextPosXOffset)) {
-            setCanvasTextPosX(canvasTextPosXOffset);
-            setCanvasTextPosY(prev => prev + canvasRef?.current?.height! / (stripeCount + 1));
+        if (pos.x >= (maxWidth - canvasTextPosXOffset)) {
+            pos.x = canvasTextPosXOffset;
+            pos.y = canvasTextPosY + canvasRef?.current?.height! / (stripeCount + 1);
+            setCanvasTextPosX(pos.x);
+            setCanvasTextPosY(pos.y);
         }
+
+        drawPushText(pos, value);
+
+
+        setCanvasTextPosX(prev => prev + 8);
     }
 
     function setCanvasSize() {
