@@ -179,16 +179,23 @@ function Canvas(props: any) {
         if(!msg) return;
 
         const drawingCommands = msg.getCommands();
+
         for(let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
             const posStart = unNormalizePos(command.getStartPos());
+            const posEnd = unNormalizePos(command.getEndPos());
 
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const posEnd = unNormalizePos(command.getEndPos());
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else if(command.getType() === DrawingCommandType.FLOATING_KEY && command.getValue().length > 1) {
+                const img = document.createElement("img") as HTMLImageElement;
+                img.width = Math.abs(posEnd.x - posStart.x);
+                img.height = Math.abs(posEnd.y - posStart.y);
+                img.src = command.getValue();
+                drawImage(img, posStart, "#000");
             } else {
-                drawText(command.getType(), posStart, command.getValue());
+                drawText(posStart, command.getValue());
             }
         }
     }
