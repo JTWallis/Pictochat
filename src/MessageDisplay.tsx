@@ -120,9 +120,10 @@ function MessageDisplay( {message}: any ) {
         let lowestStripePos = 0;
         let highestStripePos = 1.0;
 
-        for(let i = 0; i < positions.length; i++) {
-            if(lowest >= positions[i]) {
-                lowestStripePos = positions[i];
+        let k;
+        for(k = 0; k < positions.length; k++) {
+            if(lowest >= positions[k]) {
+                lowestStripePos = positions[k];
             } else {
                 break;
             }
@@ -134,6 +135,20 @@ function MessageDisplay( {message}: any ) {
             } else {
                 break;
             }
+        }
+
+        // Check if the lowest drawn stroke would have a higher y-pos than the name container
+        //   but the overall lowest x-pos would horizontally overlap.
+        //   In that case, decrement the lowestStripePos by one step,
+        //   so a drawing would not be accidentally hidden behind the name container.
+        const nameRect = nameContainerRef.current!.getBoundingClientRect();
+        const nameBottom = nameRect.bottom - canvasTop
+        const nameRight = nameRect.right - canvasRect.left;
+        const unnormLowY = lowest * canvasHeight;
+        const unnormLowX = lowestX * canvasRect.width;
+        if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
+            k -= 2;
+            if(k >= 0) lowestStripePos = positions[k];
         }
 
         const stripeHeight = highestStripePos - lowestStripePos;
