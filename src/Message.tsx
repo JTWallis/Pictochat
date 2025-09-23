@@ -25,8 +25,11 @@ export class Message {
         this.pushDrawCommand(new DrawCommand(this.commands.length, type, startPos, endPos, value, penSize, penColor));
     }
 
-    public removeLastTextCommand(): void {
-        if(this.lastTextCommandIndex < 0) return;
+    public concatCommands(commands: DrawCommand[]) {
+        this.commands = this.commands.concat(commands);
+        this.updateLastTextCommandIndex();
+    }
+
 
         this.commands.splice(this.lastTextCommandIndex, 1);
 
