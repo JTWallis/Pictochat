@@ -244,6 +244,9 @@ function Canvas(props: any) {
 
         const value: string = floatingKeyValue;
 
+        setCanvasTextPosX(pos.x);
+        setCanvasTextPosY(pos.y);
+
         drawPushText(pos, value);
     }
 
@@ -260,6 +263,9 @@ function Canvas(props: any) {
 
         if(imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
 
+        // Set pos to the right and vertical center of the image.
+        setCanvasTextPosX(imgRight);
+        setCanvasTextPosY((pos.y + imgBottom) / 2);
 
         drawPushImage(img, pos, colorFill);
     }
@@ -289,15 +295,19 @@ function Canvas(props: any) {
 
         if(pos.x < 0 || pos.y < 0) return;
 
-        drawPushText(pos, value);
+        const maxWidth = getCanvasWidth() - canvasTextPosXOffset;
 
-        const maxWidth = getCanvasWidth();
-
-        setCanvasTextPosX(prev => prev + 8);
-        if (canvasTextPosX >= (maxWidth - canvasTextPosXOffset)) {
-            setCanvasTextPosX(canvasTextPosXOffset);
-            setCanvasTextPosY(prev => prev + canvasRef?.current?.height! / (stripeCount + 1));
+        if (pos.x >= maxWidth) {
+            pos.x = canvasTextPosXOffset;
+            pos.y = canvasTextPosY + canvasRef?.current?.height! / (stripeCount + 1);
+            setCanvasTextPosX(pos.x);
+            setCanvasTextPosY(pos.y);
         }
+
+        const incrementX = 8;
+        setCanvasTextPosX(prev => prev + incrementX);
+
+        drawPushText(pos, value);
     }
 
     function setCanvasSize() {
