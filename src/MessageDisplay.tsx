@@ -83,8 +83,8 @@ function MessageDisplay( {message}: any ) {
      */
     function initHeight() {
         if(!message) return;
-        let lowest = 1.0;
-        let highest = 0.0;
+        let lowestY = 1.0;
+        let highestY = 0.0;
         let lowestX = 1.0;
         const drawingCommands = (message as Message).getCommands();
 
@@ -93,10 +93,10 @@ function MessageDisplay( {message}: any ) {
             const command = drawingCommands[i];
             const startY = command.getStartPos().y;
             const endY = command.getEndPos().y;
-            if(startY >= 0.0) lowest = Math.min(lowest, command.getStartPos().y);
-            if(endY >= 0.0) lowest = Math.min(lowest, command.getEndPos().y);
-            if(startY <= 1.0) highest = Math.max(highest, command.getStartPos().y);
-            if(endY <= 1.0) highest = Math.max(highest, command.getEndPos().y);
+            if(startY >= 0.0) lowestY = Math.min(lowestY, command.getStartPos().y);
+            if(endY >= 0.0) lowestY = Math.min(lowestY, command.getEndPos().y);
+            if(startY <= 1.0) highestY = Math.max(highestY, command.getStartPos().y);
+            if(endY <= 1.0) highestY = Math.max(highestY, command.getEndPos().y);
 
             lowestX = Math.min(lowestX, command.getStartPos().x);
             lowestX = Math.min(lowestX, command.getEndPos().x);
@@ -122,7 +122,7 @@ function MessageDisplay( {message}: any ) {
 
         let k;
         for(k = 0; k < positions.length; k++) {
-            if(lowest >= positions[k]) {
+            if(lowestY >= positions[k]) {
                 lowestStripePos = positions[k];
             } else {
                 break;
@@ -130,7 +130,7 @@ function MessageDisplay( {message}: any ) {
         }
 
         for(let i = positions.length - 1; i >= 0; i--) {
-            if(highest <= positions[i]) {
+            if(highestY <= positions[i]) {
                 highestStripePos = positions[i];
             } else {
                 break;
@@ -144,7 +144,7 @@ function MessageDisplay( {message}: any ) {
         const nameRect = nameContainerRef.current!.getBoundingClientRect();
         const nameBottom = nameRect.bottom - canvasTop
         const nameRight = nameRect.right - canvasRect.left;
-        const unnormLowY = lowest * canvasHeight;
+        const unnormLowY = lowestY * canvasHeight;
         const unnormLowX = lowestX * canvasRect.width;
         if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
             k -= 2;
@@ -154,9 +154,9 @@ function MessageDisplay( {message}: any ) {
         const stripeHeight = highestStripePos - lowestStripePos;
 
         setOriginalCanvasHeight(canvasHeight);
-        setDrawnLowest(lowest);
+        setDrawnLowest(lowestY);
         setDrawnHeight(stripeHeight);
-        setDrawnStripeOffset(lowest - lowestStripePos);
+        setDrawnStripeOffset(lowestY - lowestStripePos);
         setShowStripes(false);
 
         // Needs to be called here, no guarantee that setDrawnHeight finished after this function.
