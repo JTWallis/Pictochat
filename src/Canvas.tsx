@@ -407,6 +407,7 @@ function Canvas(props: any) {
         message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
+    function drawText(pos: Vector2, value: string) {
         const context = getCanvasContext();
         if (!context) return;
 
