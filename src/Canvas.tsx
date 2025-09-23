@@ -166,8 +166,9 @@ function Canvas(props: any) {
     }
 
     function copyOnCanvas() {
-        const message = props.getBottomScrollMessage() as Message;
-        reconstructMessage(message);
+        const msg = props.getBottomScrollMessage() as Message;
+        reconstructMessage(msg);
+        message.concatCommands(msg.getCommands());
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
@@ -179,16 +180,23 @@ function Canvas(props: any) {
         if(!msg) return;
 
         const drawingCommands = msg.getCommands();
+
         for(let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
             const posStart = unNormalizePos(command.getStartPos());
+            const posEnd = unNormalizePos(command.getEndPos());
 
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const posEnd = unNormalizePos(command.getEndPos());
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
+            } else if(command.getType() === DrawingCommandType.FLOATING_KEY && command.getValue().length > 1) {
+                const img = document.createElement("img") as HTMLImageElement;
+                img.width = Math.abs(posEnd.x - posStart.x);
+                img.height = Math.abs(posEnd.y - posStart.y);
+                img.src = command.getValue();
+                drawImage(img, posStart, "#000");
             } else {
-                drawText(command.getType(), posStart, command.getValue());
+                drawText(posStart, command.getValue());
             }
         }
     }
@@ -211,7 +219,11 @@ function Canvas(props: any) {
             setPenColor(tickRainbow());
         }
 
-        drawStroke(posFirst, pos, drawDot, penSize, penColor);
+        drawPushStroke(posFirst, pos, drawDot, penSize, penColor);
+
+
+        setPrevPosX(posX);
+        setPrevPosY(posY);
     }
 
     /**
@@ -227,7 +239,7 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
         const value: string = floatingKeyValue;
 
-        drawText(DrawingCommandType.FLOATING_KEY, pos, value);
+        drawPushText(pos, value);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -235,7 +247,7 @@ function Canvas(props: any) {
         const offsetLeft = canvasRef.current?.offsetLeft!;
         const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
 
-        drawImage(img, pos, colorFill);
+        drawPushImage(img, pos, colorFill);
     }
 
     /**
@@ -243,10 +255,25 @@ function Canvas(props: any) {
      *  or typing a key on the physical keyboard.
      */
     function handleCanvasTextChange() {
-        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
         const value: string = props.canvasText.charAt(props.canvasText.length - 1);
 
-        drawText(DrawingCommandType.TEXT, pos, value);
+        if(value === "\b") {
+            const command = message.removeLastTextCommand();
+            if(!command) return;
+            if(command.getValue().length !== 1) return;
+
+            const pos = unNormalizePos(command.getStartPos());
+            setCanvasTextPosX(pos.x);
+            setCanvasTextPosY(pos.y);
+
+            clearCanvas();
+            reconstructMessage(message);
+            return;
+        }
+
+        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
+
+        drawPushText(pos, value);
 
         const maxWidth = getCanvasWidth();
 
@@ -374,7 +401,13 @@ function Canvas(props: any) {
         context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
-    function drawText(drawingCommandType: number, pos: Vector2, value: string) {
+    function drawPushText(pos: Vector2, value: string) {
+        drawText(pos, value);
+        const normalizedPos = normalizeCanvasPos(pos);
+        message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
+    }
+
+    function drawText(pos: Vector2, value: string) {
         const context = getCanvasContext();
         if (!context) return;
 
@@ -382,10 +415,11 @@ function Canvas(props: any) {
 
         context.font = "16px Courier New";
         context.fillText(value, pos.x, pos.y, maxWidth);
+    }
 
-        const normalizedPos = normalizeCanvasPos(pos);
-
-        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, penSize, penColor);
+    function drawPushStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
+        drawStroke(posSrc, posDst, drawDot, size, color);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
@@ -404,11 +438,13 @@ function Canvas(props: any) {
             context.lineCap = "square";
             context.stroke();
         }
+    }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", size, color);
-
-        setPrevPosX(posX);
-        setPrevPosY(posY);
+    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        drawImage(img, pos, colorFill);
+        const normalizedStartPos = normalizeCanvasPos(pos);
+        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
+        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
     }
 
     function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
@@ -427,11 +463,6 @@ function Canvas(props: any) {
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
-
-        const normalizedStartPos = normalizeCanvasPos(pos);
-        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
-
-        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
     }
 
     return (
