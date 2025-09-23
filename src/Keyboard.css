@@ -27,7 +27,15 @@
     margin: auto auto auto auto;
     height: 90%;
     image-rendering: pixelated;
+    
+}
+
+.imageInvert {
     filter: invert();
+}
+
+.keySpecial {
+
 }
 
 .row-button-even {

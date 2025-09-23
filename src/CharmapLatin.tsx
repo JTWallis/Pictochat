@@ -96,6 +96,13 @@ import specialColon from './assets/CharacterMaps/Special/img_special_colon.png';
 import specialTildeSmall from './assets/CharacterMaps/Special/img_special_tilde_small.png';
 import specialBraceOpen from './assets/CharacterMaps/Special/img_special_brace_left.png';
 import specialBraceClose from './assets/CharacterMaps/Special/img_special_brace_right.png';
+
+import miscBackspace from './assets/CharacterMaps/Misc/img_misc_backspace_small.png';
+import miscCaps from './assets/CharacterMaps/Misc/img_misc_caps.png';
+import miscEnter from './assets/CharacterMaps/Misc/img_misc_enter_horizontal.png';
+import miscShift from './assets/CharacterMaps/Misc/img_misc_shift.png';
+import miscSpace from './assets/CharacterMaps/Misc/img_misc_space_big.png';
+
 import type { Vector2 } from './Vector2';
 
 export class CharmapLatin extends Charmap {
@@ -129,9 +136,9 @@ export class CharmapLatin extends Charmap {
             { valueLower: "i",      srcLower: iLower,               valueUpper: "I",    srcUpper: iUpper },
             { valueLower: "o",      srcLower: oLower,               valueUpper: "O",    srcUpper: oUpper },
             { valueLower: "p",      srcLower: pLower,               valueUpper: "P",    srcUpper: pUpper },
-            { valueLower: "BACK",   srcLower: "",                   valueUpper: "",     srcUpper: "" },
+            { valueLower: "BACK",   srcLower: miscBackspace,        valueUpper: "",     srcUpper: miscBackspace },
 
-            { valueLower: "CAPS",   srcLower: "",                   valueUpper: "",     srcUpper: "" },
+            { valueLower: "CAPS",   srcLower: miscCaps,             valueUpper: "",     srcUpper: miscCaps },
             { valueLower: "a",      srcLower: aLower,               valueUpper: "A",    srcUpper: aUpper },
             { valueLower: "s",      srcLower: sLower,               valueUpper: "S",    srcUpper: sUpper },
             { valueLower: "d",      srcLower: dLower,               valueUpper: "D",    srcUpper: dUpper },
@@ -141,9 +148,9 @@ export class CharmapLatin extends Charmap {
             { valueLower: "j",      srcLower: jLower,               valueUpper: "J",    srcUpper: jUpper },
             { valueLower: "k",      srcLower: kLower,               valueUpper: "K",    srcUpper: kUpper },
             { valueLower: "l",      srcLower: lLower,               valueUpper: "L",    srcUpper: lUpper },
-            { valueLower: "ENTER",  srcLower: "",                   valueUpper: "",         srcUpper: "" },
+            { valueLower: "ENTER",  srcLower: miscEnter,            valueUpper: "",     srcUpper: miscEnter },
 
-            { valueLower: "SHIFT",  srcLower: "",                   valueUpper: "",     srcUpper: "" },
+            { valueLower: "SHIFT",  srcLower: miscShift,            valueUpper: "",     srcUpper: miscShift },
             { valueLower: "z",      srcLower: zLower,               valueUpper: "Z",    srcUpper: zUpper },
             { valueLower: "x",      srcLower: xLower,               valueUpper: "X",    srcUpper: xUpper },
             { valueLower: "c",      srcLower: cLower,               valueUpper: "C",    srcUpper: cUpper },
@@ -157,7 +164,7 @@ export class CharmapLatin extends Charmap {
 
             { valueLower: ";",      srcLower: specialSemicolon,     valueUpper: ":",    srcUpper: specialColon },
             { valueLower: "´",      srcLower: specialAcute,         valueUpper: "˜",    srcUpper: specialTildeSmall },
-            { valueLower: "SPACE",  srcLower: "",                   valueUpper: "",     srcUpper: "" },
+            { valueLower: "SPACE",  srcLower: miscSpace,            valueUpper: "",     srcUpper: miscSpace },
             { valueLower: "[",      srcLower: specialBracketClose,  valueUpper: "{",    srcUpper: specialBraceOpen },
             { valueLower: "]",      srcLower: specialBracketOpen,   valueUpper: "}",    srcUpper: specialBraceClose },
 
