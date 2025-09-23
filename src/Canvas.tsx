@@ -247,6 +247,15 @@ function Canvas(props: any) {
         const offsetLeft = canvasRef.current?.offsetLeft!;
         const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
 
+        // Ignore Image that would be too far out of bounds.
+        const canvasRight = canvasRef.current!.offsetWidth;
+        const canvasBottom = canvasRef.current!.offsetHeight;
+        const imgRight = pos.x + img.width;
+        const imgBottom = pos.y + img.height;
+
+        if(imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
+
+
         drawPushImage(img, pos, colorFill);
     }
 
