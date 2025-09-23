@@ -58,7 +58,7 @@ function App() {
         case "enter":
           break;
         case "backspace":
-          setCanvasText(prev => prev.substring(0, prev.length - 1));
+          setCanvasText(prev => prev + "\b");
           break;
         case "space":
           setCanvasText(prev => prev + " ");
