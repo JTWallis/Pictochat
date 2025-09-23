@@ -37,6 +37,7 @@ export class Message {
         const msg = this.commands.at(this.lastTextCommandIndex)!;
         this.commands.splice(this.lastTextCommandIndex, 1);
 
+        this.updateLastTextCommandIndex();
 
         return msg;
     }
