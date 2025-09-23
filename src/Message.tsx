@@ -30,16 +30,15 @@ export class Message {
         this.updateLastTextCommandIndex();
     }
 
+    public removeLastTextCommand(): DrawCommand | null {
+        if(this.lastTextCommandIndex < 0) return null;
+        if(this.commands.length === 0) return null;
 
+        const msg = this.commands.at(this.lastTextCommandIndex)!;
         this.commands.splice(this.lastTextCommandIndex, 1);
 
-        // Update lastCommandIndex
-        for(let i = this.commands.length - 1; i >= 0; i--) {
-            if(this.commands[i].getType() === DrawingCommandType.TEXT) {
-                this.lastTextCommandIndex = i;
-                break;
-            }
-        }
+
+        return msg;
     }
 
     public getCommands(): DrawCommand[] {
