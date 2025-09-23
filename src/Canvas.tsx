@@ -253,7 +253,19 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
         const value: string = props.canvasText.charAt(props.canvasText.length - 1);
 
-        drawText(DrawingCommandType.TEXT, pos, value);
+        if(value === "\b") {
+            const command = message.removeLastTextCommand();
+            if(!command) return;
+            if(command.getValue().length !== 1) return;
+
+            const pos = unNormalizePos(command.getStartPos());
+            setCanvasTextPosX(pos.x);
+            setCanvasTextPosY(pos.y);
+
+            clearCanvas();
+            reconstructMessage(message);
+            return;
+        }
 
         const maxWidth = getCanvasWidth();
 
