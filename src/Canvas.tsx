@@ -244,6 +244,9 @@ function Canvas(props: any) {
 
         const value: string = floatingKeyValue;
 
+        setCanvasTextPosX(pos.x);
+        setCanvasTextPosY(pos.y);
+
         drawPushText(pos, value);
     }
 
@@ -260,6 +263,9 @@ function Canvas(props: any) {
 
         if(imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
 
+        // Set pos to the right and vertical center of the image.
+        setCanvasTextPosX(imgRight);
+        setCanvasTextPosY((pos.y + imgBottom) / 2);
 
         drawPushImage(img, pos, colorFill);
     }
