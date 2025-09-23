@@ -166,8 +166,9 @@ function Canvas(props: any) {
     }
 
     function copyOnCanvas() {
-        const message = props.getBottomScrollMessage() as Message;
-        reconstructMessage(message);
+        const msg = props.getBottomScrollMessage() as Message;
+        reconstructMessage(msg);
+        message.concatCommands(msg.getCommands());
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
@@ -254,7 +255,6 @@ function Canvas(props: any) {
      *  or typing a key on the physical keyboard.
      */
     function handleCanvasTextChange() {
-        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
         const value: string = props.canvasText.charAt(props.canvasText.length - 1);
 
         if(value === "\b") {
@@ -463,11 +463,6 @@ function Canvas(props: any) {
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
-
-        const normalizedStartPos = normalizeCanvasPos(pos);
-        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
-
-        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
     }
 
     return (
