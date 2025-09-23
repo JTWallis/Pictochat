@@ -218,7 +218,11 @@ function Canvas(props: any) {
             setPenColor(tickRainbow());
         }
 
-        drawStroke(posFirst, pos, drawDot, penSize, penColor);
+        drawPushStroke(posFirst, pos, drawDot, penSize, penColor);
+
+
+        setPrevPosX(posX);
+        setPrevPosY(posY);
     }
 
     /**
@@ -234,7 +238,7 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
         const value: string = floatingKeyValue;
 
-        drawText(DrawingCommandType.FLOATING_KEY, pos, value);
+        drawPushText(pos, value);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -242,7 +246,7 @@ function Canvas(props: any) {
         const offsetLeft = canvasRef.current?.offsetLeft!;
         const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
 
-        drawImage(img, pos, colorFill);
+        drawPushImage(img, pos, colorFill);
     }
 
     /**
@@ -266,6 +270,10 @@ function Canvas(props: any) {
             reconstructMessage(message);
             return;
         }
+
+        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
+
+        drawPushText(pos, value);
 
         const maxWidth = getCanvasWidth();
 
