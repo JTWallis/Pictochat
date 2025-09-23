@@ -215,6 +215,8 @@ function Canvas(props: any) {
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
+        if(posFirst.x < 0 || posFirst.y < 0) return;
+
         if(penRainbow && !isPenErase()) {
             setPenColor(tickRainbow());
         }
@@ -237,6 +239,9 @@ function Canvas(props: any) {
         const offsetLeft = canvasRef.current?.offsetLeft!;
 
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
+
+        if(pos.x < 0 || pos.y < 0) return;
+
         const value: string = floatingKeyValue;
 
         drawPushText(pos, value);
@@ -281,6 +286,8 @@ function Canvas(props: any) {
         }
 
         const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
+
+        if(pos.x < 0 || pos.y < 0) return;
 
         drawPushText(pos, value);
 
