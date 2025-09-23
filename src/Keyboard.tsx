@@ -63,9 +63,18 @@ function Keyboard(props: any) {
         for (let i = rowRangeIndices[k].x; i <= rowRangeIndices[k].y; i++) {
             let span = 1;
 
-            if (representations[i].valueLower === "BACK" || representations[i].valueLower === "CAPS") span = 2;
-            else if (representations[i].valueLower === "SHIFT" || representations[i].valueLower === "ENTER") span = 3;
-            else if (representations[i].valueLower === "SPACE") span = 5;
+            let isSpecial = false;
+
+            if (representations[i].valueLower === "BACK" || representations[i].valueLower === "CAPS") {
+                span = 2;
+                isSpecial = true;
+            } else if (representations[i].valueLower === "SHIFT" || representations[i].valueLower === "ENTER") {
+                span = 3;
+                isSpecial = true;
+            } else if (representations[i].valueLower === "SPACE") {
+                span = 5;
+                isSpecial = true;
+            }
 
             rows.push(
                 <input
@@ -73,7 +82,7 @@ function Keyboard(props: any) {
                     src={isUpper ? representations[i].srcUpper : representations[i].srcLower}
                     key={"Keyboard-Button-" + i}
                     style={{ gridRow: k + 1, gridColumnEnd: "span " + span }}
-                    className="imageButton"
+                    className={"imageButton " + (isSpecial ? "keySpecial" : "imageInvert") }
                     onMouseDown={button_mousedown}
                     onClick={e => {
                         props.onKeyboardButtonClick(representations[i]);
