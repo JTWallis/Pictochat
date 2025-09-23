@@ -83,8 +83,9 @@ function MessageDisplay( {message}: any ) {
      */
     function initHeight() {
         if(!message) return;
-        let lowest = 1.0;
-        let highest = 0.0;
+        let lowestY = 1.0;
+        let highestY = 0.0;
+        let lowestX = 1.0;
         const drawingCommands = (message as Message).getCommands();
 
         // Find normalized, lowest and highest drawn position. 
@@ -92,10 +93,13 @@ function MessageDisplay( {message}: any ) {
             const command = drawingCommands[i];
             const startY = command.getStartPos().y;
             const endY = command.getEndPos().y;
-            if(startY >= 0.0) lowest = Math.min(lowest, command.getStartPos().y);
-            if(endY >= 0.0) lowest = Math.min(lowest, command.getEndPos().y);
-            if(startY <= 1.0) highest = Math.max(highest, command.getStartPos().y);
-            if(endY <= 1.0) highest = Math.max(highest, command.getEndPos().y);
+            if(startY >= 0.0) lowestY = Math.min(lowestY, command.getStartPos().y);
+            if(endY >= 0.0) lowestY = Math.min(lowestY, command.getEndPos().y);
+            if(startY <= 1.0) highestY = Math.max(highestY, command.getStartPos().y);
+            if(endY <= 1.0) highestY = Math.max(highestY, command.getEndPos().y);
+
+            lowestX = Math.min(lowestX, command.getStartPos().x);
+            lowestX = Math.min(lowestX, command.getEndPos().x);
         }
 
         // Find normalized stripe positions.
@@ -116,28 +120,43 @@ function MessageDisplay( {message}: any ) {
         let lowestStripePos = 0;
         let highestStripePos = 1.0;
 
-        for(let i = 0; i < positions.length; i++) {
-            if(lowest >= positions[i]) {
-                lowestStripePos = positions[i];
+        let k;
+        for(k = 0; k < positions.length; k++) {
+            if(lowestY >= positions[k]) {
+                lowestStripePos = positions[k];
             } else {
                 break;
             }
         }
 
         for(let i = positions.length - 1; i >= 0; i--) {
-            if(highest <= positions[i]) {
+            if(highestY <= positions[i]) {
                 highestStripePos = positions[i];
             } else {
                 break;
             }
         }
 
+        // Check if the lowest drawn stroke would have a higher y-pos than the name container
+        //   but the overall lowest x-pos would horizontally overlap.
+        //   In that case, decrement the lowestStripePos by one step,
+        //   so a drawing would not be accidentally hidden behind the name container.
+        const nameRect = nameContainerRef.current!.getBoundingClientRect();
+        const nameBottom = nameRect.bottom - canvasTop
+        const nameRight = nameRect.right - canvasRect.left;
+        const unnormLowY = lowestY * canvasHeight;
+        const unnormLowX = lowestX * canvasRect.width;
+        if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
+            k -= 2;
+            if(k >= 0) lowestStripePos = positions[k];
+        }
+
         const stripeHeight = highestStripePos - lowestStripePos;
 
         setOriginalCanvasHeight(canvasHeight);
-        setDrawnLowest(lowest);
+        setDrawnLowest(lowestY);
         setDrawnHeight(stripeHeight);
-        setDrawnStripeOffset(lowest - lowestStripePos);
+        setDrawnStripeOffset(lowestY - lowestStripePos);
         setShowStripes(false);
 
         // Needs to be called here, no guarantee that setDrawnHeight finished after this function.
