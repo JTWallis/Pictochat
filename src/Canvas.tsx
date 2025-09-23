@@ -381,7 +381,12 @@ function Canvas(props: any) {
         context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
-    function drawText(drawingCommandType: number, pos: Vector2, value: string) {
+    function drawPushText(pos: Vector2, value: string) {
+        drawText(pos, value);
+        const normalizedPos = normalizeCanvasPos(pos);
+        message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
+    }
+
         const context = getCanvasContext();
         if (!context) return;
 
@@ -389,10 +394,11 @@ function Canvas(props: any) {
 
         context.font = "16px Courier New";
         context.fillText(value, pos.x, pos.y, maxWidth);
+    }
 
-        const normalizedPos = normalizeCanvasPos(pos);
-
-        message.pushCommand(drawingCommandType, normalizedPos, normalizedPos, value, penSize, penColor);
+    function drawPushStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
+        drawStroke(posSrc, posDst, drawDot, size, color);
+        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
@@ -411,11 +417,13 @@ function Canvas(props: any) {
             context.lineCap = "square";
             context.stroke();
         }
+    }
 
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", size, color);
-
-        setPrevPosX(posX);
-        setPrevPosY(posY);
+    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        drawImage(img, pos, colorFill);
+        const normalizedStartPos = normalizeCanvasPos(pos);
+        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
+        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
     }
 
     function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
