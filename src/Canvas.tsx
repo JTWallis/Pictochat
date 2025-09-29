@@ -2,7 +2,7 @@ import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
-import { DrawCommand, DrawingCommandType } from './DrawCommand';
+import { DrawingCommandType } from './DrawCommand';
 
 const stripeColor = "green";
 
