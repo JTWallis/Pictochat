@@ -1,0 +1,26 @@
+.keyboardOrtholinearContainer {
+    height: 100%;
+    aspect-ratio: 2.5 / 1;
+    display: grid;
+    grid-template-columns: 1.1fr repeat(10, 1fr) 1.1fr;
+    grid-template-rows: repeat(5, 1fr);
+    gap: var(--buttonGapSizeDouble);
+    
+}
+
+.keyboardColSpanTwo {
+    grid-row-end: span 2;
+}
+
+.keyboardMarginRight {
+    margin-right: 10%;
+}
+
+.keyboardMarginLeft {
+    margin-left: 10%;
+}
+
+.keyboardImageButtonOrtholinearContainer {
+    display: flex;
+}
+
