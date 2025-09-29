@@ -17,7 +17,7 @@ for (let i = 0; i < stripeCount; i++) {
     )
 }
 
-function MessageDisplay( {message}: any ) {
+function MessageDisplay( {message, findCharRepFromValue}: any ) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
