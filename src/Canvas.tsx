@@ -123,6 +123,14 @@ function Canvas(props: any) {
 
         discardMessage() {
             clearCanvas();
+        },
+
+        getLastTextValue(): string | null {
+            return message.getLastTextValue();
+        },
+
+        replaceLastTextValue(newVal: string) {
+            replaceLastMessageText(newVal);
         }
     }));
 
@@ -163,6 +171,15 @@ function Canvas(props: any) {
         await postMessage(message);
         clearCanvas();
         setMessage(new Message([], props.username));
+    }
+
+    function replaceLastMessageText(newVal: string) {
+        const oldVal = message.removeLastTextCommand();
+        if(!oldVal) return;
+
+        message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
+        clearCanvas();
+        reconstructMessage(message);
     }
 
     function copyOnCanvas() {
@@ -480,7 +497,8 @@ function Canvas(props: any) {
         drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
-        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, img.src, penSize, penColor);
+        const value = img.alt.length > 0 ? img.alt : img.src;
+        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
     }
 
     function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
