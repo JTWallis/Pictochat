@@ -10,6 +10,7 @@ import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
+import VirtualKeyboard from './VirtualKeyboard';
 import type { CharRepresentation } from './CharRepresentation';
 import { CharmapStates } from './CharmapStates';
 import { CharmapLatin } from './CharmapLatin';
@@ -165,12 +166,16 @@ function App() {
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
-            <div className="keyboardContainer">
-              <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} className="keyboardComponent"/>
-            </div>
+            <VirtualKeyboard 
+              onKeyboardButtonClick={onKeyboardButtonClick} 
+              floatingKeyRef={floatingKeyRef}
+              charmap={selectedCharmap}
+              charmapState={selectedCharmapState}
+              />
             <div className="buttonColumnRightContainer">
               <ButtonColumnRight canvasRef={canvasRef} />
             </div>
+            <div className="emptyRightKeyboardContainer" />
           </div>
         </div>
       </div>
