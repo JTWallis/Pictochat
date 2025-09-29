@@ -189,11 +189,21 @@ function Canvas(props: any) {
             if(command.getType() === DrawingCommandType.LINE_STROKE) {
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
-            } else if(command.getType() === DrawingCommandType.FLOATING_KEY && command.getValue().length > 1) {
+            } else if(command.getType() === DrawingCommandType.FLOATING_KEY) {
+                let src;
+                if(command.getValue().length > 1) {
+                    // Command Value should already be a src path.
+                    src = command.getValue();
+                } else {
+                    const rep = props.findCharRepFromValue(command.getValue());
+                    if(rep) src = rep.src;
+                }
+                if(!src) continue;
+
                 const img = document.createElement("img") as HTMLImageElement;
                 img.width = Math.abs(posEnd.x - posStart.x);
                 img.height = Math.abs(posEnd.y - posStart.y);
-                img.src = command.getValue();
+                img.src = src;
                 drawImage(img, posStart, "#000");
             } else {
                 drawText(posStart, command.getValue());

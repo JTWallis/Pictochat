@@ -55,7 +55,7 @@ function App() {
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
   const floatingKeyRef = useRef(null);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
 
@@ -137,7 +137,7 @@ function App() {
     setMessages(prev => [...prev, message]);
 
     const m = (
-      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
+      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
     );
 
     scrollbarRef.current!.addScrollsegment();
@@ -176,7 +176,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage}/>
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
