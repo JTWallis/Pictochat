@@ -1,0 +1,49 @@
+.keyboardContainer {
+    --buttonGapSize: 0.2%;
+    --buttonGapSizeDouble: 0.4%;
+
+    background-color: gray;
+    height: 100%;
+    aspect-ratio: 2.5 / 1;
+    margin-left: auto;
+    margin-right: auto;
+
+    image-rendering: pixelated;
+
+    display: grid;
+}
+
+.keyboardContainer > * {
+    grid-area: 1 / 1;
+}
+
+.keyboardMaskedContainer {
+    height: 100%;
+    aspect-ratio: 2.5 / 1;
+    mask-image: url('assets/img_keyboard_mask.png');
+    mask-size: cover;
+    mask-position: center;
+}
+
+.keyboardBorder {
+    height: 100%;
+    aspect-ratio: 2.5 / 1;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.keyboardImageButtonContainer {
+    background-color: white;
+}
+
+.keyboardImageButtonRegular {
+    filter: invert();
+    width: 50%;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+}
+
+.keyboardImageButtonSpecial {
+    height: 100%;
+    width: 100%;
+}
