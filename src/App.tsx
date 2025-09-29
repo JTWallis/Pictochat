@@ -10,6 +10,14 @@ import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
+import type { CharRepresentation } from './CharRepresentation';
+import { CharmapStates } from './CharmapStates';
+import { CharmapLatin } from './CharmapLatin';
+import { CharmapAccent } from './CharmapAccent';
+import { CharmapJapaneseHiragana } from './CharmapJapaneseHiragana';
+import { CharmapJapaneseKatakana } from './CharmapJapaneseKatakana';
+import { CharmapSpecial } from './CharmapSpecial';
+import { CharmapPicto } from './CharmapPicto';
 
 
 function isAlpha(char: string): boolean {
@@ -30,12 +38,20 @@ function isKeyValidChar(char: string) {
     (isAlpha(char) || isNumeric(char) || isSpecialSupported(char));
 }
 
+const charmapLatin = new CharmapLatin();
+const charmapAccent = new CharmapAccent();
+const charmapHiragana = new CharmapJapaneseHiragana();
+const charmapKatakana = new CharmapJapaneseKatakana();
+const charmapSpecial = new CharmapSpecial();
+const charmapPicto = new CharmapPicto();
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("Unknown");
+  const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
+  const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
   const floatingKeyRef = useRef(null);
   const canvasRef = useRef(null);
@@ -65,6 +81,35 @@ function App() {
           break;
       }
     }
+  }
+
+  function handleCharmapButtonClick(charmapState: number) {
+    if(charmapState === selectedCharmapState) return;
+
+    switch(charmapState) {
+      case CharmapStates.LATIN:
+        setSelectedCharmap(charmapLatin);
+        break;
+      case CharmapStates.ACCENT:
+        setSelectedCharmap(charmapAccent);
+        break;
+      case CharmapStates.JAPANESE_HIRAGANA:
+        setSelectedCharmap(charmapHiragana);
+        break;
+      case CharmapStates.JAPANESE_KATAKANA:
+        setSelectedCharmap(charmapKatakana);
+        break;
+      case CharmapStates.SPECIAL:
+        setSelectedCharmap(charmapSpecial);
+        break;
+      case CharmapStates.PICTO:
+        setSelectedCharmap(charmapPicto);
+        break;
+      default:
+        return;
+    }
+
+    setSelectedCharmapState(charmapState);
   }
 
   function getBottomScrollMessage() {
