@@ -158,7 +158,7 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef}/>
+          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef} onCharmapButtonClick={handleCharmapButtonClick}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">

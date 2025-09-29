@@ -11,8 +11,9 @@ import ImageMapAccent from './assets/img_button_toolbox_charmap_accent.png';
 import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
+import { CharmapStates } from './CharmapStates';
 
-function ButtonColumnLeft( {scrollListRef, canvasRef}: any ) {
+function ButtonColumnLeft( {scrollListRef, canvasRef, onCharmapButtonClick}: any ) {
     return (
         <div className="buttonColumn">
             <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
@@ -28,11 +29,11 @@ function ButtonColumnLeft( {scrollListRef, canvasRef}: any ) {
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop" src={ImageMapLatin} ></input>
-            <input type="image" className="button marginTop" src={ImageMapAccent}></input>
-            <input type="image" className="button marginTop" src={ImageMapJapan}></input>
-            <input type="image" className="button marginTop" src={ImageMapSpecial}></input>
-            <input type="image" className="button marginTop marginBot" src={ImageMapPicto}></input>
+            <input type="image" className="button marginTop" src={ImageMapLatin} onClick={() => onCharmapButtonClick(CharmapStates.LATIN)}></input>
+            <input type="image" className="button marginTop" src={ImageMapAccent} onClick={() => onCharmapButtonClick(CharmapStates.ACCENT)}></input>
+            <input type="image" className="button marginTop" src={ImageMapJapan} onClick={() => onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA)}></input>
+            <input type="image" className="button marginTop" src={ImageMapSpecial} onClick={() => onCharmapButtonClick(CharmapStates.SPECIAL)}></input>
+            <input type="image" className="button marginTop marginBot" src={ImageMapPicto} onClick={() => onCharmapButtonClick(CharmapStates.PICTO)}></input>
         </div>
     );
 }
