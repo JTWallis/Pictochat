@@ -12,6 +12,8 @@ import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
 import VirtualKeyboard from './VirtualKeyboard';
 import type { CharRepresentation } from './CharRepresentation';
+import { CharmapBase } from './CharmapBase';
+import type { CharmapBaseJapanese } from './CharmapBaseJapanese';
 import { CharmapStates } from './CharmapStates';
 import { CharmapLatin } from './CharmapLatin';
 import { CharmapAccent } from './CharmapAccent';
@@ -63,8 +65,15 @@ function App() {
     handleKeyDown(event.key);
   }
 
-  function onKeyboardButtonClick(char: any) {
-    handleKeyDown(char);
+
+  function transformKana(transformType: string): void {
+    const lastChar = canvasRef.current!.getLastTextValue();
+    if(!lastChar) return;
+
+    const transformedChar = (selectedCharmap as CharmapBaseJapanese).getTransformedRepresentation(lastChar, transformType);
+    if(!transformedChar) return;
+
+    canvasRef.current!.replaceLastTextValue(transformedChar.value);
   }
 
   function handleKeyDown(key: string) {
