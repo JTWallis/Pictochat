@@ -1,0 +1,78 @@
+
+.keyboardStaggeredContainer {
+    height: 100%;
+    aspect-ratio: 2.5 / 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.keyboardStaggeredContainer > * {
+    height: 20%;
+    margin-top: var(--buttonGapSize);
+    margin-bottom: var(--buttonGapSize);
+}
+
+.keyboardStaggeredRow1 {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--buttonGapSizeDouble);
+}
+
+.keyboardStaggeredRow2 {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.keyboardStaggeredRow3 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.keyboardStaggeredRow4 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.keyboardStaggeredRow5 {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--buttonGapSizeDouble);
+    padding-right: 10.5%;
+}
+
+.keyboardImageButtonStaggeredContainer {
+    margin-left: var(--buttonGapSize);
+    margin-right: var(--buttonGapSize);
+    display: flex;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: clip;
+}
+
+.keyboardImageButtonStaggeredBack {
+    aspect-ratio: 1.667 / 1;
+    margin-left: 1.5%;
+    margin-right: var(--buttonGapSizeDouble);
+}
+
+.keyboardImageButtonStaggeredCaps {
+    aspect-ratio: 1.333 / 1;
+    margin-left: var(--buttonGapSizeDouble);
+    margin-right: auto;
+}
+
+.keyboardImageButtonStaggeredEnter {
+    aspect-ratio: 2.267 / 1;
+    margin-left: auto;
+    margin-right: var(--buttonGapSizeDouble);
+}
+
+.keyboardImageButtonStaggeredShift {
+    aspect-ratio: 1.667 / 1;
+    margin-left: var(--buttonGapSizeDouble);
+    margin-right: 1.5%;
+}
+
+.keyboardImageButtonStaggeredSpace {
+    aspect-ratio: 5.266 / 1;
+}

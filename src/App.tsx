@@ -2,7 +2,6 @@ import './App.css'
 import ButtonColumnLeft from './ButtonColumnLeft';
 import Canvas from './Canvas'
 import FloatingKey from './FloatingKey';
-import Keyboard from './Keyboard'
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import MessageDisplay from './MessageDisplay';
@@ -10,6 +9,17 @@ import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
+import VirtualKeyboard from './VirtualKeyboard';
+import type { CharRepresentation } from './CharRepresentation';
+import { CharmapBase } from './CharmapBase';
+import type { CharmapBaseJapanese } from './CharmapBaseJapanese';
+import { CharmapStates } from './CharmapStates';
+import { CharmapLatin } from './CharmapLatin';
+import { CharmapAccent } from './CharmapAccent';
+import { CharmapJapaneseHiragana } from './CharmapJapaneseHiragana';
+import { CharmapJapaneseKatakana } from './CharmapJapaneseKatakana';
+import { CharmapSpecial } from './CharmapSpecial';
+import { CharmapPicto } from './CharmapPicto';
 
 
 function isAlpha(char: string): boolean {
@@ -30,15 +40,23 @@ function isKeyValidChar(char: string) {
     (isAlpha(char) || isNumeric(char) || isSpecialSupported(char));
 }
 
+const charmapLatin = new CharmapLatin();
+const charmapAccent = new CharmapAccent();
+const charmapHiragana = new CharmapJapaneseHiragana();
+const charmapKatakana = new CharmapJapaneseKatakana();
+const charmapSpecial = new CharmapSpecial();
+const charmapPicto = new CharmapPicto();
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("Unknown");
+  const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
+  const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
   const floatingKeyRef = useRef(null);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
 
@@ -46,8 +64,33 @@ function App() {
     handleKeyDown(event.key);
   }
 
-  function onKeyboardButtonClick(char: any) {
-    handleKeyDown(char);
+  function onKeyboardButtonClick(e: any) {
+    switch(e.target.value) {
+      case "HIRAGANA":
+        handleCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
+        break;
+      case "KATAKANA":
+        handleCharmapButtonClick(CharmapStates.JAPANESE_KATAKANA);
+        break;
+      case "゛":
+      case "゜":
+      case "SMALL":
+        transformKana(e.target.value);
+        break;
+      default:
+        handleKeyDown(e.target.value);
+        break;
+    }
+  }
+
+  function transformKana(transformType: string): void {
+    const lastChar = canvasRef.current!.getLastTextValue();
+    if(!lastChar) return;
+
+    const transformedChar = (selectedCharmap as CharmapBaseJapanese).getTransformedRepresentation(lastChar, transformType);
+    if(!transformedChar) return;
+
+    canvasRef.current!.replaceLastTextValue(transformedChar.value);
   }
 
   function handleKeyDown(key: string) {
@@ -58,6 +101,7 @@ function App() {
         case "enter":
           break;
         case "backspace":
+        case "back":
           setCanvasText(prev => prev + "\b");
           break;
         case "space":
@@ -67,17 +111,60 @@ function App() {
     }
   }
 
+  function handleCharmapButtonClick(charmapState: number) {
+    if(charmapState === selectedCharmapState) return;
+
+    switch(charmapState) {
+      case CharmapStates.LATIN:
+        setSelectedCharmap(charmapLatin);
+        break;
+      case CharmapStates.ACCENT:
+        setSelectedCharmap(charmapAccent);
+        break;
+      case CharmapStates.JAPANESE_HIRAGANA:
+        setSelectedCharmap(charmapHiragana);
+        break;
+      case CharmapStates.JAPANESE_KATAKANA:
+        setSelectedCharmap(charmapKatakana);
+        break;
+      case CharmapStates.SPECIAL:
+        setSelectedCharmap(charmapSpecial);
+        break;
+      case CharmapStates.PICTO:
+        setSelectedCharmap(charmapPicto);
+        break;
+      default:
+        return;
+    }
+
+    setSelectedCharmapState(charmapState);
+  }
+
   function getBottomScrollMessage() {
     const index = scrollListRef.current.getBottomMessageIndex();
     if(index < 0 || index >= messages.length) return null;
     return messages[index];
   }
 
+  function findCharRepFromValue(value: string): CharRepresentation | undefined {
+    if(value.length === 0) return undefined;
+
+    const charmaps: CharmapBase[] = [charmapLatin, charmapAccent, charmapHiragana, charmapKatakana, charmapSpecial, charmapPicto];
+
+    let foundValue;
+    charmaps.every(charmap => {
+      foundValue = charmap.findRepresentation(value);
+      return (foundValue === undefined);
+    });
+
+    return foundValue;
+  }
+
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
     const m = (
-      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message}/>
+      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
     );
 
     scrollbarRef.current!.addScrollsegment();
@@ -112,20 +199,24 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef}/>
+          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef} onCharmapButtonClick={handleCharmapButtonClick}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage}/>
+            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
-            <div className="keyboardContainer">
-              <Keyboard onKeyboardButtonClick={onKeyboardButtonClick} floatingKeyRef={floatingKeyRef} className="keyboardComponent"/>
-            </div>
+            <VirtualKeyboard 
+              onKeyboardButtonClick={onKeyboardButtonClick} 
+              floatingKeyRef={floatingKeyRef}
+              charmap={selectedCharmap}
+              charmapState={selectedCharmapState}
+              />
             <div className="buttonColumnRightContainer">
               <ButtonColumnRight canvasRef={canvasRef} />
             </div>
+            <div className="emptyRightKeyboardContainer" />
           </div>
         </div>
       </div>

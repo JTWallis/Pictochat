@@ -1,5 +1,4 @@
-import { Charmap } from './Charmap';
-import type { CharRepresentation } from './CharRepresentation';
+import { CharmapBaseDouble } from './CharmapBaseDouble';
 
 import aLower from './assets/CharacterMaps/Latin/img_char_a_lower.png';
 import bLower from './assets/CharacterMaps/Latin/img_char_b_lower.png';
@@ -103,75 +102,74 @@ import miscEnter from './assets/CharacterMaps/Misc/img_misc_enter_horizontal.png
 import miscShift from './assets/CharacterMaps/Misc/img_misc_shift.png';
 import miscSpace from './assets/CharacterMaps/Misc/img_misc_space_big.png';
 
-import type { Vector2 } from './Vector2';
-
-export class CharmapLatin extends Charmap {
+export class CharmapLatin extends CharmapBaseDouble {
 
     constructor() {
         super();
     }
 
-    protected createRepresentations(): CharRepresentation[] {
-        return [
-            { valueLower: "1",      srcLower: alpha1,               valueUpper: "!",    srcUpper: specialExclamation },
-            { valueLower: "2",      srcLower: alpha2,               valueUpper: "@",    srcUpper: specialAt },
-            { valueLower: "3",      srcLower: alpha3,               valueUpper: "#",    srcUpper: specialHash },
-            { valueLower: "4",      srcLower: alpha4,               valueUpper: "$",    srcUpper: specialDollar },
-            { valueLower: "5",      srcLower: alpha5,               valueUpper: "%",    srcUpper: specialPercent },
-            { valueLower: "6",      srcLower: alpha6,               valueUpper: "^",    srcUpper: specialCircumflex },
-            { valueLower: "7",      srcLower: alpha7,               valueUpper: "&",    srcUpper: specialAmpersand },
-            { valueLower: "8",      srcLower: alpha8,               valueUpper: "*",    srcUpper: specialAsterisk },
-            { valueLower: "9",      srcLower: alpha9,               valueUpper: "(",    srcUpper: specialParanthesisOpen },
-            { valueLower: "0",      srcLower: alpha0,               valueUpper: ")",    srcUpper: specialParanthesisClose },
-            { valueLower: "-",      srcLower: specialMinus,         valueUpper: "_",    srcUpper: specialUnderscore },
-            { valueLower: "=",      srcLower: specialEqual,         valueUpper: "+",    srcUpper: specialPlus },
+    protected override initRepresentations(): void {
+        this.representations = [
+            { lower: { value: "1", src: alpha1 }, upper: { value: "!", src: specialExclamation } },
+            { lower: { value: "2", src: alpha2 }, upper: { value: "@", src: specialAt } },
+            { lower: { value: "3", src: alpha3 }, upper: { value: "#", src: specialHash } },
+            { lower: { value: "4", src: alpha4 }, upper: { value: "$", src: specialDollar } },
+            { lower: { value: "5", src: alpha5 }, upper: { value: "%", src: specialPercent } },
+            { lower: { value: "6", src: alpha6 }, upper: { value: "^", src: specialCircumflex } },
+            { lower: { value: "7", src: alpha7 }, upper: { value: "&", src: specialAmpersand } },
+            { lower: { value: "8", src: alpha8 }, upper: { value: "*", src: specialAsterisk } },
+            { lower: { value: "9", src: alpha9 }, upper: { value: "(", src: specialParanthesisOpen } },
+            { lower: { value: "0", src: alpha0 }, upper: { value: ")", src: specialParanthesisClose } },
+            { lower: { value: "-", src: specialMinus }, upper: { value: "_", src: specialUnderscore } },
+            { lower: { value: "=", src: specialEqual }, upper: { value: "+", src: specialPlus } },
 
-            { valueLower: "q",      srcLower: qLower,               valueUpper: "Q",    srcUpper: qUpper },
-            { valueLower: "w",      srcLower: wLower,               valueUpper: "W",    srcUpper: wUpper },
-            { valueLower: "e",      srcLower: eLower,               valueUpper: "E",    srcUpper: eUpper },
-            { valueLower: "r",      srcLower: rLower,               valueUpper: "R",    srcUpper: rUpper },
-            { valueLower: "t",      srcLower: tLower,               valueUpper: "T",    srcUpper: tUpper },
-            { valueLower: "y",      srcLower: yLower,               valueUpper: "Y",    srcUpper: yUpper },
-            { valueLower: "u",      srcLower: uLower,               valueUpper: "U",    srcUpper: uUpper },
-            { valueLower: "i",      srcLower: iLower,               valueUpper: "I",    srcUpper: iUpper },
-            { valueLower: "o",      srcLower: oLower,               valueUpper: "O",    srcUpper: oUpper },
-            { valueLower: "p",      srcLower: pLower,               valueUpper: "P",    srcUpper: pUpper },
-            { valueLower: "BACK",   srcLower: miscBackspace,        valueUpper: "",     srcUpper: miscBackspace },
+            { lower: { value: "q", src: qLower }, upper: { value: "Q", src: qUpper } },
+            { lower: { value: "w", src: wLower }, upper: { value: "W", src: wUpper } },
+            { lower: { value: "e", src: eLower }, upper: { value: "E", src: eUpper } },
+            { lower: { value: "r", src: rLower }, upper: { value: "R", src: rUpper } },
+            { lower: { value: "t", src: tLower }, upper: { value: "T", src: tUpper } },
+            { lower: { value: "y", src: yLower }, upper: { value: "Y", src: yUpper } },
+            { lower: { value: "u", src: uLower }, upper: { value: "U", src: uUpper } },
+            { lower: { value: "i", src: iLower }, upper: { value: "I", src: iUpper } },
+            { lower: { value: "o", src: oLower }, upper: { value: "O", src: oUpper } },
+            { lower: { value: "p", src: pLower }, upper: { value: "P", src: pUpper } },
+            { lower: { value: "BACK", src: miscBackspace }, upper: { value: "", src: miscBackspace } },
 
-            { valueLower: "CAPS",   srcLower: miscCaps,             valueUpper: "",     srcUpper: miscCaps },
-            { valueLower: "a",      srcLower: aLower,               valueUpper: "A",    srcUpper: aUpper },
-            { valueLower: "s",      srcLower: sLower,               valueUpper: "S",    srcUpper: sUpper },
-            { valueLower: "d",      srcLower: dLower,               valueUpper: "D",    srcUpper: dUpper },
-            { valueLower: "f",      srcLower: fLower,               valueUpper: "F",    srcUpper: fUpper },
-            { valueLower: "g",      srcLower: gLower,               valueUpper: "G",    srcUpper: gUpper },
-            { valueLower: "h",      srcLower: hLower,               valueUpper: "H",    srcUpper: hUpper },
-            { valueLower: "j",      srcLower: jLower,               valueUpper: "J",    srcUpper: jUpper },
-            { valueLower: "k",      srcLower: kLower,               valueUpper: "K",    srcUpper: kUpper },
-            { valueLower: "l",      srcLower: lLower,               valueUpper: "L",    srcUpper: lUpper },
-            { valueLower: "ENTER",  srcLower: miscEnter,            valueUpper: "",     srcUpper: miscEnter },
+            { lower: { value: "CAPS", src: miscCaps }, upper: { value: "", src: miscCaps } },
+            { lower: { value: "a", src: aLower }, upper: { value: "A", src: aUpper } },
+            { lower: { value: "s", src: sLower }, upper: { value: "S", src: sUpper } },
+            { lower: { value: "d", src: dLower }, upper: { value: "D", src: dUpper } },
+            { lower: { value: "f", src: fLower }, upper: { value: "F", src: fUpper } },
+            { lower: { value: "g", src: gLower }, upper: { value: "G", src: gUpper } },
+            { lower: { value: "h", src: hLower }, upper: { value: "H", src: hUpper } },
+            { lower: { value: "j", src: jLower }, upper: { value: "J", src: jUpper } },
+            { lower: { value: "k", src: kLower }, upper: { value: "K", src: kUpper } },
+            { lower: { value: "l", src: lLower }, upper: { value: "L", src: lUpper } },
+            { lower: { value: "ENTER", src: miscEnter }, upper: { value: "", src: miscEnter } },
 
-            { valueLower: "SHIFT",  srcLower: miscShift,            valueUpper: "",     srcUpper: miscShift },
-            { valueLower: "z",      srcLower: zLower,               valueUpper: "Z",    srcUpper: zUpper },
-            { valueLower: "x",      srcLower: xLower,               valueUpper: "X",    srcUpper: xUpper },
-            { valueLower: "c",      srcLower: cLower,               valueUpper: "C",    srcUpper: cUpper },
-            { valueLower: "v",      srcLower: vLower,               valueUpper: "V",    srcUpper: vUpper },
-            { valueLower: "b",      srcLower: bLower,               valueUpper: "B",    srcUpper: bUpper },
-            { valueLower: "n",      srcLower: nLower,               valueUpper: "N",    srcUpper: nUpper },
-            { valueLower: "m",      srcLower: mLower,               valueUpper: "M",    srcUpper: mUpper },
-            { valueLower: ",",      srcLower: specialComma,         valueUpper: "<",    srcUpper: specialAngleOpen },
-            { valueLower: ".",      srcLower: specialPunct,         valueUpper: ">",    srcUpper: specialAngleClose },
-            { valueLower: "/",      srcLower: specialSlash,         valueUpper: "?",    srcUpper: specialQuestion },
+            { lower: { value: "SHIFT", src: miscShift }, upper: { value: "", src: miscShift } },
+            { lower: { value: "z", src: zLower }, upper: { value: "Z", src: zUpper } },
+            { lower: { value: "x", src: xLower }, upper: { value: "X", src: xUpper } },
+            { lower: { value: "c", src: cLower }, upper: { value: "C", src: cUpper } },
+            { lower: { value: "v", src: vLower }, upper: { value: "V", src: vUpper } },
+            { lower: { value: "b", src: bLower }, upper: { value: "B", src: bUpper } },
+            { lower: { value: "n", src: nLower }, upper: { value: "N", src: nUpper } },
+            { lower: { value: "m", src: mLower }, upper: { value: "M", src: mUpper } },
+            { lower: { value: ",", src: specialComma }, upper: { value: "<", src: specialAngleOpen } },
+            { lower: { value: ".", src: specialPunct }, upper: { value: ">", src: specialAngleClose } },
+            { lower: { value: "/", src: specialSlash }, upper: { value: "?", src: specialQuestion } },
 
-            { valueLower: ";",      srcLower: specialSemicolon,     valueUpper: ":",    srcUpper: specialColon },
-            { valueLower: "´",      srcLower: specialAcute,         valueUpper: "˜",    srcUpper: specialTildeSmall },
-            { valueLower: "SPACE",  srcLower: miscSpace,            valueUpper: "",     srcUpper: miscSpace },
-            { valueLower: "[",      srcLower: specialBracketClose,  valueUpper: "{",    srcUpper: specialBraceOpen },
-            { valueLower: "]",      srcLower: specialBracketOpen,   valueUpper: "}",    srcUpper: specialBraceClose },
+            { lower: { value: ";", src: specialSemicolon }, upper: { value: ":", src: specialColon } },
+            { lower: { value: "´", src: specialAcute }, upper: { value: "˜", src: specialTildeSmall } },
+            { lower: { value: "SPACE", src: miscSpace }, upper: { value: "", src: miscSpace } },
+            { lower: { value: "[", src: specialBracketClose }, upper: { value: "{", src: specialBraceOpen } },
+            { lower: { value: "]", src: specialBracketOpen }, upper: { value: "} }", src: specialBraceClose } },
 
         ];
+
     }
-    protected createRowRanges(): Vector2[] {
-        return [
+    protected override initRowRanges(): void {
+        this.rowRangeIndices = [
             this.createRowRangeFromValues("1", "="),
             this.createRowRangeFromValues("q", "BACK"),
             this.createRowRangeFromValues("CAPS", "ENTER"),

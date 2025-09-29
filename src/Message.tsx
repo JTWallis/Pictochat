@@ -15,7 +15,7 @@ export class Message {
     private pushDrawCommand(command: DrawCommand): void {
         this.commands.push(command);
 
-        if(command.getType() === DrawingCommandType.TEXT) {
+        if(command.getType() !== DrawingCommandType.LINE_STROKE) {
             this.lastTextCommandIndex = this.commands.length - 1;
         }
     }
@@ -28,6 +28,12 @@ export class Message {
     public concatCommands(commands: DrawCommand[]) {
         this.commands = this.commands.concat(commands);
         this.updateLastTextCommandIndex();
+    }
+
+    public getLastTextValue(): string | null {
+        if(this.lastTextCommandIndex < 0) return null;
+        if(this.commands.length === 0) return null;
+        return this.commands.at(this.lastTextCommandIndex)!.getValue();
     }
 
     public removeLastTextCommand(): DrawCommand | null {
@@ -52,7 +58,7 @@ export class Message {
 
     private updateLastTextCommandIndex() {
         for(let i = this.commands.length - 1; i >= 0; i--) {
-            if(this.commands[i].getType() === DrawingCommandType.TEXT) {
+            if(this.commands[i].getType() !== DrawingCommandType.LINE_STROKE) {
                 this.lastTextCommandIndex = i;
                 return;
             }

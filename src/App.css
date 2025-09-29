@@ -78,16 +78,16 @@ button {
 }
 
 .emptyLeftKeyboardContainer {
-    width: 25%;
+    width: 50%;
 }
 
-.keyboardContainer {
-    width: 50%;
+.emptyRightKeyboardContainer {
+    width: 42.5%;
 }
 
 .buttonColumnRightContainer {
     background-color: blueviolet;
-    width: 25%;
+    width: 7.5%;
 }
 
 .keyboardRow {
