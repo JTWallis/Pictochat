@@ -73,6 +73,7 @@ function FloatingKey(props: any) {
             </label>
             <img
                 src={imgSrc}
+                alt={labelValue}
                 className="absolute image"
                 ref={imageRef}
                 style={{
