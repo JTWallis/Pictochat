@@ -9,7 +9,7 @@ function FloatingKey(props: any) {
 
     const [posX, setPosX] = useState<number>(0);
     const [posY, setPosY] = useState<number>(0);
-    const [labelValue, setLabelValue] = useState("TestValue");
+    const [labelValue, setLabelValue] = useState("");
     const [labelVisible, setLabelVisible] = useState(true);
     const [imgSrc, setImgSrc] = useState("");
     const [imgSize, setImgSize] = useState(10);
@@ -32,11 +32,12 @@ function FloatingKey(props: any) {
             
         },
 
-        setImg: (src: string, size: number) => {
+        setImg: (src: string, size: number, value: string) => {
             setLabelVisible(false);
             setImgVisible(true);
             setImgSrc(src);
             setImgSize(size);
+            if(value) setLabelValue(value);
         },
 
         apply: () => {
