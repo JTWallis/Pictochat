@@ -65,6 +65,24 @@ function App() {
     handleKeyDown(event.key);
   }
 
+  function onKeyboardButtonClick(e: any) {
+    switch(e.target.value) {
+      case "HIRAGANA":
+        handleCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
+        break;
+      case "KATAKANA":
+        handleCharmapButtonClick(CharmapStates.JAPANESE_KATAKANA);
+        break;
+      case "゛":
+      case "゜":
+      case "SMALL":
+        transformKana(e.target.value);
+        break;
+      default:
+        handleKeyDown(e.target.value);
+        break;
+    }
+  }
 
   function transformKana(transformType: string): void {
     const lastChar = canvasRef.current!.getLastTextValue();
