@@ -119,6 +119,20 @@ function App() {
     return messages[index];
   }
 
+  function findCharRepFromValue(value: string): CharRepresentation | undefined {
+    if(value.length === 0) return undefined;
+
+    const charmaps: CharmapBase[] = [charmapLatin, charmapAccent, charmapHiragana, charmapKatakana, charmapSpecial, charmapPicto];
+
+    let foundValue;
+    charmaps.every(charmap => {
+      foundValue = charmap.findRepresentation(value);
+      return (foundValue === undefined);
+    });
+
+    return foundValue;
+  }
+
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
