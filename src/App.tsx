@@ -2,7 +2,6 @@ import './App.css'
 import ButtonColumnLeft from './ButtonColumnLeft';
 import Canvas from './Canvas'
 import FloatingKey from './FloatingKey';
-import Keyboard from './Keyboard'
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import MessageDisplay from './MessageDisplay';
@@ -102,6 +101,7 @@ function App() {
         case "enter":
           break;
         case "backspace":
+        case "back":
           setCanvasText(prev => prev + "\b");
           break;
         case "space":
