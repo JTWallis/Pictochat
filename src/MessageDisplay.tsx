@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import './MessageDisplay.css';
-import { Vector2 } from './Vector2';
 import type { Message } from './Message';
 import CanvasShared from './CanvasShared';
 
@@ -10,10 +9,7 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-    const [canvasWidth, setCanvasWidth] = useState(300);
-    const [canvasHeight, setCanvasHeight] = useState(150);
-    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(150);
-    const [drawnHeight, setDrawnHeight] = useState(150);
+
     const [drawnLowest, setDrawnLowest] = useState(0.0);
     const [drawnStripeOffset, setDrawnStripeOffset] = useState(0);
     const [showStripes, setShowStripes] = useState(true);
@@ -123,13 +119,10 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
 
         const stripeHeight = highestStripePos - lowestStripePos;
 
-        setOriginalCanvasHeight(canvasHeight);
         setDrawnLowest(lowestY);
-        setDrawnHeight(stripeHeight);
         setDrawnStripeOffset(lowestY - lowestStripePos);
         setShowStripes(false);
 
-        // Needs to be called here, no guarantee that setDrawnHeight finished after this function.
         applySizeStyles(stripeHeight);
     }
 
