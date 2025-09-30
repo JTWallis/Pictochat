@@ -5,6 +5,7 @@ import type { CharmapBaseDouble } from './CharmapBaseDouble';
 
 function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) {
 
+    const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
 
     function getButtonContainers() {
