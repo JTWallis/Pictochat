@@ -1,5 +1,5 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import './Canvas.css'
+import './MessageSketch.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
@@ -40,7 +40,7 @@ function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
 
-function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromValue, getBottomScrollMessage}: any) {
+function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRepFromValue, getBottomScrollMessage}: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
     const [posX, setPosX] = useState(-1);
@@ -48,7 +48,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     const [prevPosX, setPrevPosX] = useState(-1);
     const [prevPosY, setPrevPosY] = useState(-1);
 
-    const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const sketchContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
     const canvasSharedRef = useRef<any>(null);
 
@@ -154,8 +154,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
-        const width = canvasContainerRef.current?.clientWidth!;
-        const height = canvasContainerRef.current?.clientHeight!;
+        const width = sketchContainerRef.current?.clientWidth!;
+        const height = sketchContainerRef.current?.clientHeight!;
         return new Vector2(pos.x * width, pos.y * height);
     }
 
@@ -163,8 +163,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
     function handleStrokePosChange() {
-        const offsetTop = canvasContainerRef.current?.offsetTop!;
-        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
+        const offsetTop = sketchContainerRef.current?.offsetTop!;
+        const offsetLeft = sketchContainerRef.current?.offsetLeft!;
 
         const drawDot = prevPosX < 0;
 
@@ -192,8 +192,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
         //  resulting in a "pop effect". This offset makes the position accurate again.
         const offsetPopFixY = -13;
-        const offsetTop = canvasContainerRef.current?.offsetTop! + offsetPopFixY;
-        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
+        const offsetTop = sketchContainerRef.current?.offsetTop! + offsetPopFixY;
+        const offsetLeft = sketchContainerRef.current?.offsetLeft!;
 
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
 
@@ -208,13 +208,13 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
-        const offsetTop = canvasContainerRef.current?.offsetTop!;
-        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
+        const offsetTop = sketchContainerRef.current?.offsetTop!;
+        const offsetLeft = sketchContainerRef.current?.offsetLeft!;
         const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
 
         // Ignore Image that would be too far out of bounds.
-        const canvasRight = canvasContainerRef.current!.offsetWidth;
-        const canvasBottom = canvasContainerRef.current!.offsetHeight;
+        const canvasRight = sketchContainerRef.current!.offsetWidth;
+        const canvasBottom = sketchContainerRef.current!.offsetHeight;
         const imgRight = pos.x + img.width;
         const imgBottom = pos.y + img.height;
 
@@ -252,12 +252,12 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
         if (pos.x < 0 || pos.y < 0) return;
 
-        const width = canvasContainerRef.current?.clientWidth!;
+        const width = sketchContainerRef.current?.clientWidth!;
         const maxWidth = width - canvasTextPosXOffset;
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosY + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            pos.y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
         }
@@ -269,7 +269,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function handleCanvasResize() {
-        const height = canvasContainerRef.current?.clientHeight!;
+        const height = sketchContainerRef.current?.clientHeight!;
         const h = height / (stripeCount + 1);
         const w = nameContainerRef.current?.clientWidth!;
         setCanvasTextPosX(w + canvasTextPosXOffset);
@@ -367,8 +367,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = canvasContainerRef.current?.clientWidth!;
-        const height = canvasContainerRef.current?.clientHeight!;
+        const width = sketchContainerRef.current?.clientWidth!;
+        const height = sketchContainerRef.current?.clientHeight!;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
@@ -393,7 +393,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     return (
-        <div className="canvasContainer" ref={canvasContainerRef}
+        <div className="messageSketchContainer" ref={sketchContainerRef}
             onMouseDown={canvas_mousedown}
             onMouseUp={canvas_mouseup}
             onMouseMove={canvas_mousemove}
@@ -413,4 +413,4 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     );
 }
 
-export default Canvas;
+export default MessageSketch;
