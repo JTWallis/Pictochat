@@ -40,7 +40,7 @@ function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
 
-function Canvas(props: any) {
+function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromValue, getBottomScrollMessage}: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
     const [posX, setPosX] = useState(-1);
@@ -62,7 +62,7 @@ function Canvas(props: any) {
         y: 0
     });
 
-    const [message, setMessage] = useState(new Message([], props.username));
+    const [message, setMessage] = useState(new Message([], username));
 
     const [penSize, setPenSize] = useState(sizeLarge);
     const [penColor, setPenColor] = useState(colorForeground);
@@ -70,7 +70,7 @@ function Canvas(props: any) {
     const [rainbowTick, setRainbowTick] = useState(0);
 
 
-    useImperativeHandle(props.canvasRef, () => ({
+    useImperativeHandle(canvasRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
             setFloatingKeyPos({
                 x: screenX,
@@ -126,14 +126,14 @@ function Canvas(props: any) {
 
     useEffect(() => {
         handleCanvasTextChange();
-    }, [props.canvasText]);
+    }, [canvasText]);
 
     useEffect(() => {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
     async function sendCurrentMessage() {
-        props.addMessage(message);
+        addMessage(message);
         await postMessage(message);
         canvasSharedRef.current!.clearCanvas();
         setMessage(new Message([], username));
@@ -227,7 +227,7 @@ function Canvas(props: any) {
      *  or typing a key on the physical keyboard.
      */
     function handleCanvasTextChange() {
-        const value: string = props.canvasText.charAt(props.canvasText.length - 1);
+        const value: string = canvasText.charAt(canvasText.length - 1);
 
         if(value === "\b") {
             const command = message.removeLastTextCommand();
