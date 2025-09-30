@@ -45,6 +45,14 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
             return lower;
         }
 
+        function getValue(index: number): string {
+            return getRep(index).value;
+        }
+
+        function getSrc(index: number): string {
+            return getRep(index).src;
+        }
+
         for (let k = 0; k < rowRangeIndices.length; k++) {
             rows.push([]);
 
@@ -79,8 +87,8 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
                         <VirtualKeyboardButton
                             key={"Keyboard-Button-" + i}
                             className={imageClass}
-                            value={isUpper ? representations[i].upper.value : representations[i].lower.value}
-                            src={isUpper ? representations[i].upper.src : representations[i].lower.src}
+                            value={getValue(i)}
+                            src={getSrc(i)}
                             handleButtonMouseDown={onButtonMouseDown}
                             handleOnClick={handleOnVirtualKeyboardButtonClick}
                         />
