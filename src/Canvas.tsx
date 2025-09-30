@@ -268,14 +268,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         drawPushText(pos, value);
     }
 
-    function setCanvasSize() {
-        console.log("CanvasSize");
-        const width = canvasContainerRef.current?.clientWidth!;
+    function handleCanvasResize() {
         const height = canvasContainerRef.current?.clientHeight!;
-
-        setCanvasWidth(width);
-        setCanvasHeight(height);
-
         const h = height / (stripeCount + 1);
         const w = nameContainerRef.current?.clientWidth!;
         setCanvasTextPosX(w + canvasTextPosXOffset);
