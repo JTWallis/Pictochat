@@ -8,6 +8,24 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
     const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
 
+    function handleOnVirtualKeyboardButtonClick(e: MouseEvent) {
+        const value = (e.target as HTMLInputElement).value;
+        console.log(value);
+        switch (value) {
+            case SPECIAL_CAPS:
+                setIsShift(false);
+                setIsUpper(!isUpper);
+                break;
+            case SPECIAL_SHIFT:
+                setIsShift(!isShift);
+                break;
+            default:
+                setIsShift(false);
+                onClick(e);
+                break;
+        }
+    }
+
     function getButtonContainers() {
         const rowRangeIndices = (charmap as CharmapBaseDouble).getRowRangeIndices();
         const representations = (charmap as CharmapBaseDouble).getCharRepresentations();
@@ -50,7 +68,7 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
                             value={isUpper ? representations[i].upper.value : representations[i].lower.value}
                             src={isUpper ? representations[i].upper.src : representations[i].lower.src}
                             handleButtonMouseDown={onButtonMouseDown}
-                            handleOnClick={onClick}
+                            handleOnClick={handleOnVirtualKeyboardButtonClick}
                         />
                     </div>
 
