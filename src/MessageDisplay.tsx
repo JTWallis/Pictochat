@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import './MessageDisplay.css';
 import type { Message } from './Message';
-import CanvasShared from './CanvasShared';
+import Canvas from './Canvas';
 
 function MessageDisplay( {message, findCharRepFromValue}: any ) {
 
-    const canvasSharedRef = useRef<any>(null);
+    const canvasComponentRef = useRef<any>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
@@ -128,12 +128,12 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
 
     return (
         <div className="messageDisplayContainer" ref={canvasContainerRef}>
-            <CanvasShared
+            <Canvas
                 message={message}
                 findCharRepFromValue={findCharRepFromValue}
                 showStripes={showStripes}
                 showName={true}
-                canvasSharedRef={canvasSharedRef}
+                canvasComponentRef={canvasComponentRef}
                 stripesContainerRef={stripesContainerRef}
                 nameContainerRef={nameContainerRef}
                 drawOffsetY={drawnLowest - drawnStripeOffset}

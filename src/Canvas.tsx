@@ -1,14 +1,14 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import './CanvasShared.css'
+import './Canvas.css'
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
 
 const stripeCount = 4;
 
-function CanvasShared({ canvasSharedRef, message, userColor, onCanvasResize, findCharRepFromValue, drawOffsetY, showStripes, stripesContainerRef, showName, nameContainerRef}: any) {
+function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCharRepFromValue, drawOffsetY, showStripes, stripesContainerRef, showName, nameContainerRef}: any) {
 
 
-    useImperativeHandle(canvasSharedRef, () => ({
+    useImperativeHandle(canvasComponentRef, () => ({
         drawText(pos: Vector2, text: string) {
             drawText(pos, text);
         },
@@ -215,4 +215,4 @@ function CanvasShared({ canvasSharedRef, message, userColor, onCanvasResize, fin
     );
 }
 
-export default CanvasShared;
+export default Canvas;

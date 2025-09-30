@@ -3,7 +3,7 @@ import './MessageSketch.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
-import CanvasShared from './CanvasShared';
+import Canvas from './Canvas';
 
 const stripeCount = 4;
 
@@ -50,7 +50,7 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-    const canvasSharedRef = useRef<any>(null);
+    const canvasComponentRef = useRef<any>(null);
 
     const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
     const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
@@ -107,7 +107,7 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
         },
 
         discardMessage() {
-            canvasSharedRef.current!.clearCanvas();
+            canvasComponentRef.current!.clearCanvas();
         },
 
         getLastTextValue(): string | null {
@@ -134,7 +134,7 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     async function sendCurrentMessage() {
         addMessage(message);
         await postMessage(message);
-        canvasSharedRef.current!.clearCanvas();
+        canvasComponentRef.current!.clearCanvas();
         setMessage(new Message([], username));
     }
 
@@ -143,14 +143,14 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
         if (!oldVal) return;
 
         message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
-        canvasSharedRef.current!.clearCanvas();
-        canvasSharedRef.current!.reconstructMessage();
+        canvasComponentRef.current!.clearCanvas();
+        canvasComponentRef.current!.reconstructMessage();
     }
 
     function copyOnCanvas() {
         const msg = getBottomScrollMessage() as Message;
         message.concatCommands(msg.getCommands());
-        canvasSharedRef.current!.reconstructMessage();
+        canvasComponentRef.current!.reconstructMessage();
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
@@ -243,8 +243,8 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
 
-            canvasSharedRef.current!.clearCanvas();
-            canvasSharedRef.current!.reconstructMessage(message);
+            canvasComponentRef.current!.clearCanvas();
+            canvasComponentRef.current!.reconstructMessage(message);
             return;
         }
 
@@ -374,18 +374,18 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        canvasSharedRef.current!.drawText(pos, value);
+        canvasComponentRef.current!.drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
         message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, size: number, color: string) {
-        canvasSharedRef.current!.drawStroke(posSrc, posDst, size, color);
+        canvasComponentRef.current!.drawStroke(posSrc, posDst, size, color);
         message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        canvasSharedRef.current!.drawImage(img, pos, colorFill);
+        canvasComponentRef.current!.drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
@@ -400,8 +400,8 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
             onMouseEnter={canvas_mouseenter}
             onMouseLeave={canvas_mouseleave}
         >
-            <CanvasShared
-                canvasSharedRef={canvasSharedRef}
+            <Canvas
+                canvasComponentRef={canvasComponentRef}
                 nameContainerRef={nameContainerRef}
                 message={message}
                 onCanvasResize={handleCanvasResize}
