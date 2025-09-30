@@ -1,16 +1,75 @@
 import './VirtualKeyboardStaggered.css'
-import { useState } from 'react';
+import { useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from './CharmapBaseDouble';
+import type { CharRepresentation } from './CharRepresentation';
 
-function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) {
+const SPECIAL_CAPS = "CAPS";
+const SPECIAL_SHIFT = "SHIFT";
 
+function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMouseDown, onClick }: any) {
+
+    useImperativeHandle(vkeyboardStaggeredRef, () => ({
+        onShiftDown(): void {
+            setIsShift(true);
+        },
+
+        onShiftUp(): void {
+            setIsShift(false);
+        },
+
+        onCapsDown(): void {
+            setIsUpper(!isUpper);
+        }
+    }));
+
+    const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
+
+    function handleOnVirtualKeyboardButtonClick(e: MouseEvent) {
+        const value = (e.target as HTMLInputElement).value;
+        console.log(value);
+        switch (value) {
+            case SPECIAL_CAPS:
+                setIsShift(false);
+                setIsUpper(!isUpper);
+                break;
+            case SPECIAL_SHIFT:
+                setIsShift(!isShift);
+                break;
+            default:
+                setIsShift(false);
+                onClick(e);
+                break;
+        }
+    }
 
     function getButtonContainers() {
         const rowRangeIndices = (charmap as CharmapBaseDouble).getRowRangeIndices();
         const representations = (charmap as CharmapBaseDouble).getCharRepresentations();
         const rows: any[] = [];
+
+        function getRep(index: number): CharRepresentation {
+            const lower = representations[index].lower;
+            const upper = representations[index].upper;
+
+            if(upper.value.length === 0) return lower;
+            if(isUpper) return upper;
+
+            if(isShift && (charmap as CharmapBaseDouble).isCharShiftIncluded(lower.value)) {
+                return upper;
+            }
+
+            return lower;
+        }
+
+        function getValue(index: number): string {
+            return getRep(index).value;
+        }
+
+        function getSrc(index: number): string {
+            return getRep(index).src;
+        }
 
         for (let k = 0; k < rowRangeIndices.length; k++) {
             rows.push([]);
@@ -20,13 +79,13 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
                 let imageClass = "keyboardImageButtonSpecial";
 
                 switch (representations[i].lower.value) {
-                    case "CAPS":
+                    case SPECIAL_CAPS:
                         buttonClass = "keyboardImageButtonStaggeredCaps";
                         break;
                     case "BACK":
                         buttonClass = "keyboardImageButtonStaggeredBack";
                         break;
-                    case "SHIFT":
+                    case SPECIAL_SHIFT:
                         buttonClass = "keyboardImageButtonStaggeredShift";
                         break;
                     case "ENTER":
@@ -46,10 +105,10 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
                         <VirtualKeyboardButton
                             key={"Keyboard-Button-" + i}
                             className={imageClass}
-                            value={isUpper ? representations[i].upper.value : representations[i].lower.value}
-                            src={isUpper ? representations[i].upper.src : representations[i].lower.src}
+                            value={getValue(i)}
+                            src={getSrc(i)}
                             handleButtonMouseDown={onButtonMouseDown}
-                            handleOnClick={onClick}
+                            handleOnClick={handleOnVirtualKeyboardButtonClick}
                         />
                     </div>
 

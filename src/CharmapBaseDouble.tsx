@@ -5,14 +5,31 @@ import { Vector2 } from "./Vector2";
 
 export abstract class CharmapBaseDouble extends CharmapBase {
     protected representations: CharRepresentationLowerUpper[] = [];
+    protected shiftIncludedIndices: number[] = [];
 
     constructor() {
         super();
         this.init();
     }
 
+    public override init() {
+        super.init();
+        this.initShiftIncludedIndices();
+    }
+
     public getCharRepresentations(): CharRepresentationLowerUpper[] {
         return this.representations;
+    }
+
+    public isCharShiftIncluded(char: string): boolean {
+        for(var index of this.shiftIncludedIndices) {
+            const rep = this.representations[index];
+            if(rep.lower.value === char || rep.upper.value === char) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public findRepresentation(value: string): CharRepresentation | undefined {
@@ -25,6 +42,8 @@ export abstract class CharmapBaseDouble extends CharmapBase {
 
         return result;
     }
+
+    protected abstract initShiftIncludedIndices(): void;
 
     protected createRowRangeFromValues(startValueLower: string, endValueLower: string): Vector2 {
         return new Vector2(

@@ -168,7 +168,8 @@ export class CharmapLatin extends CharmapBaseDouble {
         ];
 
     }
-    protected override initRowRanges(): void {
+
+    protected initRowRanges(): void {
         this.rowRangeIndices = [
             this.createRowRangeFromValues("1", "="),
             this.createRowRangeFromValues("q", "BACK"),
@@ -176,6 +177,12 @@ export class CharmapLatin extends CharmapBaseDouble {
             this.createRowRangeFromValues("SHIFT", "/"),
             this.createRowRangeFromValues(";", "]"),
         ];
+    }
+
+    protected initShiftIncludedIndices() {
+        this.representations.forEach((e, index) => {
+            if(e.lower.value >= "a" && e.lower.value <= "z") this.shiftIncludedIndices.push(index);
+        });
     }
 
 

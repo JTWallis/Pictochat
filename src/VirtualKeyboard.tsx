@@ -5,7 +5,7 @@ import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
 import imgBorder from './assets/img_keyboard_border.png';
 
 
-function VirtualKeyboard( {floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
+function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
     const [mouseDown, setMouseDown] = useState(false);
 
     useEffect(() => {
@@ -70,6 +70,7 @@ function VirtualKeyboard( {floatingKeyRef, onKeyboardButtonClick, charmap, charm
                         />
                         :
                         <VirtualKeyboardStaggered
+                            vkeyboardStaggeredRef={vkeyboardStaggeredRef}
                             charmap={charmap}
                             onButtonMouseDown={handleButtonMouseDown}
                             onClick={handleOnClick}
