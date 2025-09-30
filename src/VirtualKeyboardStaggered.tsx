@@ -31,6 +31,20 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
         const representations = (charmap as CharmapBaseDouble).getCharRepresentations();
         const rows: any[] = [];
 
+        function getRep(index: number): CharRepresentation {
+            const lower = representations[index].lower;
+            const upper = representations[index].upper;
+
+            if(upper.value.length === 0) return lower;
+            if(isUpper) return upper;
+
+            if(isShift && (charmap as CharmapBaseDouble).isCharShiftIncluded(lower.value)) {
+                return upper;
+            }
+
+            return lower;
+        }
+
         for (let k = 0; k < rowRangeIndices.length; k++) {
             rows.push([]);
 
