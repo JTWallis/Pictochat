@@ -1,7 +1,6 @@
 .screen {
     height: 100%;
-    aspect-ratio: 16 / 9;
-    margin: 0 auto 0 auto;
+    width: 100%;
     display: grid;
 }
 
@@ -40,16 +39,6 @@ canvas {
     align-items: center;
 }
 
-.text {
-    grid-area: 1 / 1;
-    line-height: 220%;
-    font-size: 1rem;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: pre-wrap;
-    pointer-events: none;
-}
-
 .stripes {
     width: 99.5%;
     height: 98%;
@@ -58,8 +47,6 @@ canvas {
     justify-content: space-evenly;
     grid-area: 1 / 1;
     pointer-events: none;
-
-
 }
 
 .stripe {

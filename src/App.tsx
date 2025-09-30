@@ -1,6 +1,6 @@
 import './App.css'
 import ButtonColumnLeft from './ButtonColumnLeft';
-import Canvas from './Canvas'
+import MessageSketch from './MessageSketch'
 import FloatingKey from './FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
@@ -229,7 +229,7 @@ function App() {
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <Canvas canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
+            <MessageSketch canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>

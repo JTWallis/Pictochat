@@ -1,162 +1,68 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
-import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
 
-const stripeColor = "green";
-
-const stripeStyle: React.CSSProperties = {
-    color: stripeColor
-};
-
 const stripeCount = 4;
 
-const stripes: any = [];
-for (let i = 0; i < stripeCount; i++) {
-    stripes.push(
-        <hr key={"Stripe-" + i} className="stripe" style={stripeStyle} />
-    )
-}
-
-const colorBackground = "#FFF";
-const colorForeground = "#000";
-const sizeSmall = 1.0;
-const sizeLarge = 3.0;
-const rainbowPhaseR = 0;
-const rainbowPhaseG = 2;
-const rainbowPhaseB = 4;
-
-const canvasTextPosXOffset = 5;
-
-/**
- * Takes a single value between 0 and 255 and turns it into a 2-digit hex representation.
- * @param b Color value between 0 and 255.
- * @returns 2-digit hex-representation of that value.
- */
-function byteToHex(b: number): string {
-    const str = "0123456789ABCDEF";
-    const subStrFirst = (b >> 4) & 0x0F;
-    const subStrSecond = b & 0x0F;
-    return str.substring(subStrFirst, subStrFirst+1) + str.substring(subStrSecond, subStrSecond+1);
-}
-
-/**
- * Takes three RGB values between 0 and 255 and turns them in a 6-digit hex-representation.
- * @param r Red color value.
- * @param g Green color value.
- * @param b Blue color value.
- * @returns 6-digit hex-representation of the RGB values, with '#' as the prefix. E.g. #12ABCD
- */
-function rgbToColor(r: number, g: number, b: number): string {
-    return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
-}
-
-function Canvas(props: any) {
-
-    const [mouseDown, setMouseDown] = useState(false);
-    const [posX, setPosX] = useState(-1);
-    const [posY, setPosY] = useState(-1);
-    const [prevPosX, setPrevPosX] = useState(-1);
-    const [prevPosY, setPrevPosY] = useState(-1);
-
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const canvasContainerRef = useRef<HTMLDivElement>(null);
-    const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [canvasWidth, setCanvasWidth] = useState(300);
-    const [canvasHeight, setCanvasHeight] = useState(150);
-
-    const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
-    const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
-
-    const [floatingKeyValue, setFloatingKeyValue] = useState("");
-    const [floatingKeyPos, setFloatingKeyPos] = useState({
-        x: 0,
-        y: 0
-    });
-
-    const [message, setMessage] = useState(new Message([], props.username));
-
-    const [penSize, setPenSize] = useState(sizeLarge);
-    const [penColor, setPenColor] = useState(colorForeground);
-    const [penRainbow, setPenRainbow] = useState(false);
-    const [rainbowTick, setRainbowTick] = useState(0);
+function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCharRepFromValue, drawOffsetY, showStripes, stripesContainerRef, showName, nameContainerRef}: any) {
 
 
-    useImperativeHandle(props.canvasRef, () => ({
-        drawText(text: string, screenX: number, screenY: number) {
-            setFloatingKeyPos({
-                x: screenX,
-                y: screenY
-            })
-            setFloatingKeyValue(text);
+    useImperativeHandle(canvasComponentRef, () => ({
+        drawText(pos: Vector2, text: string) {
+            drawText(pos, text);
         },
 
-        drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
-            handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
+        drawStroke(posStart: Vector2, posEnd: Vector2, size: number, color: string) {
+            const drawDot = posStart.equals(posEnd);
+            drawStroke(posStart, posEnd, drawDot, size, color);
         },
 
-        usePenDraw() {
-            setPenDraw();
+        drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+            drawImage(img, pos, colorFill);
         },
 
-        usePenErase() {
-            setPenErase();
-        },
-
-        usePenSmall() {
-            setPenSmall();
-        },
-
-        usePenBig() {
-            setPenBig();
-        },
-
-        sendMessage() {
-            sendCurrentMessage();
-        },
-
-        copyMessage() {
-            copyOnCanvas();
-        },
-
-        discardMessage() {
+        clearCanvas() {
             clearCanvas();
         },
 
-        getLastTextValue(): string | null {
-            return message.getLastTextValue();
-        },
-
-        replaceLastTextValue(newVal: string) {
-            replaceLastMessageText(newVal);
+        reconstructMessage() {
+            reconstructMessage();
         }
     }));
 
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+    const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
+    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(150);
+
+
     useEffect(() => {
-        addEventListener("resize", setCanvasSize);
+        addEventListener("resize", updateCanvasSize);
+        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
         return () => {
-            removeEventListener("resize", setCanvasSize);
+            removeEventListener("resize", updateCanvasSize);
         }
     }, []);
 
     useEffect(() => {
-        setCanvasSize();
+        updateCanvasSize();
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
-        handleStrokePosChange();
-    }, [posX, posY]);
+        clearCanvas();
+        reconstructMessage();
+        if(onCanvasResize) onCanvasResize();
+    }, [canvasSize]);
 
-    useEffect(() => {
-        handleCanvasTextChange();
-    }, [props.canvasText]);
+    function updateCanvasSize() {
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
 
-    useEffect(() => {
-        handleFloatingKeyAttachment();
-    }, [floatingKeyValue, floatingKeyPos]);
+        setCanvasSize(new Vector2(width, height));
+    }
 
     function getCanvasWidth(): number {
         return canvasRef.current?.width!;
@@ -166,56 +72,54 @@ function Canvas(props: any) {
         return canvasRef?.current?.getContext("2d");
     }
 
-    async function sendCurrentMessage() {
-        props.addMessage(message);
-        await postMessage(message);
-        clearCanvas();
-        setMessage(new Message([], props.username));
-    }
-
-    function replaceLastMessageText(newVal: string) {
-        const oldVal = message.removeLastTextCommand();
-        if(!oldVal) return;
-
-        message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
-        clearCanvas();
-        reconstructMessage(message);
-    }
-
-    function copyOnCanvas() {
-        const msg = props.getBottomScrollMessage() as Message;
-        reconstructMessage(msg);
-        message.concatCommands(msg.getCommands());
-    }
-
     function unNormalizePos(pos: Vector2): Vector2 {
-        const height = canvasRef.current?.height!;
-        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
+        return new Vector2(pos.x * getCanvasWidth(), pos.y * originalCanvasHeight);
     }
 
-    function reconstructMessage(msg: Message) {
-        if(!msg) return;
+    function getStripes() {
 
-        const drawingCommands = msg.getCommands();
+        const stripeColor = userColor ? userColor : "green";
 
-        for(let i = 0; i < drawingCommands.length; i++) {
+        const stripeStyle: React.CSSProperties = {
+            color: stripeColor
+        };
+
+        const stripes: any = [];
+        for (let i = 0; i < stripeCount; i++) {
+            stripes.push(
+                <hr key={"Stripe-" + i} className="stripe" style={stripeStyle} />
+            )
+        }
+
+        return stripes;
+    }
+
+    function reconstructMessage() {
+        if (!message) return;
+
+        const drawingCommands = message.getCommands();
+
+        for (let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
-            const posStart = unNormalizePos(command.getStartPos());
-            const posEnd = unNormalizePos(command.getEndPos());
+            const offsetY = (!drawOffsetY) ? 0 : drawOffsetY;
+            const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - offsetY);
+            const posStart = unNormalizePos(offsetStart);
+            const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - offsetY);
+            const posEnd = unNormalizePos(offsetEnd);
 
-            if(command.getType() === DrawingCommandType.LINE_STROKE) {
+            if (command.getType() === DrawingCommandType.LINE_STROKE) {
                 const drawDot = posStart.equals(posEnd);
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
-            } else if(command.getType() === DrawingCommandType.FLOATING_KEY) {
+            } else if (command.getType() === DrawingCommandType.FLOATING_KEY) {
                 let src;
-                if(command.getValue().length > 1) {
+                if (command.getValue().length > 1) {
                     // Command Value should already be a src path.
                     src = command.getValue();
                 } else {
-                    const rep = props.findCharRepFromValue(command.getValue());
-                    if(rep) src = rep.src;
+                    const rep = findCharRepFromValue(command.getValue());
+                    if (rep) src = rep.src;
                 }
-                if(!src) continue;
+                if (!src) continue;
 
                 const img = document.createElement("img") as HTMLImageElement;
                 img.width = Math.abs(posEnd.x - posStart.x);
@@ -227,237 +131,11 @@ function Canvas(props: any) {
             }
         }
     }
-    
-
-    /**
-     * Draws a stroke onto the Canvas based on the previous and current cursor position.
-     */
-    function handleStrokePosChange() {
-        const offsetTop = canvasRef.current?.offsetTop!;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
-
-        const drawDot = prevPosX < 0;
-
-        const posPrev: Vector2 = new Vector2(prevPosX - offsetLeft, prevPosY - offsetTop);
-        const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
-        const posFirst: Vector2 = drawDot ? pos : posPrev;
-
-        if(posFirst.x < 0 || posFirst.y < 0) return;
-
-        if(penRainbow && !isPenErase()) {
-            setPenColor(tickRainbow());
-        }
-
-        drawPushStroke(posFirst, pos, drawDot, penSize, penColor);
-
-
-        setPrevPosX(posX);
-        setPrevPosY(posY);
-    }
-
-    /**
-     * Draws the dragged Floating Key onto the Canvas.
-     */
-    function handleFloatingKeyAttachment() {
-        // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
-        //  resulting in a "pop effect". This offset makes the position accurate again.
-        const offsetPopFixY = -13;
-        const offsetTop = canvasRef.current?.offsetTop! + offsetPopFixY;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
-
-        const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
-
-        if(pos.x < 0 || pos.y < 0) return;
-
-        const value: string = floatingKeyValue;
-
-        setCanvasTextPosX(pos.x);
-        setCanvasTextPosY(pos.y);
-
-        drawPushText(pos, value);
-    }
-
-    function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
-        const offsetTop = canvasRef.current?.offsetTop!;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
-        const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
-
-        // Ignore Image that would be too far out of bounds.
-        const canvasRight = canvasRef.current!.offsetWidth;
-        const canvasBottom = canvasRef.current!.offsetHeight;
-        const imgRight = pos.x + img.width;
-        const imgBottom = pos.y + img.height;
-
-        if(imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
-
-        // Set pos to the right and vertical center of the image.
-        setCanvasTextPosX(imgRight);
-        setCanvasTextPosY((pos.y + imgBottom) / 2);
-
-        drawPushImage(img, pos, colorFill);
-    }
-
-    /**
-     * Draws a char onto the Canvas upon pressing a Button on the Virtual Keyboard 
-     *  or typing a key on the physical keyboard.
-     */
-    function handleCanvasTextChange() {
-        const value: string = props.canvasText.charAt(props.canvasText.length - 1);
-
-        if(value === "\b") {
-            const command = message.removeLastTextCommand();
-            if(!command) return;
-            if(command.getValue().length !== 1) return;
-
-            const pos = unNormalizePos(command.getStartPos());
-            setCanvasTextPosX(pos.x);
-            setCanvasTextPosY(pos.y);
-
-            clearCanvas();
-            reconstructMessage(message);
-            return;
-        }
-
-        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
-
-        if(pos.x < 0 || pos.y < 0) return;
-
-        const maxWidth = getCanvasWidth() - canvasTextPosXOffset;
-
-        if (pos.x >= maxWidth) {
-            pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosY + canvasRef?.current?.height! / (stripeCount + 1);
-            setCanvasTextPosX(pos.x);
-            setCanvasTextPosY(pos.y);
-        }
-
-        const incrementX = 8;
-        setCanvasTextPosX(prev => prev + incrementX);
-
-        drawPushText(pos, value);
-    }
-
-    function setCanvasSize() {
-        console.log("CanvasSize");
-        const width = canvasContainerRef.current?.clientWidth!;
-        const height = canvasContainerRef.current?.clientHeight!;
-
-        setCanvasWidth(width);
-        setCanvasHeight(height);
-
-        const h = height / (stripeCount + 1);
-        const w = nameContainerRef.current?.clientWidth!;
-        setCanvasTextPosX(w + canvasTextPosXOffset);
-        setCanvasTextPosY(h - h / 2);
-    }
-
-    function isPenErase() {
-        return penColor === colorBackground;
-    }
-
-    function setPenSmall() {
-        setPenSize(sizeSmall);
-    }
-
-    function setPenBig() {
-        setPenSize(sizeLarge);
-    }
-
-    function setPenDraw() {
-        if(penColor === colorForeground) {
-            setPenRainbow(true);
-        } else {
-            setPenColor(colorForeground);
-
-            if(!isPenErase()) {
-                setPenRainbow(false);
-            }
-        }
-    }
-
-    function setPenErase() {
-        setPenColor(colorBackground);
-    }
-
-    /**
-     * Increments the rainbow ticks and returns an RGB value of the current ticks color.
-     * @returns Hex-representation of the RGB values for the current color of the rainbow.
-     */
-    function tickRainbow(): string {
-        const freq = 0.31415;
-        const maxTicks = 32;
-        setRainbowTick(prev => prev >= maxTicks ? 0 : prev + 1);
-
-        const r = Math.sin(freq * rainbowTick + rainbowPhaseR) * 127 + 128;
-        const g = Math.sin(freq * rainbowTick + rainbowPhaseG) * 127 + 128;
-        const b = Math.sin(freq * rainbowTick + rainbowPhaseB) * 127 + 128;
-
-        return rgbToColor(r, g, b);
-    }
-
-    function resetPos() {
-        setPosX(-1);
-        setPosY(-1);
-        setPrevPosX(-1);
-        setPrevPosY(-1);
-    }
-
-    function canvas_mousedown(event: any) {
-        setMouseDown(true);
-        setPosX(event.pageX);
-        setPosY(event.pageY);
-    }
-
-    function canvas_mousemove(event: any) {
-        if (!mouseDown) return;
-        setPosX(event.pageX);
-        setPosY(event.pageY);
-    }
-
-    function canvas_mouseup(event: any) {
-        setMouseDown(false);
-        resetPos();
-
-        console.log("DrawCommands:");
-        const commands = message.getCommands();
-        for (let i = 0; i < commands.length; i++) {
-            console.log("  ", commands[i].debugPrintString());
-        }
-    }
-
-    function canvas_mouseenter(event: any) {
-        if (!mouseDown) return;
-
-        setPosX(event.pageX);
-        setPosY(event.pageY);
-    }
-
-    function canvas_mouseleave(event: any) {
-        if (!mouseDown) return;
-
-        //draw(event);
-
-        //prevX = null;
-        //prevY = null;
-    }
-
-    function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = getCanvasWidth();
-        const height = canvasRef.current?.height!;
-
-        return new Vector2(canvasPos.x / width, canvasPos.y / height);
-    }
 
     function clearCanvas() {
         const context = getCanvasContext();
         const height = canvasRef.current?.height!;
         context?.clearRect(0, 0, getCanvasWidth(), height);
-    }
-
-    function drawPushText(pos: Vector2, value: string) {
-        drawText(pos, value);
-        const normalizedPos = normalizeCanvasPos(pos);
-        message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
     function drawText(pos: Vector2, value: string) {
@@ -468,11 +146,6 @@ function Canvas(props: any) {
 
         context.font = "16px Courier New";
         context.fillText(value, pos.x, pos.y, maxWidth);
-    }
-
-    function drawPushStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
-        drawStroke(posSrc, posDst, drawDot, size, color);
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
@@ -493,13 +166,6 @@ function Canvas(props: any) {
         }
     }
 
-    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        drawImage(img, pos, colorFill);
-        const normalizedStartPos = normalizeCanvasPos(pos);
-        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
-        const value = img.alt.length > 0 ? img.alt : img.src;
-        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
-    }
 
     function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
         const context = getCanvasContext();
@@ -524,24 +190,26 @@ function Canvas(props: any) {
             <div className="canvasBackground">
 
             </div>
-            <label className="text">{/*props.canvasText*/}</label>
-            <div className="stripes">
-                {stripes}
-            </div>
+            {showStripes ? (
+                <div className="stripes" ref={stripesContainerRef}>
+                    {getStripes()}
+                </div>
+            ) : (
+                <></>
+            )}
             <canvas
-                width={canvasWidth}
-                height={canvasHeight}
-                onMouseDown={canvas_mousedown}
-                onMouseUp={canvas_mouseup}
-                onMouseMove={canvas_mousemove}
-                onMouseEnter={canvas_mouseenter}
-                onMouseLeave={canvas_mouseleave}
+                width={canvasSize.x}
+                height={canvasSize.y}
                 ref={canvasRef}>
             </canvas>
             <div className="borderContainer">
-                <div className="nameContainer" ref={nameContainerRef}>
-                    <label>{props.username}</label>
-                </div>
+                {showName ? (
+                    <div className="nameContainer" ref={nameContainerRef}>
+                        <label>{message.getUsername()}</label>
+                    </div>
+                ) : (
+                    <></>
+                )}
             </div>
         </div>
     );
