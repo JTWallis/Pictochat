@@ -51,9 +51,7 @@ function Canvas(props: any) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [canvasWidth, setCanvasWidth] = useState(300);
-    const [canvasHeight, setCanvasHeight] = useState(150);
+    const canvasSharedRef = useRef<any>(null);
 
     const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
     const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
@@ -110,7 +108,7 @@ function Canvas(props: any) {
         },
 
         discardMessage() {
-            clearCanvas();
+            canvasSharedRef.current!.clearCanvas();
         },
 
         getLastTextValue(): string | null {
@@ -137,8 +135,8 @@ function Canvas(props: any) {
     async function sendCurrentMessage() {
         props.addMessage(message);
         await postMessage(message);
-        clearCanvas();
-        setMessage(new Message([], props.username));
+        canvasSharedRef.current!.clearCanvas();
+        setMessage(new Message([], username));
     }
 
     function replaceLastMessageText(newVal: string) {
@@ -146,13 +144,12 @@ function Canvas(props: any) {
         if(!oldVal) return;
 
         message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
-        clearCanvas();
-        reconstructMessage(message);
+        canvasSharedRef.current!.clearCanvas();
+        canvasSharedRef.current!.reconstructMessage();
     }
 
     function copyOnCanvas() {
-        const msg = props.getBottomScrollMessage() as Message;
-        reconstructMessage(msg);
+        const msg = getBottomScrollMessage() as Message;
         message.concatCommands(msg.getCommands());
         canvasSharedRef.current!.reconstructMessage();
     }
@@ -241,8 +238,8 @@ function Canvas(props: any) {
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
 
-            clearCanvas();
-            reconstructMessage(message);
+            canvasSharedRef.current!.clearCanvas();
+            canvasSharedRef.current!.reconstructMessage(message);
             return;
         }
 
@@ -377,28 +374,18 @@ function Canvas(props: any) {
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        drawText(pos, value);
+        canvasSharedRef.current!.drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
         message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
-    function drawText(pos: Vector2, value: string) {
-        const context = getCanvasContext();
-        if (!context) return;
-
-        const maxWidth = getCanvasWidth();
-
-        context.font = "16px Courier New";
-        context.fillText(value, pos.x, pos.y, maxWidth);
-    }
-
-    function drawPushStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
-        drawStroke(posSrc, posDst, drawDot, size, color);
+    function drawPushStroke(posSrc: Vector2, posDst: Vector2, size: number, color: string) {
+        canvasSharedRef.current!.drawStroke(posSrc, posDst, size, color);
         message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        drawImage(img, pos, colorFill);
+        canvasSharedRef.current!.drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
