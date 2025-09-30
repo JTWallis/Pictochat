@@ -5,7 +5,8 @@ import type { Message } from './Message';
 import CanvasShared from './CanvasShared';
 
 function MessageDisplay( {message, findCharRepFromValue}: any ) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const canvasSharedRef = useRef<any>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
