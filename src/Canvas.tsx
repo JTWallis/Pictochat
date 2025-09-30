@@ -48,7 +48,6 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     const [prevPosX, setPrevPosX] = useState(-1);
     const [prevPosY, setPrevPosY] = useState(-1);
 
-    const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
     const canvasSharedRef = useRef<any>(null);
@@ -154,12 +153,18 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         canvasSharedRef.current!.reconstructMessage();
     }
 
+    function unNormalizePos(pos: Vector2): Vector2 {
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
+        return new Vector2(pos.x * width, pos.y * height);
+    }
+
     /**
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
     function handleStrokePosChange() {
-        const offsetTop = canvasRef.current?.offsetTop!;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
+        const offsetTop = canvasContainerRef.current?.offsetTop!;
+        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
 
         const drawDot = prevPosX < 0;
 
@@ -187,8 +192,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
         //  resulting in a "pop effect". This offset makes the position accurate again.
         const offsetPopFixY = -13;
-        const offsetTop = canvasRef.current?.offsetTop! + offsetPopFixY;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
+        const offsetTop = canvasContainerRef.current?.offsetTop! + offsetPopFixY;
+        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
 
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
 
@@ -203,13 +208,13 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
-        const offsetTop = canvasRef.current?.offsetTop!;
-        const offsetLeft = canvasRef.current?.offsetLeft!;
+        const offsetTop = canvasContainerRef.current?.offsetTop!;
+        const offsetLeft = canvasContainerRef.current?.offsetLeft!;
         const pos: Vector2 = new Vector2(screenPos.x - offsetLeft, screenPos.y - offsetTop);
 
         // Ignore Image that would be too far out of bounds.
-        const canvasRight = canvasRef.current!.offsetWidth;
-        const canvasBottom = canvasRef.current!.offsetHeight;
+        const canvasRight = canvasContainerRef.current!.offsetWidth;
+        const canvasBottom = canvasContainerRef.current!.offsetHeight;
         const imgRight = pos.x + img.width;
         const imgBottom = pos.y + img.height;
 
@@ -247,11 +252,12 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
         if(pos.x < 0 || pos.y < 0) return;
 
-        const maxWidth = getCanvasWidth() - canvasTextPosXOffset;
+        const width = canvasContainerRef.current?.clientWidth!;
+        const maxWidth = width - canvasTextPosXOffset;
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosY + canvasRef?.current?.height! / (stripeCount + 1);
+            pos.y = canvasTextPosY + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
         }
@@ -367,8 +373,8 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = getCanvasWidth();
-        const height = canvasRef.current?.height!;
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
