@@ -2,6 +2,10 @@ import './VirtualKeyboardStaggered.css'
 import { useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from './CharmapBaseDouble';
+import type { CharRepresentation } from './CharRepresentation';
+
+const SPECIAL_CAPS = "CAPS";
+const SPECIAL_SHIFT = "SHIFT";
 
 function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) {
 
@@ -61,13 +65,13 @@ function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) 
                 let imageClass = "keyboardImageButtonSpecial";
 
                 switch (representations[i].lower.value) {
-                    case "CAPS":
+                    case SPECIAL_CAPS:
                         buttonClass = "keyboardImageButtonStaggeredCaps";
                         break;
                     case "BACK":
                         buttonClass = "keyboardImageButtonStaggeredBack";
                         break;
-                    case "SHIFT":
+                    case SPECIAL_SHIFT:
                         buttonClass = "keyboardImageButtonStaggeredShift";
                         break;
                     case "ENTER":
