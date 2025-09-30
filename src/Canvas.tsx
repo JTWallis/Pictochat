@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './Canvas.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
@@ -26,7 +26,7 @@ function byteToHex(b: number): string {
     const str = "0123456789ABCDEF";
     const subStrFirst = (b >> 4) & 0x0F;
     const subStrSecond = b & 0x0F;
-    return str.substring(subStrFirst, subStrFirst+1) + str.substring(subStrSecond, subStrSecond+1);
+    return str.substring(subStrFirst, subStrFirst + 1) + str.substring(subStrSecond, subStrSecond + 1);
 }
 
 /**
@@ -140,7 +140,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
     function replaceLastMessageText(newVal: string) {
         const oldVal = message.removeLastTextCommand();
-        if(!oldVal) return;
+        if (!oldVal) return;
 
         message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
         canvasSharedRef.current!.clearCanvas();
@@ -172,13 +172,13 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
-        if(posFirst.x < 0 || posFirst.y < 0) return;
+        if (posFirst.x < 0 || posFirst.y < 0) return;
 
-        if(penRainbow && !isPenErase()) {
+        if (penRainbow && !isPenErase()) {
             setPenColor(tickRainbow());
         }
 
-        drawPushStroke(posFirst, pos, drawDot, penSize, penColor);
+        drawPushStroke(posFirst, pos, penSize, penColor);
 
 
         setPrevPosX(posX);
@@ -197,7 +197,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
         const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
 
-        if(pos.x < 0 || pos.y < 0) return;
+        if (pos.x < 0 || pos.y < 0) return;
 
         const value: string = floatingKeyValue;
 
@@ -218,7 +218,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
         const imgRight = pos.x + img.width;
         const imgBottom = pos.y + img.height;
 
-        if(imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
+        if (imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
 
         // Set pos to the right and vertical center of the image.
         setCanvasTextPosX(imgRight);
@@ -234,10 +234,10 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     function handleCanvasTextChange() {
         const value: string = canvasText.charAt(canvasText.length - 1);
 
-        if(value === "\b") {
+        if (value === "\b") {
             const command = message.removeLastTextCommand();
-            if(!command) return;
-            if(command.getValue().length !== 1) return;
+            if (!command) return;
+            if (command.getValue().length !== 1) return;
 
             const pos = unNormalizePos(command.getStartPos());
             setCanvasTextPosX(pos.x);
@@ -250,7 +250,7 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
         const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
 
-        if(pos.x < 0 || pos.y < 0) return;
+        if (pos.x < 0 || pos.y < 0) return;
 
         const width = canvasContainerRef.current?.clientWidth!;
         const maxWidth = width - canvasTextPosXOffset;
@@ -289,12 +289,12 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
     }
 
     function setPenDraw() {
-        if(penColor === colorForeground) {
+        if (penColor === colorForeground) {
             setPenRainbow(true);
         } else {
             setPenColor(colorForeground);
 
-            if(!isPenErase()) {
+            if (!isPenErase()) {
                 setPenRainbow(false);
             }
         }
@@ -394,11 +394,11 @@ function Canvas({canvasText, canvasRef, username, addMessage, findCharRepFromVal
 
     return (
         <div className="canvasContainer" ref={canvasContainerRef}
-                onMouseDown={canvas_mousedown}
-                onMouseUp={canvas_mouseup}
-                onMouseMove={canvas_mousemove}
-                onMouseEnter={canvas_mouseenter}
-                onMouseLeave={canvas_mouseleave}
+            onMouseDown={canvas_mousedown}
+            onMouseUp={canvas_mouseup}
+            onMouseMove={canvas_mousemove}
+            onMouseEnter={canvas_mouseenter}
+            onMouseLeave={canvas_mouseleave}
         >
             <CanvasShared
                 canvasSharedRef={canvasSharedRef}
