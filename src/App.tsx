@@ -47,6 +47,9 @@ const charmapKatakana = new CharmapJapaneseKatakana();
 const charmapSpecial = new CharmapSpecial();
 const charmapPicto = new CharmapPicto();
 
+const KEY_SHIFT = "Shift";
+const KEY_CAPS = "CapsLock";
+
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
@@ -62,7 +65,27 @@ function App() {
   const vkeyboardStaggeredRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
-    handleKeyDown(event.key);
+    switch(event.key) {
+      case KEY_SHIFT:
+        vkeyboardStaggeredRef.current.onShiftDown();
+        break;
+      case KEY_CAPS:
+        vkeyboardStaggeredRef.current.onCapsDown();
+        break;
+      default:
+        handleKeyDown(event.key);
+        break;
+    }
+  }
+
+  function onKeyUp(event: any) {
+    switch(event.key) {
+      case KEY_SHIFT:
+        vkeyboardStaggeredRef.current.onShiftUp();
+        break;
+      default:
+        break;
+    }
   }
 
   function onKeyboardButtonClick(e: any) {
@@ -175,9 +198,11 @@ function App() {
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
+      window.addEventListener("keyup", onKeyUp);
     }
   }, []);
 
