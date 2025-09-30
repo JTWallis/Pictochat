@@ -3,21 +3,9 @@ import './Canvas.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
-
-const stripeColor = "green";
-
-const stripeStyle: React.CSSProperties = {
-    color: stripeColor
-};
+import CanvasShared from './CanvasShared';
 
 const stripeCount = 4;
-
-const stripes: any = [];
-for (let i = 0; i < stripeCount; i++) {
-    stripes.push(
-        <hr key={"Stripe-" + i} className="stripe" style={stripeStyle} />
-    )
-}
 
 const colorBackground = "#FFF";
 const colorForeground = "#000";
@@ -135,18 +123,6 @@ function Canvas(props: any) {
     }));
 
     useEffect(() => {
-        addEventListener("resize", setCanvasSize);
-
-        return () => {
-            removeEventListener("resize", setCanvasSize);
-        }
-    }, []);
-
-    useEffect(() => {
-        setCanvasSize();
-    }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
-
-    useEffect(() => {
         handleStrokePosChange();
     }, [posX, posY]);
 
@@ -157,14 +133,6 @@ function Canvas(props: any) {
     useEffect(() => {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
-
-    function getCanvasWidth(): number {
-        return canvasRef.current?.width!;
-    }
-
-    function getCanvasContext(): CanvasRenderingContext2D | null | undefined {
-        return canvasRef?.current?.getContext("2d");
-    }
 
     async function sendCurrentMessage() {
         props.addMessage(message);
@@ -186,48 +154,8 @@ function Canvas(props: any) {
         const msg = props.getBottomScrollMessage() as Message;
         reconstructMessage(msg);
         message.concatCommands(msg.getCommands());
+        canvasSharedRef.current!.reconstructMessage();
     }
-
-    function unNormalizePos(pos: Vector2): Vector2 {
-        const height = canvasRef.current?.height!;
-        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
-    }
-
-    function reconstructMessage(msg: Message) {
-        if(!msg) return;
-
-        const drawingCommands = msg.getCommands();
-
-        for(let i = 0; i < drawingCommands.length; i++) {
-            const command = drawingCommands[i];
-            const posStart = unNormalizePos(command.getStartPos());
-            const posEnd = unNormalizePos(command.getEndPos());
-
-            if(command.getType() === DrawingCommandType.LINE_STROKE) {
-                const drawDot = posStart.equals(posEnd);
-                drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
-            } else if(command.getType() === DrawingCommandType.FLOATING_KEY) {
-                let src;
-                if(command.getValue().length > 1) {
-                    // Command Value should already be a src path.
-                    src = command.getValue();
-                } else {
-                    const rep = props.findCharRepFromValue(command.getValue());
-                    if(rep) src = rep.src;
-                }
-                if(!src) continue;
-
-                const img = document.createElement("img") as HTMLImageElement;
-                img.width = Math.abs(posEnd.x - posStart.x);
-                img.height = Math.abs(posEnd.y - posStart.y);
-                img.src = src;
-                drawImage(img, posStart, "#000");
-            } else {
-                drawText(posStart, command.getValue());
-            }
-        }
-    }
-    
 
     /**
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
@@ -448,12 +376,6 @@ function Canvas(props: any) {
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
 
-    function clearCanvas() {
-        const context = getCanvasContext();
-        const height = canvasRef.current?.height!;
-        context?.clearRect(0, 0, getCanvasWidth(), height);
-    }
-
     function drawPushText(pos: Vector2, value: string) {
         drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
@@ -475,24 +397,6 @@ function Canvas(props: any) {
         message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
-    function drawStroke(posSrc: Vector2, posDst: Vector2, drawDot: boolean, size: number, color: string) {
-        const context = getCanvasContext();
-        if (!context) return;
-
-        if (drawDot) {
-            context.fillStyle = color;
-            context.fillRect(posSrc.x, posSrc.y, size, size);
-        } else {
-            context.beginPath();
-            context.moveTo(posSrc.x, posSrc.y);
-            context.lineTo(posDst.x, posDst.y);
-            context.lineWidth = size;
-            context.strokeStyle = color;
-            context.lineCap = "square";
-            context.stroke();
-        }
-    }
-
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
         drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
@@ -501,48 +405,23 @@ function Canvas(props: any) {
         message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
     }
 
-    function drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        const context = getCanvasContext();
-        if (!context) return;
-
-        const buffer = document.createElement("canvas");
-        buffer.width = img.width;
-        buffer.height = img.height;
-
-        const bufferContext = buffer.getContext("2d")!;
-        bufferContext.imageSmoothingEnabled = false;
-        bufferContext.drawImage(img, 0, 0, img.width, img.height);
-        bufferContext.fillStyle = colorFill;
-        bufferContext.globalCompositeOperation = "source-atop";
-        bufferContext.fillRect(0, 0, buffer.width, buffer.height);
-
-        context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
-    }
-
     return (
-        <div className="screen" ref={canvasContainerRef}>
-            <div className="canvasBackground">
-
-            </div>
-            <label className="text">{/*props.canvasText*/}</label>
-            <div className="stripes">
-                {stripes}
-            </div>
-            <canvas
-                width={canvasWidth}
-                height={canvasHeight}
+        <div className="canvasContainer" ref={canvasContainerRef}
                 onMouseDown={canvas_mousedown}
                 onMouseUp={canvas_mouseup}
                 onMouseMove={canvas_mousemove}
                 onMouseEnter={canvas_mouseenter}
                 onMouseLeave={canvas_mouseleave}
-                ref={canvasRef}>
-            </canvas>
-            <div className="borderContainer">
-                <div className="nameContainer" ref={nameContainerRef}>
-                    <label>{props.username}</label>
-                </div>
-            </div>
+        >
+            <CanvasShared
+                canvasSharedRef={canvasSharedRef}
+                nameContainerRef={nameContainerRef}
+                message={message}
+                onCanvasResize={handleCanvasResize}
+                findCharRepFromValue={findCharRepFromValue}
+                showStripes={true}
+                showName={true}
+            />
         </div>
     );
 }
