@@ -59,6 +59,7 @@ function App() {
   const canvasRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
+  const vkeyboardStaggeredRef = useRef<any>(null);
 
   function onKeyDown(event: any) {
     handleKeyDown(event.key);
@@ -208,6 +209,7 @@ function App() {
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
             <VirtualKeyboard 
+              vkeyboardStaggeredRef={vkeyboardStaggeredRef}
               onKeyboardButtonClick={onKeyboardButtonClick} 
               floatingKeyRef={floatingKeyRef}
               charmap={selectedCharmap}

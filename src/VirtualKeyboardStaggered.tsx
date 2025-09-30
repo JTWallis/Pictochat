@@ -1,5 +1,5 @@
 import './VirtualKeyboardStaggered.css'
-import { useState } from 'react';
+import { useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from './CharmapBaseDouble';
 import type { CharRepresentation } from './CharRepresentation';
@@ -7,7 +7,21 @@ import type { CharRepresentation } from './CharRepresentation';
 const SPECIAL_CAPS = "CAPS";
 const SPECIAL_SHIFT = "SHIFT";
 
-function VirtualKeyboardStaggered({ charmap, onButtonMouseDown, onClick }: any) {
+function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMouseDown, onClick }: any) {
+
+    useImperativeHandle(vkeyboardStaggeredRef, () => ({
+        onShiftDown(): void {
+            setIsShift(true);
+        },
+
+        onShiftUp(): void {
+            setIsShift(false);
+        },
+
+        onCapsDown(): void {
+            setIsUpper(!isUpper);
+        }
+    }));
 
     const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
