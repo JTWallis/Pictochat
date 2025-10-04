@@ -1,18 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import './MessageDisplay.css';
-import type { Message } from './Message';
-import Canvas from './Canvas';
 
-function MessageDisplay( {message, findCharRepFromValue}: any ) {
+function MessageDisplay( {className, setStripeSteps, setRenderStripes, setDrawOffsetY, getMessageCommands, getStripeRects, getNameRect, }: any ) {
 
-    const canvasComponentRef = useRef<any>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
-    const stripesContainerRef = useRef<HTMLDivElement>(null);
-    const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [drawnLowest, setDrawnLowest] = useState(0.0);
-    const [drawnStripeOffset, setDrawnStripeOffset] = useState(0);
-    const [showStripes, setShowStripes] = useState(true);
 
     useEffect(() => {
         initHeight();
@@ -27,11 +18,10 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
      *   exceeding stripe. The displayed Canvas is then as high as the drawing, with some extra height for the next stripe.
      */
     function initHeight() {
-        if(!message) return;
         let lowestY = 1.0;
         let highestY = 0.0;
         let lowestX = 1.0;
-        const drawingCommands = (message as Message).getCommands();
+        const drawingCommands = getMessageCommands();
 
         // Find normalized, lowest and highest drawn position. 
         for(let i = 0; i < drawingCommands.length; i++) {
@@ -48,14 +38,13 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
         }
 
         // Find normalized stripe positions.
-        const stripeContainerChildren = stripesContainerRef.current!.children;
+        const stripeRects = getStripeRects();
         const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
         const canvasTop = canvasRect.top;
         const canvasHeight = canvasRect.height;
         let positions: number[] = [];
-        for(let i = 0; i < stripeContainerChildren.length; i++) {
-            const stripe = stripeContainerChildren[i];
-            const rect = stripe.getBoundingClientRect();
+        for(let i = 0; i < stripeRects.length; i++) {
+            const rect = stripeRects[i];
             positions.push((rect.bottom - canvasTop) / canvasHeight);
         }
 
@@ -65,19 +54,22 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
         let lowestStripePos = 0;
         let highestStripePos = 1.0;
 
-        let k;
-        for(k = 0; k < positions.length; k++) {
-            if(lowestY >= positions[k]) {
-                lowestStripePos = positions[k];
+        let lowestStripeIndex;
+        for(lowestStripeIndex = 0; lowestStripeIndex < positions.length; lowestStripeIndex++) {
+            if(lowestY >= positions[lowestStripeIndex]) {
+                lowestStripePos = positions[lowestStripeIndex];
             } else {
+                lowestStripeIndex--;
                 break;
             }
         }
 
-        for(let i = positions.length - 1; i >= 0; i--) {
-            if(highestY <= positions[i]) {
-                highestStripePos = positions[i];
+        let highestStripeIndex;
+        for(highestStripeIndex = positions.length - 1; highestStripeIndex >= 0; highestStripeIndex--) {
+            if(highestY <= positions[highestStripeIndex]) {
+                highestStripePos = positions[highestStripeIndex];
             } else {
+                highestStripeIndex++;
                 break;
             }
         }
@@ -86,23 +78,21 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
         //   but the overall lowest x-pos would horizontally overlap.
         //   In that case, decrement the lowestStripePos by one step,
         //   so a drawing would not be accidentally hidden behind the name container.
-        const nameRect = nameContainerRef.current!.getBoundingClientRect();
+        const nameRect = getNameRect();
         const nameBottom = nameRect.bottom - canvasTop
         const nameRight = nameRect.right - canvasRect.left;
         const unnormLowY = lowestY * canvasHeight;
         const unnormLowX = lowestX * canvasRect.width;
         if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
-            k -= 2;
-            if(k >= 0) lowestStripePos = positions[k];
+            lowestStripeIndex--;
+            if(lowestStripeIndex >= 0) lowestStripePos = positions[lowestStripeIndex];
         }
 
-        const stripeHeight = highestStripePos - lowestStripePos;
+        const stripeSteps = highestStripeIndex - lowestStripeIndex;
 
-        setDrawnLowest(lowestY);
-        setDrawnStripeOffset(lowestY - lowestStripePos);
-        setShowStripes(false);
-
-        applySizeStyles(stripeHeight);
+        setDrawOffsetY(lowestStripePos);
+        setStripeSteps(stripeSteps);
+        setRenderStripes(false);
     }
 
     return (
