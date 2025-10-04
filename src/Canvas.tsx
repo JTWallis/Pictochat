@@ -72,6 +72,28 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
         return stripes;
     }
 
+    /**
+     * Fixes the width and height of the Canvas and Name container, by getting their current rect sizes
+     *   and applying the width and height with a px value, instead of percentage.
+     * The styles need to be set at a percentage at the start to correctly set the stripe positions and
+     *   calculate the new height based on the DrawingCommand positions.
+     * @param newCanvasHeightNormalized Percentage of the current Canvas height to shrink the Canvas to.
+     */
+    function updateCanvasHeight(newCanvasHeightPx: number) {
+        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
+
+        const nameHeight = nameContainerRef.current!.getBoundingClientRect().height;
+        nameContainerRef.current!.style.height = `${nameHeight}px`;
+
+        const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
+        const canvasWidth = canvasRect.width;
+
+        const canvasStyle = canvasContainerRef.current!.style;
+        canvasStyle.aspectRatio = "";
+        canvasStyle.height = `${newCanvasHeightPx}px`;
+        canvasStyle.width = `${canvasWidth}px`;
+    }
+
     function reconstructMessage() {
         if (!message) return;
 

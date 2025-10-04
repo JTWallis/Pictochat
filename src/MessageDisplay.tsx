@@ -19,27 +19,6 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
     }, []);
 
     /**
-     * Fixes the width and height of the Canvas and Name container, by getting their current rect sizes
-     *   and applying the width and height with a px value, instead of percentage.
-     * The styles need to be set at a percentage at the start to correctly set the stripe positions and
-     *   calculate the new height based on the DrawingCommand positions.
-     * @param newCanvasHeightNormalized Percentage of the current Canvas height to shrink the Canvas to.
-     */
-    function applySizeStyles(newCanvasHeightNormalized: number) {
-        const nameHeight = nameContainerRef.current!.getBoundingClientRect().height;
-        nameContainerRef.current!.style.height = `${nameHeight}px`;
-
-        const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
-        const canvasWidth = canvasRect.width;
-        const canvasHeight = canvasRect.height;
-
-        const canvasStyle = canvasContainerRef.current!.style;
-        canvasStyle.aspectRatio = "";
-        canvasStyle.height = `${newCanvasHeightNormalized * canvasHeight}px`;
-        canvasStyle.width = `${canvasWidth}px`;
-    }
-
-    /**
      * Scales the Canvas in steps of stripe heights, based on the drawing height.
      * Gets the lowest and highest position from all DrawingCommands and rounds them towards the last
      *   stripe height they would exceed or subceed.
