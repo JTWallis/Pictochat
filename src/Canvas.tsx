@@ -4,12 +4,30 @@ import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
+import type { CanvasSketchFullAPI, CanvasSketchPartialAPI } from './CanvasSketchAPI';
+import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
+import type { Message } from './Message';
+import type { CharRepresentation } from './CharRepresentation';
 
 const stripeCount = 4;
 
-function Canvas({ className, message, userColor, onCanvasResize, findCharRepFromValue, hideName, isSketch, canvasText,
-    pushMessageCommand, sendMessage, concatBottomScrollMessage, removeLastMessageTextCommand, getLastMessageTextValue, canvasSketchRef
- }: any) {
+interface CanvasSketchProperties {
+    canvasText: string,
+    api: CanvasSketchPartialAPI,
+    canvasSketchRef: React.RefObject<any>
+}
+
+interface CanvasProps {
+    className: string,
+    message: Message,
+    findCharRepFromValue: (value: string) => CharRepresentation | undefined,
+    hideName?: boolean,
+    userColor?: string,
+    onCanvasResize?: () => void,
+    sketchProperties?: CanvasSketchProperties
+}
+
+function Canvas(props: CanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);

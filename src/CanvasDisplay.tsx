@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react';
 import './CanvasDisplay.css';
+import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
 
-function CanvasDisplay( {className, setStripeSteps, setRenderStripes, setDrawOffsetY, getMessageCommands, getStripeRects, getNameRect, }: any ) {
+interface CanvasDisplayProps {
+    className: string,
+    api: CanvasDisplayAPI
+}
+
+function CanvasDisplay(props: CanvasDisplayProps ) {
 
     const canvasContainerRef = useRef<HTMLDivElement>(null);
 

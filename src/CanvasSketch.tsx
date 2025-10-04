@@ -2,6 +2,7 @@ import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './CanvasSketch.css'
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
+import type { CanvasSketchFullAPI } from './CanvasSketchAPI';
 
 const stripeCount = 4;
 
@@ -38,10 +39,14 @@ function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
 
-function CanvasSketch({className, canvasText, canvasSketchRef,
-    reconstructMessage, drawStroke, drawText, drawImage, clearCanvas,
-    pushMessageCommand, sendMessage, concatBottomScrollMessage, removeLastMessageTextCommand, getLastMessageTextValue
-}: any) {
+interface CanvasSketchProps {
+    className: string,
+    canvasText: string,
+    canvasSketchRef: React.RefObject<any>,
+    api: CanvasSketchFullAPI
+};
+
+function CanvasSketch(props: CanvasSketchProps) {
 
     const [mouseDown, setMouseDown] = useState(false);
     const [posX, setPosX] = useState(-1);
