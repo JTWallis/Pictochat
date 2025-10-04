@@ -54,7 +54,8 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
-        return new Vector2(pos.x * getCanvasWidth(), pos.y * originalCanvasHeight);
+        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
     }
 
     function getStripes() {
