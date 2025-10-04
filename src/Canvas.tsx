@@ -15,7 +15,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
     const nameContainerRef = useRef<HTMLDivElement>(null);
 
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
-    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(150);
+    const [renderStripes, setRenderStripes] = useState(true);
 
 
     useEffect(() => {
@@ -222,7 +222,7 @@ function getMessageCommands() {
             <div className="canvasBackground">
 
             </div>
-            {showStripes ? (
+            {renderStripes ? (
                 <div className="stripes" ref={stripesContainerRef}>
                     {getStripes()}
                 </div>
