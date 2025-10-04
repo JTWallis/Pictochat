@@ -127,17 +127,9 @@ function MessageDisplay( {message, findCharRepFromValue}: any ) {
     }
 
     return (
-        <div className="messageDisplayContainer" ref={canvasContainerRef}>
-            <Canvas
-                message={message}
-                findCharRepFromValue={findCharRepFromValue}
-                showStripes={showStripes}
-                showName={true}
-                canvasComponentRef={canvasComponentRef}
-                stripesContainerRef={stripesContainerRef}
-                nameContainerRef={nameContainerRef}
-                drawOffsetY={drawnLowest - drawnStripeOffset}
-                />
+        <div 
+            className={className} 
+            ref={canvasContainerRef}>
         </div>
     );
 }

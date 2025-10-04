@@ -393,22 +393,13 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     }
 
     return (
-        <div className="messageSketchContainer" ref={sketchContainerRef}
+        <div className={className} ref={sketchContainerRef}
             onMouseDown={canvas_mousedown}
             onMouseUp={canvas_mouseup}
             onMouseMove={canvas_mousemove}
             onMouseEnter={canvas_mouseenter}
             onMouseLeave={canvas_mouseleave}
         >
-            <Canvas
-                canvasComponentRef={canvasComponentRef}
-                nameContainerRef={nameContainerRef}
-                message={message}
-                onCanvasResize={handleCanvasResize}
-                findCharRepFromValue={findCharRepFromValue}
-                showStripes={true}
-                showName={true}
-            />
         </div>
     );
 }

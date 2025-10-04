@@ -186,7 +186,8 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
     }
 
     return (
-        <div className="screen" ref={canvasContainerRef}>
+        <div className={className} ref={canvasContainerRef}>
+            <div className="canvasContainer">
             <div className="canvasBackground">
 
             </div>
@@ -202,6 +203,35 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
                 height={canvasSize.y}
                 ref={canvasRef}>
             </canvas>
+
+                {isSketch ?
+                    <MessageSketch
+                        className="canvasTypeContainer"
+                        canvasText={canvasText}
+                        reconstructMessage={reconstructMessage}
+                        drawStroke={drawStroke}
+                        drawText={drawText}
+                        drawImage={drawImage}
+                        clearCanvas={clearCanvas}
+                        pushMessageCommand={pushMessageCommand}
+                        sendMessage={sendMessage}
+                        concatBottomScrollMessage={concatBottomScrollMessage}
+                        removeLastMessageTextCommand={removeLastMessageTextCommand}
+                        getLastMessageTextValue={getLastMessageTextValue}
+                        canvasSketchRef={canvasSketchRef}
+                    />
+                    :
+                    <MessageDisplay
+                        className="canvasTypeContainer"
+                        setStripeSteps={setStripeSteps}
+                        setRenderStripes={setRenderStripes}
+                        setDrawOffsetY={setDrawOffsetY}
+                        getStripeRects={getStripeRects}
+                        getNameRect={getNameRect}
+                        getMessageCommands={getMessageCommands}
+                    />
+                }
+
             <div className="borderContainer">
                 {showName ? (
                     <div className="nameContainer" ref={nameContainerRef}>
@@ -210,6 +240,7 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
                 ) : (
                     <></>
                 )}
+                </div>
             </div>
         </div>
     );
