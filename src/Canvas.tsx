@@ -264,12 +264,12 @@ function getMessageCommands() {
                 }
 
             <div className="borderContainer">
-                {showName ? (
+                {hideName ? (
+<></>
+                    ) : (
                     <div className="nameContainer" ref={nameContainerRef}>
                         <label>{message.getUsername()}</label>
                     </div>
-                ) : (
-                    <></>
                 )}
                 </div>
             </div>
