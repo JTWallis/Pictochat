@@ -69,7 +69,7 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     const [rainbowTick, setRainbowTick] = useState(0);
 
 
-    useImperativeHandle(canvasRef, () => ({
+    useImperativeHandle(canvasSketchRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
             setFloatingKeyPos({
                 x: screenX,

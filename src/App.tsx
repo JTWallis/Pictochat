@@ -59,7 +59,7 @@ function App() {
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
   const floatingKeyRef = useRef(null);
-  const canvasRef = useRef<any>(null);
+  const canvasSketchRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
   const vkeyboardStaggeredRef = useRef<any>(null);
@@ -108,13 +108,13 @@ function App() {
   }
 
   function transformKana(transformType: string): void {
-    const lastChar = canvasRef.current!.getLastTextValue();
+    const lastChar = canvasSketchRef.current!.getLastTextValue();
     if(!lastChar) return;
 
     const transformedChar = (selectedCharmap as CharmapBaseJapanese).getTransformedRepresentation(lastChar, transformType);
     if(!transformedChar) return;
 
-    canvasRef.current!.replaceLastTextValue(transformedChar.value);
+    canvasSketchRef.current!.replaceLastTextValue(transformedChar.value);
   }
 
   function handleKeyDown(key: string) {
@@ -241,13 +241,13 @@ function App() {
               charmapState={selectedCharmapState}
               />
             <div className="buttonColumnRightContainer">
-              <ButtonColumnRight canvasRef={canvasRef} />
+              <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
             </div>
             <div className="emptyRightKeyboardContainer" />
           </div>
         </div>
       </div>
-      <FloatingKey floatingKeyRef={floatingKeyRef} canvasRef={canvasRef} />
+      <FloatingKey floatingKeyRef={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
     </>
   )
 }

@@ -13,7 +13,7 @@ import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
 
-function ButtonColumnLeft( {scrollListRef, canvasRef, onCharmapButtonClick}: any ) {
+function ButtonColumnLeft( {scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
     return (
         <div className="buttonColumn">
             <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
@@ -21,11 +21,11 @@ function ButtonColumnLeft( {scrollListRef, canvasRef, onCharmapButtonClick}: any
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop" src={ImagePenDraw} onClick={() => canvasRef.current.usePenDraw()} />
-            <input type="image" className="button marginTop" src={ImagePenErase} onClick={() => canvasRef.current.usePenErase()} ></input>
+            <input type="image" className="button marginTop" src={ImagePenDraw} onClick={() => canvasSketchRef.current.usePenDraw()} />
+            <input type="image" className="button marginTop" src={ImagePenErase} onClick={() => canvasSketchRef.current.usePenErase()} ></input>
             <hr className="borderInvisible marginTop marginBot"></hr>
-            <input type="image" className="button marginTop" src={ImagePenBig} onClick={() => canvasRef.current.usePenBig()} ></input>
-            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} onClick={() => canvasRef.current.usePenSmall()} ></input>
+            <input type="image" className="button marginTop" src={ImagePenBig} onClick={() => canvasSketchRef.current.usePenBig()} ></input>
+            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} onClick={() => canvasSketchRef.current.usePenSmall()} ></input>
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
