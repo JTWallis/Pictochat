@@ -1,7 +1,9 @@
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
+import MessageSketch from './MessageSketch';
+import MessageDisplay from './MessageDisplay';
 
 const stripeCount = 4;
 
@@ -35,7 +37,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
     useEffect(() => {
         clearCanvas();
         reconstructMessage();
-        if(onCanvasResize) onCanvasResize();
+        if (onCanvasResize) onCanvasResize();
     }, [canvasSize]);
 
     function updateCanvasSize() {
@@ -89,7 +91,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
         return rects;
     }
 
-function getMessageCommands() {
+    function getMessageCommands() {
         return message.getCommands();
     }
 
@@ -221,21 +223,21 @@ function getMessageCommands() {
     return (
         <div className={className} ref={canvasContainerRef}>
             <div className="canvasContainer">
-            <div className="canvasBackground">
+                <div className="canvasBackground">
 
-            </div>
-            {renderStripes ? (
-                <div className="stripes" ref={stripesContainerRef}>
-                    {getStripes()}
                 </div>
-            ) : (
-                <></>
-            )}
-            <canvas
-                width={canvasSize.x}
-                height={canvasSize.y}
-                ref={canvasRef}>
-            </canvas>
+                {renderStripes ? (
+                    <div className="stripes" ref={stripesContainerRef}>
+                        {getStripes()}
+                    </div>
+                ) : (
+                    <></>
+                )}
+                <canvas
+                    width={canvasSize.x}
+                    height={canvasSize.y}
+                    ref={canvasRef}>
+                </canvas>
 
                 {isSketch ?
                     <MessageSketch
@@ -265,14 +267,14 @@ function getMessageCommands() {
                     />
                 }
 
-            <div className="borderContainer">
-                {hideName ? (
-<></>
+                <div className="borderContainer">
+                    {hideName ? (
+                        <></>
                     ) : (
-                    <div className="nameContainer" ref={nameContainerRef}>
-                        <label>{message.getUsername()}</label>
-                    </div>
-                )}
+                        <div className="nameContainer" ref={nameContainerRef}>
+                            <label>{message.getUsername()}</label>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
