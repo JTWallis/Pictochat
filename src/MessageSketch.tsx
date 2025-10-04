@@ -340,12 +340,6 @@ function MessageSketch({className, canvasText, canvasSketchRef,
     function canvas_mouseup(event: any) {
         setMouseDown(false);
         resetPos();
-
-        console.log("DrawCommands:");
-        const commands = message.getCommands();
-        for (let i = 0; i < commands.length; i++) {
-            console.log("  ", commands[i].debugPrintString());
-        }
     }
 
     function canvas_mouseenter(event: any) {
