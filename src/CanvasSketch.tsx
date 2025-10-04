@@ -1,9 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './CanvasSketch.css'
-import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
-import Canvas from './Canvas';
 
 const stripeCount = 4;
 

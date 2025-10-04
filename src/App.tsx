@@ -1,10 +1,8 @@
 import './App.css'
 import ButtonColumnLeft from './ButtonColumnLeft';
-import MessageSketch from './MessageSketch'
 import FloatingKey from './FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
-import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
