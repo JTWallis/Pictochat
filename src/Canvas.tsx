@@ -72,6 +72,18 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
         return stripes;
     }
 
+    function setStripeSteps(steps: number) {
+        if(steps < 1) steps = 1;
+        else if(steps > stripeCount) return;
+
+        const rects = getStripeRects();
+        const stripeBottom = rects[steps - 1].bottom;
+        const canvasTop = canvasContainerRef.current!.getBoundingClientRect().top;
+        const height = stripeBottom - canvasTop;
+
+        updateCanvasHeight(height);
+    }
+
     /**
      * Fixes the width and height of the Canvas and Name container, by getting their current rect sizes
      *   and applying the width and height with a px value, instead of percentage.
