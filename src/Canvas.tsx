@@ -110,7 +110,27 @@ function Canvas(props: CanvasProps) {
     }
 
     function getMessageCommands() {
-        return message.getCommands();
+
+    function buildCanvasSketchFullAPI(): CanvasSketchFullAPI {
+        return {
+            ...props.sketchProperties!.api,
+            drawStroke,
+            drawText,
+            drawImage,
+            reconstructMessage,
+            clearCanvas
+        };
+    }
+
+    function buildCanvasDisplayAPI(): CanvasDisplayAPI {
+        return {
+            setStripeSteps,
+            setRenderStripes,
+            setDrawOffsetY,
+            getStripeRects,
+            getNameRect,
+            getMessageCommands
+        }
     }
 
     function setStripeSteps(steps: number) {
