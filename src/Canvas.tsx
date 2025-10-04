@@ -5,31 +5,9 @@ import { DrawingCommandType } from './DrawCommand';
 
 const stripeCount = 4;
 
-function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCharRepFromValue, drawOffsetY, showStripes, stripesContainerRef, showName, nameContainerRef}: any) {
-
-
-    useImperativeHandle(canvasComponentRef, () => ({
-        drawText(pos: Vector2, text: string) {
-            drawText(pos, text);
-        },
-
-        drawStroke(posStart: Vector2, posEnd: Vector2, size: number, color: string) {
-            const drawDot = posStart.equals(posEnd);
-            drawStroke(posStart, posEnd, drawDot, size, color);
-        },
-
-        drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-            drawImage(img, pos, colorFill);
-        },
-
-        clearCanvas() {
-            clearCanvas();
-        },
-
-        reconstructMessage() {
-            reconstructMessage();
-        }
-    }));
+function Canvas({ className, message, userColor, onCanvasResize, findCharRepFromValue, hideName, isSketch, canvasText,
+    pushMessageCommand, sendMessage, concatBottomScrollMessage, removeLastMessageTextCommand, getLastMessageTextValue, canvasSketchRef
+ }: any) {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);

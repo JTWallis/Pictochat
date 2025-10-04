@@ -40,7 +40,10 @@ function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
 
-function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRepFromValue, getBottomScrollMessage}: any) {
+function MessageSketch({className, canvasText, canvasSketchRef,
+    reconstructMessage, drawStroke, drawText, drawImage, clearCanvas,
+    pushMessageCommand, sendMessage, concatBottomScrollMessage, removeLastMessageTextCommand, getLastMessageTextValue
+}: any) {
 
     const [mouseDown, setMouseDown] = useState(false);
     const [posX, setPosX] = useState(-1);
@@ -50,7 +53,6 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-    const canvasComponentRef = useRef<any>(null);
 
     const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
     const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
@@ -61,7 +63,6 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
         y: 0
     });
 
-    const [message, setMessage] = useState(new Message([], username));
 
     const [penSize, setPenSize] = useState(sizeLarge);
     const [penColor, setPenColor] = useState(colorForeground);
@@ -107,11 +108,11 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
         },
 
         discardMessage() {
-            canvasComponentRef.current!.clearCanvas();
+            clearCanvas();
         },
 
         getLastTextValue(): string | null {
-            return message.getLastTextValue();
+            return getLastMessageTextValue();
         },
 
         replaceLastTextValue(newVal: string) {
@@ -132,25 +133,22 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     }, [floatingKeyValue, floatingKeyPos]);
 
     async function sendCurrentMessage() {
-        addMessage(message);
-        await postMessage(message);
-        canvasComponentRef.current!.clearCanvas();
-        setMessage(new Message([], username));
+        await sendMessage();
+        clearCanvas();
     }
 
     function replaceLastMessageText(newVal: string) {
-        const oldVal = message.removeLastTextCommand();
+        const oldVal = removeLastMessageTextCommand();
         if (!oldVal) return;
 
-        message.pushCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
-        canvasComponentRef.current!.clearCanvas();
-        canvasComponentRef.current!.reconstructMessage();
+        pushMessageCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
+        clearCanvas();
+        reconstructMessage();
     }
 
     function copyOnCanvas() {
-        const msg = getBottomScrollMessage() as Message;
-        message.concatCommands(msg.getCommands());
-        canvasComponentRef.current!.reconstructMessage();
+        concatBottomScrollMessage();
+        reconstructMessage();
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
@@ -235,7 +233,7 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
         const value: string = canvasText.charAt(canvasText.length - 1);
 
         if (value === "\b") {
-            const command = message.removeLastTextCommand();
+            const command = removeLastMessageTextCommand();
             if (!command) return;
             if (command.getValue().length !== 1) return;
 
@@ -243,8 +241,8 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
 
-            canvasComponentRef.current!.clearCanvas();
-            canvasComponentRef.current!.reconstructMessage(message);
+            clearCanvas();
+            reconstructMessage();
             return;
         }
 
@@ -374,22 +372,23 @@ function MessageSketch({canvasText, canvasRef, username, addMessage, findCharRep
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        canvasComponentRef.current!.drawText(pos, value);
+        drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
-        message.pushCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
+        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, size: number, color: string) {
-        canvasComponentRef.current!.drawStroke(posSrc, posDst, size, color);
-        message.pushCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+        const drawDot = posSrc.equals(posDst);
+        drawStroke(posSrc, posDst, drawDot, size, color);
+        pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        canvasComponentRef.current!.drawImage(img, pos, colorFill);
+        drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
-        message.pushCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
     }
 
     return (
