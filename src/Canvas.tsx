@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
-import MessageSketch from './MessageSketch';
-import MessageDisplay from './MessageDisplay';
+import CanvasSketch from './CanvasSketch';
+import CanvasDisplay from './CanvasDisplay';
 
 const stripeCount = 4;
 
@@ -240,7 +240,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
                 </canvas>
 
                 {isSketch ?
-                    <MessageSketch
+                    <CanvasSketch
                         className="canvasTypeContainer"
                         canvasText={canvasText}
                         reconstructMessage={reconstructMessage}
@@ -256,7 +256,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
                         canvasSketchRef={canvasSketchRef}
                     />
                     :
-                    <MessageDisplay
+                    <CanvasDisplay
                         className="canvasTypeContainer"
                         setStripeSteps={setStripeSteps}
                         setRenderStripes={setRenderStripes}

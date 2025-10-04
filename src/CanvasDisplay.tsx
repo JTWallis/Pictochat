@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import './MessageDisplay.css';
+import './CanvasDisplay.css';
 
-function MessageDisplay( {className, setStripeSteps, setRenderStripes, setDrawOffsetY, getMessageCommands, getStripeRects, getNameRect, }: any ) {
+function CanvasDisplay( {className, setStripeSteps, setRenderStripes, setDrawOffsetY, getMessageCommands, getStripeRects, getNameRect, }: any ) {
 
     const canvasContainerRef = useRef<HTMLDivElement>(null);
 
@@ -104,4 +104,4 @@ function MessageDisplay( {className, setStripeSteps, setRenderStripes, setDrawOf
 }
 
 
-export default MessageDisplay
+export default CanvasDisplay

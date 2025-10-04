@@ -1,5 +1,5 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import './MessageSketch.css'
+import './CanvasSketch.css'
 import { Message } from './Message';
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
@@ -40,7 +40,7 @@ function rgbToColor(r: number, g: number, b: number): string {
     return "#" + byteToHex(r) + byteToHex(g) + byteToHex(b);
 }
 
-function MessageSketch({className, canvasText, canvasSketchRef,
+function CanvasSketch({className, canvasText, canvasSketchRef,
     reconstructMessage, drawStroke, drawText, drawImage, clearCanvas,
     pushMessageCommand, sendMessage, concatBottomScrollMessage, removeLastMessageTextCommand, getLastMessageTextValue
 }: any) {
@@ -397,4 +397,4 @@ function MessageSketch({className, canvasText, canvasSketchRef,
     );
 }
 
-export default MessageSketch;
+export default CanvasSketch;
