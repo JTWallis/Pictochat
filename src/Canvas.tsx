@@ -280,28 +280,14 @@ function Canvas(props: CanvasProps) {
                 {isSketch ?
                     <CanvasSketch
                         className="canvasTypeContainer"
-                        canvasText={canvasText}
-                        reconstructMessage={reconstructMessage}
-                        drawStroke={drawStroke}
-                        drawText={drawText}
-                        drawImage={drawImage}
-                        clearCanvas={clearCanvas}
-                        pushMessageCommand={pushMessageCommand}
-                        sendMessage={sendMessage}
-                        concatBottomScrollMessage={concatBottomScrollMessage}
-                        removeLastMessageTextCommand={removeLastMessageTextCommand}
-                        getLastMessageTextValue={getLastMessageTextValue}
-                        canvasSketchRef={canvasSketchRef}
+                        canvasText={props.sketchProperties.canvasText}
+                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        api={buildCanvasSketchFullAPI()}
                     />
                     :
                     <CanvasDisplay
                         className="canvasTypeContainer"
-                        setStripeSteps={setStripeSteps}
-                        setRenderStripes={setRenderStripes}
-                        setDrawOffsetY={setDrawOffsetY}
-                        getStripeRects={getStripeRects}
-                        getNameRect={getNameRect}
-                        getMessageCommands={getMessageCommands}
+                        api={buildCanvasDisplayAPI()}
                     />
                 }
 

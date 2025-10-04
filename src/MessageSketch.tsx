@@ -8,6 +8,14 @@ import type { DrawCommand } from './DrawCommand';
 
 function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef}: any) {
 
+    const api: CanvasSketchPartialAPI = {
+        pushMessageCommand,
+        sendMessage,
+        concatBottomScrollMessage,
+        removeLastMessageTextCommand,
+        getLastMessageTextValue
+    };
+
     const [message, setMessage] = useState(new Message([], username));
 
     function pushMessageCommand(type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) {
@@ -38,14 +46,13 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
             className="messageSketchContainer"
             isSketch={true}
             message={message}
-            canvasText={canvasText}    
             findCharRepFromValue={findCharRepFromValue}
-            pushMessageCommand={pushMessageCommand}
-            sendMessage={sendMessage}
-            concatBottomScrollMessage={concatBottomScrollMessage}
-            removeLastMessageTextCommand={removeLastMessageTextCommand}
-            getLastMessageTextValue={getLastMessageTextValue}
-            canvasSketchRef={canvasSketchRef}
+            sketchProperties={{
+                canvasText: canvasText,
+                api: api,
+                canvasSketchRef: canvasSketchRef
+            }}
+
         />
     )
 }
