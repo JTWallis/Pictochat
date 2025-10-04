@@ -11,6 +11,8 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const stripesContainerRef = useRef<HTMLDivElement>(null);
+    const nameContainerRef = useRef<HTMLDivElement>(null);
 
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(150);
@@ -71,6 +73,20 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
 
         return stripes;
     }
+
+    function getNameRect() {
+        return nameContainerRef.current!.getBoundingClientRect();
+    }
+
+    function getStripeRects() {
+        const rects = [];
+        for(let i = 0; i < stripesContainerRef.current!.children.length; i++) {
+            rects.push(stripesContainerRef.current!.children[i].getBoundingClientRect());
+        }
+
+        return rects;
+    }
+
 
     function setStripeSteps(steps: number) {
         if(steps < 1) steps = 1;
