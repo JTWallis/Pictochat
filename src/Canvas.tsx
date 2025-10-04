@@ -15,13 +15,13 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
     const nameContainerRef = useRef<HTMLDivElement>(null);
 
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
+    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
 
 
     useEffect(() => {
         addEventListener("resize", updateCanvasSize);
-        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
         return () => {
             removeEventListener("resize", updateCanvasSize);
