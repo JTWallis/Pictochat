@@ -16,6 +16,7 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
 
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
     const [renderStripes, setRenderStripes] = useState(true);
+    const [drawOffsetY, setDrawOffsetY] = useState(0);
 
 
     useEffect(() => {
