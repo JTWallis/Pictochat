@@ -73,7 +73,7 @@ function CanvasSketch(props: CanvasSketchProps) {
     const [rainbowTick, setRainbowTick] = useState(0);
 
 
-    useImperativeHandle(canvasSketchRef, () => ({
+    useImperativeHandle(props.canvasSketchRef, () => ({
         drawText(text: string, screenX: number, screenY: number) {
             setFloatingKeyPos({
                 x: screenX,
@@ -111,11 +111,11 @@ function CanvasSketch(props: CanvasSketchProps) {
         },
 
         discardMessage() {
-            clearCanvas();
+            props.api.clearCanvas();
         },
 
         getLastTextValue(): string | null {
-            return getLastMessageTextValue();
+            return props.api.getLastMessageTextValue();
         },
 
         replaceLastTextValue(newVal: string) {
@@ -129,29 +129,29 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     useEffect(() => {
         handleCanvasTextChange();
-    }, [canvasText]);
+    }, [props.canvasText]);
 
     useEffect(() => {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
     async function sendCurrentMessage() {
-        await sendMessage();
-        clearCanvas();
+        await props.api.sendMessage();
+        props.api.clearCanvas();
     }
 
     function replaceLastMessageText(newVal: string) {
-        const oldVal = removeLastMessageTextCommand();
+        const oldVal = props.api.removeLastMessageTextCommand();
         if (!oldVal) return;
 
-        pushMessageCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
-        clearCanvas();
-        reconstructMessage();
+        props.api.pushMessageCommand(oldVal.getType(), oldVal.getStartPos(), oldVal.getEndPos(), newVal, oldVal.getPenSize(), oldVal.getPenColor());
+        props.api.clearCanvas();
+        props.api.reconstructMessage();
     }
 
     function copyOnCanvas() {
-        concatBottomScrollMessage();
-        reconstructMessage();
+        props.api.concatBottomScrollMessage();
+        props.api.reconstructMessage();
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
@@ -233,10 +233,10 @@ function CanvasSketch(props: CanvasSketchProps) {
      *  or typing a key on the physical keyboard.
      */
     function handleCanvasTextChange() {
-        const value: string = canvasText.charAt(canvasText.length - 1);
+        const value: string = props.canvasText.charAt(props.canvasText.length - 1);
 
         if (value === "\b") {
-            const command = removeLastMessageTextCommand();
+            const command = props.api.removeLastMessageTextCommand();
             if (!command) return;
             if (command.getValue().length !== 1) return;
 
@@ -244,8 +244,8 @@ function CanvasSketch(props: CanvasSketchProps) {
             setCanvasTextPosX(pos.x);
             setCanvasTextPosY(pos.y);
 
-            clearCanvas();
-            reconstructMessage();
+            props.api.clearCanvas();
+            props.api.reconstructMessage();
             return;
         }
 
@@ -369,27 +369,27 @@ function CanvasSketch(props: CanvasSketchProps) {
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        drawText(pos, value);
+        props.api.drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
-        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
+        props.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
     }
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, size: number, color: string) {
         const drawDot = posSrc.equals(posDst);
-        drawStroke(posSrc, posDst, drawDot, size, color);
-        pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+        props.api.drawStroke(posSrc, posDst, drawDot, size, color);
+        props.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        drawImage(img, pos, colorFill);
+        props.api.drawImage(img, pos, colorFill);
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
-        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
+        props.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
     }
 
     return (
-        <div className={className} ref={sketchContainerRef}
+        <div className={props.className} ref={sketchContainerRef}
             onMouseDown={canvas_mousedown}
             onMouseUp={canvas_mouseup}
             onMouseMove={canvas_mousemove}

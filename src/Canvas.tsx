@@ -55,7 +55,7 @@ function Canvas(props: CanvasProps) {
     useEffect(() => {
         clearCanvas();
         reconstructMessage();
-        if (onCanvasResize) onCanvasResize();
+        if (props.onCanvasResize) props.onCanvasResize();
     }, [canvasSize]);
 
     function updateCanvasSize() {
@@ -80,7 +80,7 @@ function Canvas(props: CanvasProps) {
 
     function getStripes() {
 
-        const stripeColor = userColor ? userColor : "green";
+        const stripeColor = props.userColor ? props.userColor : "green";
 
         const stripeStyle: React.CSSProperties = {
             color: stripeColor
@@ -110,6 +110,8 @@ function Canvas(props: CanvasProps) {
     }
 
     function getMessageCommands() {
+        return props.message.getCommands();
+    }
 
     function buildCanvasSketchFullAPI(): CanvasSketchFullAPI {
         return {
@@ -168,9 +170,9 @@ function Canvas(props: CanvasProps) {
     }
 
     function reconstructMessage() {
-        if (!message) return;
+        if (!props.message) return;
 
-        const drawingCommands = message.getCommands();
+        const drawingCommands = props.message.getCommands();
 
         for (let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
@@ -189,7 +191,7 @@ function Canvas(props: CanvasProps) {
                     // Command Value should already be a src path.
                     src = command.getValue();
                 } else {
-                    const rep = findCharRepFromValue(command.getValue());
+                    const rep = props.findCharRepFromValue(command.getValue());
                     if (rep) src = rep.src;
                 }
                 if (!src) continue;
@@ -259,7 +261,7 @@ function Canvas(props: CanvasProps) {
     }
 
     return (
-        <div className={className} ref={canvasContainerRef}>
+        <div className={props.className} ref={canvasContainerRef}>
             <div className="canvasContainer">
                 <div className="canvasBackground">
 
@@ -277,7 +279,7 @@ function Canvas(props: CanvasProps) {
                     ref={canvasRef}>
                 </canvas>
 
-                {isSketch ?
+                {props.sketchProperties ?
                     <CanvasSketch
                         className="canvasTypeContainer"
                         canvasText={props.sketchProperties.canvasText}
@@ -292,11 +294,11 @@ function Canvas(props: CanvasProps) {
                 }
 
                 <div className="borderContainer">
-                    {hideName ? (
+                    {props.hideName ? (
                         <></>
                     ) : (
                         <div className="nameContainer" ref={nameContainerRef}>
-                            <label>{message.getUsername()}</label>
+                            <label>{props.message.getUsername()}</label>
                         </div>
                     )}
                 </div>

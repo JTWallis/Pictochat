@@ -27,7 +27,7 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
         let lowestY = 1.0;
         let highestY = 0.0;
         let lowestX = 1.0;
-        const drawingCommands = getMessageCommands();
+        const drawingCommands = props.api.getMessageCommands();
 
         // Find normalized, lowest and highest drawn position. 
         for(let i = 0; i < drawingCommands.length; i++) {
@@ -44,7 +44,7 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
         }
 
         // Find normalized stripe positions.
-        const stripeRects = getStripeRects();
+        const stripeRects = props.api.getStripeRects();
         const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
         const canvasTop = canvasRect.top;
         const canvasHeight = canvasRect.height;
@@ -84,7 +84,7 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
         //   but the overall lowest x-pos would horizontally overlap.
         //   In that case, decrement the lowestStripePos by one step,
         //   so a drawing would not be accidentally hidden behind the name container.
-        const nameRect = getNameRect();
+        const nameRect = props.api.getNameRect();
         const nameBottom = nameRect.bottom - canvasTop
         const nameRight = nameRect.right - canvasRect.left;
         const unnormLowY = lowestY * canvasHeight;
@@ -96,14 +96,14 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
 
         const stripeSteps = highestStripeIndex - lowestStripeIndex;
 
-        setDrawOffsetY(lowestStripePos);
-        setStripeSteps(stripeSteps);
-        setRenderStripes(false);
+        props.api.setDrawOffsetY(lowestStripePos);
+        props.api.setStripeSteps(stripeSteps);
+        props.api.setRenderStripes(false);
     }
 
     return (
         <div 
-            className={className} 
+            className={props.className} 
             ref={canvasContainerRef}>
         </div>
     );
