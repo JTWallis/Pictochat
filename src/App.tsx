@@ -1,10 +1,8 @@
 import './App.css'
 import ButtonColumnLeft from './ButtonColumnLeft';
-import MessageSketch from './MessageSketch'
 import FloatingKey from './FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
-import MessageDisplay from './MessageDisplay';
 import ScrollList from './ScrollList';
 import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
@@ -20,6 +18,8 @@ import { CharmapJapaneseHiragana } from './CharmapJapaneseHiragana';
 import { CharmapJapaneseKatakana } from './CharmapJapaneseKatakana';
 import { CharmapSpecial } from './CharmapSpecial';
 import { CharmapPicto } from './CharmapPicto';
+import MessageSketch from './MessageSketch';
+import MessageDisplay from './MessageDisplay';
 
 
 function isAlpha(char: string): boolean {
@@ -59,7 +59,7 @@ function App() {
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
   const floatingKeyRef = useRef(null);
-  const canvasRef = useRef<any>(null);
+  const canvasSketchRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
   const vkeyboardStaggeredRef = useRef<any>(null);
@@ -108,13 +108,13 @@ function App() {
   }
 
   function transformKana(transformType: string): void {
-    const lastChar = canvasRef.current!.getLastTextValue();
+    const lastChar = canvasSketchRef.current!.getLastTextValue();
     if(!lastChar) return;
 
     const transformedChar = (selectedCharmap as CharmapBaseJapanese).getTransformedRepresentation(lastChar, transformType);
     if(!transformedChar) return;
 
-    canvasRef.current!.replaceLastTextValue(transformedChar.value);
+    canvasSketchRef.current!.replaceLastTextValue(transformedChar.value);
   }
 
   function handleKeyDown(key: string) {
@@ -225,11 +225,18 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef} onCharmapButtonClick={handleCharmapButtonClick}/>
+          <ButtonColumnLeft scrollListRef={scrollListRef} canvasSketchRef={canvasSketchRef} onCharmapButtonClick={handleCharmapButtonClick}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <MessageSketch canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
+            <MessageSketch 
+              canvasSketchRef={canvasSketchRef}
+              username={username}
+              canvasText={canvasText}
+              getBottomScrollMessage={getBottomScrollMessage}
+              findCharRepFromValue={findCharRepFromValue}
+              addMessage={addMessage}
+            />
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
@@ -241,13 +248,13 @@ function App() {
               charmapState={selectedCharmapState}
               />
             <div className="buttonColumnRightContainer">
-              <ButtonColumnRight canvasRef={canvasRef} />
+              <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
             </div>
             <div className="emptyRightKeyboardContainer" />
           </div>
         </div>
       </div>
-      <FloatingKey floatingKeyRef={floatingKeyRef} canvasRef={canvasRef} />
+      <FloatingKey floatingKeyRef={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
     </>
   )
 }

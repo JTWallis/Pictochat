@@ -1,46 +1,47 @@
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
+import CanvasSketch from './CanvasSketch';
+import CanvasDisplay from './CanvasDisplay';
+import type { CanvasSketchFullAPI, CanvasSketchPartialAPI } from './CanvasSketchAPI';
+import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
+import type { Message } from './Message';
+import type { CharRepresentation } from './CharRepresentation';
 
 const stripeCount = 4;
 
-function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCharRepFromValue, drawOffsetY, showStripes, stripesContainerRef, showName, nameContainerRef}: any) {
+interface CanvasSketchProperties {
+    canvasText: string,
+    api: CanvasSketchPartialAPI,
+    canvasSketchRef: React.RefObject<any>
+}
 
+interface CanvasProps {
+    className: string,
+    message: Message,
+    findCharRepFromValue: (value: string) => CharRepresentation | undefined,
+    hideName?: boolean,
+    userColor?: string,
+    onCanvasResize?: () => void,
+    sketchProperties?: CanvasSketchProperties
+}
 
-    useImperativeHandle(canvasComponentRef, () => ({
-        drawText(pos: Vector2, text: string) {
-            drawText(pos, text);
-        },
-
-        drawStroke(posStart: Vector2, posEnd: Vector2, size: number, color: string) {
-            const drawDot = posStart.equals(posEnd);
-            drawStroke(posStart, posEnd, drawDot, size, color);
-        },
-
-        drawImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-            drawImage(img, pos, colorFill);
-        },
-
-        clearCanvas() {
-            clearCanvas();
-        },
-
-        reconstructMessage() {
-            reconstructMessage();
-        }
-    }));
+function Canvas(props: CanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const stripesContainerRef = useRef<HTMLDivElement>(null);
+    const nameContainerRef = useRef<HTMLDivElement>(null);
 
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
-    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(150);
+    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
+    const [renderStripes, setRenderStripes] = useState(true);
+    const [drawOffsetY, setDrawOffsetY] = useState(0);
 
 
     useEffect(() => {
         addEventListener("resize", updateCanvasSize);
-        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
         return () => {
             removeEventListener("resize", updateCanvasSize);
@@ -54,7 +55,7 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
     useEffect(() => {
         clearCanvas();
         reconstructMessage();
-        if(onCanvasResize) onCanvasResize();
+        if (props.onCanvasResize) props.onCanvasResize();
     }, [canvasSize]);
 
     function updateCanvasSize() {
@@ -73,12 +74,13 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
-        return new Vector2(pos.x * getCanvasWidth(), pos.y * originalCanvasHeight);
+        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
     }
 
     function getStripes() {
 
-        const stripeColor = userColor ? userColor : "green";
+        const stripeColor = props.userColor ? props.userColor : "green";
 
         const stripeStyle: React.CSSProperties = {
             color: stripeColor
@@ -94,10 +96,83 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
         return stripes;
     }
 
-    function reconstructMessage() {
-        if (!message) return;
+    function getNameRect() {
+        return nameContainerRef.current!.getBoundingClientRect();
+    }
 
-        const drawingCommands = message.getCommands();
+    function getStripeRects() {
+        const rects = [];
+        for(let i = 0; i < stripesContainerRef.current!.children.length; i++) {
+            rects.push(stripesContainerRef.current!.children[i].getBoundingClientRect());
+        }
+
+        return rects;
+    }
+
+    function getMessageCommands() {
+        return props.message.getCommands();
+    }
+
+    function buildCanvasSketchFullAPI(): CanvasSketchFullAPI {
+        return {
+            ...props.sketchProperties!.api,
+            drawStroke,
+            drawText,
+            drawImage,
+            reconstructMessage,
+            clearCanvas
+        };
+    }
+
+    function buildCanvasDisplayAPI(): CanvasDisplayAPI {
+        return {
+            setStripeSteps,
+            setRenderStripes,
+            setDrawOffsetY,
+            getStripeRects,
+            getNameRect,
+            getMessageCommands
+        }
+    }
+
+    function setStripeSteps(steps: number) {
+        if(steps < 1) steps = 1;
+        else if(steps > stripeCount) return;
+
+        const rects = getStripeRects();
+        const stripeBottom = rects[steps - 1].bottom;
+        const canvasTop = canvasContainerRef.current!.getBoundingClientRect().top;
+        const height = stripeBottom - canvasTop;
+
+        updateCanvasHeight(height);
+    }
+
+    /**
+     * Fixes the width and height of the Canvas and Name container, by getting their current rect sizes
+     *   and applying the width and height with a px value, instead of percentage.
+     * The styles need to be set at a percentage at the start to correctly set the stripe positions and
+     *   calculate the new height based on the DrawingCommand positions.
+     * @param newCanvasHeightNormalized Percentage of the current Canvas height to shrink the Canvas to.
+     */
+    function updateCanvasHeight(newCanvasHeightPx: number) {
+        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
+
+        const nameHeight = nameContainerRef.current!.getBoundingClientRect().height;
+        nameContainerRef.current!.style.height = `${nameHeight}px`;
+
+        const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
+        const canvasWidth = canvasRect.width;
+
+        const canvasStyle = canvasContainerRef.current!.style;
+        canvasStyle.aspectRatio = "";
+        canvasStyle.height = `${newCanvasHeightPx}px`;
+        canvasStyle.width = `${canvasWidth}px`;
+    }
+
+    function reconstructMessage() {
+        if (!props.message) return;
+
+        const drawingCommands = props.message.getCommands();
 
         for (let i = 0; i < drawingCommands.length; i++) {
             const command = drawingCommands[i];
@@ -116,7 +191,7 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
                     // Command Value should already be a src path.
                     src = command.getValue();
                 } else {
-                    const rep = findCharRepFromValue(command.getValue());
+                    const rep = props.findCharRepFromValue(command.getValue());
                     if (rep) src = rep.src;
                 }
                 if (!src) continue;
@@ -186,30 +261,47 @@ function Canvas({ canvasComponentRef, message, userColor, onCanvasResize, findCh
     }
 
     return (
-        <div className="screen" ref={canvasContainerRef}>
-            <div className="canvasBackground">
+        <div className={props.className} ref={canvasContainerRef}>
+            <div className="canvasContainer">
+                <div className="canvasBackground">
 
-            </div>
-            {showStripes ? (
-                <div className="stripes" ref={stripesContainerRef}>
-                    {getStripes()}
                 </div>
-            ) : (
-                <></>
-            )}
-            <canvas
-                width={canvasSize.x}
-                height={canvasSize.y}
-                ref={canvasRef}>
-            </canvas>
-            <div className="borderContainer">
-                {showName ? (
-                    <div className="nameContainer" ref={nameContainerRef}>
-                        <label>{message.getUsername()}</label>
+                {renderStripes ? (
+                    <div className="stripes" ref={stripesContainerRef}>
+                        {getStripes()}
                     </div>
                 ) : (
                     <></>
                 )}
+                <canvas
+                    width={canvasSize.x}
+                    height={canvasSize.y}
+                    ref={canvasRef}>
+                </canvas>
+
+                {props.sketchProperties ?
+                    <CanvasSketch
+                        className="canvasTypeContainer"
+                        canvasText={props.sketchProperties.canvasText}
+                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        api={buildCanvasSketchFullAPI()}
+                    />
+                    :
+                    <CanvasDisplay
+                        className="canvasTypeContainer"
+                        api={buildCanvasDisplayAPI()}
+                    />
+                }
+
+                <div className="borderContainer">
+                    {props.hideName ? (
+                        <></>
+                    ) : (
+                        <div className="nameContainer" ref={nameContainerRef}>
+                            <label>{props.message.getUsername()}</label>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

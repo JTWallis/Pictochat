@@ -1,4 +1,4 @@
-.screen {
+.canvasContainer {
     height: 100%;
     width: 100%;
     display: grid;
@@ -14,6 +14,13 @@ canvas {
     width: 100%;
     grid-area: 1/1;
     border-radius: 8px;
+}
+
+.canvasTypeContainer {
+    height: 100%;
+    width: 100%;
+    grid-area: 1/1;
+    display: flex;
 }
 
 .borderContainer {
