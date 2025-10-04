@@ -43,9 +43,9 @@ function FloatingKey(props: any) {
         apply: () => {
             // Draw value of FloatingKey onto canvas.
             if(labelVisible) {
-                props.canvasRef.current.drawText(labelValue, posX, posY);
+                props.canvasSketchRef.current.drawText(labelValue, posX, posY);
             } else if(imgVisible) {
-                props.canvasRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
+                props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
             }
 
             // Hide FloatingKey
