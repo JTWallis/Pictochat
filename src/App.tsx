@@ -18,6 +18,8 @@ import { CharmapJapaneseHiragana } from './CharmapJapaneseHiragana';
 import { CharmapJapaneseKatakana } from './CharmapJapaneseKatakana';
 import { CharmapSpecial } from './CharmapSpecial';
 import { CharmapPicto } from './CharmapPicto';
+import MessageSketch from './MessageSketch';
+import MessageDisplay from './MessageDisplay';
 
 
 function isAlpha(char: string): boolean {
@@ -223,11 +225,18 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef} canvasRef={canvasRef} onCharmapButtonClick={handleCharmapButtonClick}/>
+          <ButtonColumnLeft scrollListRef={scrollListRef} canvasSketchRef={canvasSketchRef} onCharmapButtonClick={handleCharmapButtonClick}/>
         </div>
         <div className="botRight">
           <div className="botRightTop">
-            <MessageSketch canvasText={canvasText} canvasRef={canvasRef} addMessage={addMessage} username={username} getBottomScrollMessage={getBottomScrollMessage} findCharRepFromValue={findCharRepFromValue}/>
+            <MessageSketch 
+              canvasSketchRef={canvasSketchRef}
+              username={username}
+              canvasText={canvasText}
+              getBottomScrollMessage={getBottomScrollMessage}
+              findCharRepFromValue={findCharRepFromValue}
+              addMessage={addMessage}
+            />
           </div>
           <div className="botRightBot">
             <div className="emptyLeftKeyboardContainer"></div>
