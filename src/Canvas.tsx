@@ -87,6 +87,9 @@ function Canvas({ className, message, userColor, onCanvasResize, findCharRepFrom
         return rects;
     }
 
+function getMessageCommands() {
+        return message.getCommands();
+    }
 
     function setStripeSteps(steps: number) {
         if(steps < 1) steps = 1;
