@@ -20,6 +20,8 @@ import { CharmapSpecial } from './CharmapSpecial';
 import { CharmapPicto } from './CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
+import MessageSpecial from './MessageSpecial';
+import { createMessageWelcome } from './MessageSpecialHelper';
 
 
 function isAlpha(char: string): boolean {
@@ -188,9 +190,14 @@ function App() {
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
-    const m = (
-      <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
-    );
+    const m = message.isSpecialMessage() ? 
+      (
+        <MessageSpecial key={"MessageSpecial-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue} />
+      )
+      :
+      (
+        <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
+      );
 
     scrollbarRef.current!.addScrollsegment();
     setMessageDisplays((prev) => [...prev, m]);
@@ -200,6 +207,8 @@ function App() {
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
+
+    addMessage(createMessageWelcome(username));
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
