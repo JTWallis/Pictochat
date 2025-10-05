@@ -6,7 +6,7 @@ export interface CanvasSketchPartialAPI {
     sendMessage: () => void;
     concatBottomScrollMessage: () => void;
     removeLastMessageTextCommand: () => DrawCommand | null ;
-    getLastMessageTextValue: () => string | null;
+    getLastMessageText: () => DrawCommand | null;
 }
 
 export interface CanvasSketchFullAPI extends CanvasSketchPartialAPI  {

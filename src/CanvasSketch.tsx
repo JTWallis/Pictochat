@@ -117,7 +117,8 @@ function CanvasSketch(props: CanvasSketchProps) {
         },
 
         getLastTextValue(): string | null {
-            return props.api.getLastMessageTextValue();
+            const lastText = props.api.getLastMessageText();
+            return lastText ? lastText.getValue() : null;
         },
 
         replaceLastTextValue(newVal: string) {
