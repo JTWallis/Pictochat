@@ -61,10 +61,8 @@ function Canvas(props: CanvasProps) {
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
-        clearCanvas();
-        reconstructMessage();
-        if (props.onCanvasResize) props.onCanvasResize();
-    }, [canvasSize]);
+        updateCanvasTextPos();
+    }, [props.message]);
 
     function initFloatingKeySize() {
         if(!props.sketchProperties) return;
