@@ -257,7 +257,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
             props.api.clearCanvas();
             props.api.reconstructMessage();
-            return;
         }
     }
 
