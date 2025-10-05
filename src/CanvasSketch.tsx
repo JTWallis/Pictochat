@@ -259,24 +259,7 @@ function CanvasSketch(props: CanvasSketchProps) {
             props.api.reconstructMessage();
             return;
         }
-
-        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
-
-        if (pos.x < 0 || pos.y < 0) return;
-
-        const width = sketchContainerRef.current?.clientWidth!;
-        const maxWidth = width - canvasTextPosXOffset;
-
-        if (pos.x >= maxWidth) {
-            pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
-            setCanvasTextPosX(pos.x);
-            setCanvasTextPosY(pos.y);
-        }
-
-        const incrementX = 8;
-        setCanvasTextPosX(prev => prev + incrementX);
-
+    }
 
     function incrementCanvasTextPosX(incr: number) {
         const maxWidth = sketchContainerRef.current?.clientWidth! - canvasTextPosXOffset;
