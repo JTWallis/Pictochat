@@ -35,7 +35,7 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
         const targetType = event.target.nodeName;
 
         if (targetType === "INPUT") {
-            floatingKeyRef.current.setImg(event.target.src, event.target.height, event.target.value);
+            floatingKeyRef.current.setImg(event.target.src, event.target.value);
         } else if (targetType === "BUTTON") {
             floatingKeyRef.current.setChar(event.target.value);
         }
