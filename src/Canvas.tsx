@@ -12,6 +12,7 @@ import type { CharRepresentation } from './CharRepresentation';
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
 const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
+const canvasTextPosXOffset = 5;
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -41,6 +42,9 @@ function Canvas(props: CanvasProps) {
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
+    const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
+
+    const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
     useEffect(() => {
@@ -57,10 +61,8 @@ function Canvas(props: CanvasProps) {
     }, [canvasContainerRef.current?.clientWidth, canvasContainerRef.current?.clientHeight]);
 
     useEffect(() => {
-        clearCanvas();
-        reconstructMessage();
-        if (props.onCanvasResize) props.onCanvasResize();
-    }, [canvasSize]);
+        updateCanvasTextPos();
+    }, [props.message]);
 
     function initFloatingKeySize() {
         if(!props.sketchProperties) return;
@@ -71,12 +73,44 @@ function Canvas(props: CanvasProps) {
         props.sketchProperties.floatingKeyRef.current!.setSize(buttonWidth);
     }
 
+    function updateCanvasTextPos() {
+        if(!props.sketchProperties) return;
+        const height = canvasContainerRef.current?.clientHeight!;
+
+        const lastTextCommand = props.sketchProperties.api.getLastMessageText();
+        if(lastTextCommand) {
+            const width = canvasContainerRef.current?.clientWidth!;
+            const x = lastTextCommand.getStartPos().x * width;
+            const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
+            const pos = new Vector2(x, y);
+            incrementCanvasTextPosX(pos);
+            return;
+        }
+
+        const nameCurrent = nameContainerRef.current;
+        const xOffset =  nameCurrent ? nameCurrent.clientWidth : 0;
+        const yOffset = height / (stripeCount + 1);
+
+        const x = xOffset + canvasTextPosXOffset;
+        const y = yOffset - yOffset / 2;
+        setCanvasTextPos(new Vector2(x, y));
+    }
+
+
+    function handleCanvasResize() {
+        clearCanvas();
+        reconstructMessage();
+        updateCanvasTextPos();
+        if (props.onCanvasResize) props.onCanvasResize();
+    }
+
     function updateCanvasSize() {
         const width = canvasContainerRef.current?.clientWidth!;
         const height = canvasContainerRef.current?.clientHeight!;
 
         setCanvasSize(new Vector2(width, height + canvasSizeAddPx));
         initFloatingKeySize();
+        handleCanvasResize();
     }
 
     function getCanvasWidth(): number {
@@ -135,7 +169,9 @@ function Canvas(props: CanvasProps) {
             drawText,
             drawImage,
             reconstructMessage,
-            clearCanvas
+            clearCanvas,
+            setCanvasTextPos,
+            incrementCanvasTextPosX
         };
     }
 
@@ -160,6 +196,19 @@ function Canvas(props: CanvasProps) {
         const height = stripeBottom - canvasTop;
 
         updateCanvasHeight(height);
+    }
+
+    function incrementCanvasTextPosX(incrementFrom?: Vector2) {
+        const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
+        const pos = incrementFrom ? incrementFrom : canvasTextPos;
+        pos.x += buttonWidth;
+
+        if (pos.x >= maxWidth) {
+            pos.x = canvasTextPosXOffset;
+            pos.y = canvasTextPos.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+        }
+
+        setCanvasTextPos(pos);
     }
 
     /**
@@ -223,6 +272,8 @@ function Canvas(props: CanvasProps) {
                 drawText(posStart, command.getValue());
             }
         }
+
+        updateCanvasTextPos();
     }
 
     function clearCanvas() {
@@ -303,6 +354,7 @@ function Canvas(props: CanvasProps) {
                         className="canvasTypeContainer"
                         canvasText={props.sketchProperties.canvasText}
                         canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        canvasTextPos={canvasTextPos}
                         api={buildCanvasSketchFullAPI()}
                     />
                     :

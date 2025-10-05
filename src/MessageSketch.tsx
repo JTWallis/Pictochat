@@ -14,7 +14,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         sendMessage,
         concatBottomScrollMessage,
         removeLastMessageTextCommand,
-        getLastMessageTextValue
+        getLastMessageText
     };
 
     const [message, setMessage] = useState(new Message([], username));
@@ -23,9 +23,9 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         message.pushCommand(type, startPos, endPos, value, penSize, penColor);
     }
 
-    async function sendMessage() {
+    function sendMessage() {
         addMessage(message);
-        await postMessage(message);
+        postMessage(message);
         setMessage(new Message([], username));
     }
 
@@ -38,8 +38,8 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         return message.removeLastTextCommand();
     }
 
-    function getLastMessageTextValue(): string | null {
-        return message.getLastTextValue();
+    function getLastMessageText(): DrawCommand | null {
+        return message.getLastText();
     }
 
     return (
