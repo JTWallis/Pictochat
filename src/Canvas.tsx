@@ -98,12 +98,21 @@ function Canvas(props: CanvasProps) {
         setCanvasTextPos(new Vector2(x, y));
     }
 
+
+    function handleCanvasResize() {
+        clearCanvas();
+        reconstructMessage();
+        updateCanvasTextPos();
+        if (props.onCanvasResize) props.onCanvasResize();
+    }
+
     function updateCanvasSize() {
         const width = canvasContainerRef.current?.clientWidth!;
         const height = canvasContainerRef.current?.clientHeight!;
 
         setCanvasSize(new Vector2(width, height + canvasSizeAddPx));
         initFloatingKeySize();
+        handleCanvasResize();
     }
 
     function getCanvasWidth(): number {
