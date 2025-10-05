@@ -138,8 +138,8 @@ function CanvasSketch(props: CanvasSketchProps) {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
-    async function sendCurrentMessage() {
-        await props.api.sendMessage();
+    function sendCurrentMessage() {
+        props.api.sendMessage();
         props.api.clearCanvas();
     }
 

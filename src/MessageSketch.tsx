@@ -23,9 +23,9 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         message.pushCommand(type, startPos, endPos, value, penSize, penColor);
     }
 
-    async function sendMessage() {
+    function sendMessage() {
         addMessage(message);
-        await postMessage(message);
+        postMessage(message);
         setMessage(new Message([], username));
     }
 
