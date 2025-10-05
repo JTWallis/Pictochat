@@ -11,6 +11,7 @@ import type { CharRepresentation } from './CharRepresentation';
 
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
+const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -74,6 +75,7 @@ function Canvas(props: CanvasProps) {
         const width = canvasContainerRef.current?.clientWidth!;
         const height = canvasContainerRef.current?.clientHeight!;
 
+        setCanvasSize(new Vector2(width, height + canvasSizeAddPx));
         initFloatingKeySize();
     }
 
