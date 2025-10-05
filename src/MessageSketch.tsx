@@ -7,7 +7,7 @@ import type { DrawCommand } from './DrawCommand';
 import type { CanvasSketchPartialAPI } from './CanvasSketchAPI';
 
 
-function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef}: any) {
+function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef, floatingKeyRef}: any) {
 
     const api: CanvasSketchPartialAPI = {
         pushMessageCommand,
@@ -50,7 +50,8 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
             sketchProperties={{
                 canvasText: canvasText,
                 api: api,
-                canvasSketchRef: canvasSketchRef
+                canvasSketchRef: canvasSketchRef,
+                floatingKeyRef: floatingKeyRef
             }}
 
         />

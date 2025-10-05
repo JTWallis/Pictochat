@@ -10,11 +10,14 @@ import type { Message } from './Message';
 import type { CharRepresentation } from './CharRepresentation';
 
 const stripeCount = 4;
+const lineCharSize = 1 / 24;
+const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
 
 interface CanvasSketchProperties {
     canvasText: string,
     api: CanvasSketchPartialAPI,
     canvasSketchRef: React.RefObject<any>
+    floatingKeyRef: React.RefObject<any>
 }
 
 interface CanvasProps {
@@ -42,6 +45,7 @@ function Canvas(props: CanvasProps) {
 
     useEffect(() => {
         addEventListener("resize", updateCanvasSize);
+        initFloatingKeySize();
 
         return () => {
             removeEventListener("resize", updateCanvasSize);
@@ -58,11 +62,21 @@ function Canvas(props: CanvasProps) {
         if (props.onCanvasResize) props.onCanvasResize();
     }, [canvasSize]);
 
+    function initFloatingKeySize() {
+        if(!props.sketchProperties) return;
+
+        const width = getCanvasWidth();
+        const buttonWidth = width * lineCharSize;
+
+        props.sketchProperties.floatingKeyRef.current!.setSize(buttonWidth);
+    }
+
     function updateCanvasSize() {
         const width = canvasContainerRef.current?.clientWidth!;
         const height = canvasContainerRef.current?.clientHeight!;
 
-        setCanvasSize(new Vector2(width, height));
+        setCanvasSize(new Vector2(width, height + canvasSizeAddPx));
+        initFloatingKeySize();
     }
 
     function getCanvasWidth(): number {
