@@ -40,10 +40,14 @@ function FloatingKey(props: any) {
         },
 
         apply: () => {
-            // Draw value of FloatingKey onto canvas.
-            if(labelVisible) {
-                props.canvasSketchRef.current.drawText(labelValue, posX, posY);
-            } else if(imgVisible) {
+
+        applyImmediate: (src: string, value: string) => {
+            setImage(src, value);
+            resetPos();
+            setSend(true);
+        }
+    }));
+
                 props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
             }
 
