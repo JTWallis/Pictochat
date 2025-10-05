@@ -51,9 +51,12 @@ function FloatingKey(props: any) {
                 props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
             }
 
-            // Hide FloatingKey
+    function hide() {
             setLabelVisible(false);
             setImgVisible(false);
+    }
+
+    function resetPos() {
             setPosX(-100);
             setPosY(-100);
         }
