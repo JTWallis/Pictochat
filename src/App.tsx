@@ -231,6 +231,7 @@ function App() {
           <div className="botRightTop">
             <MessageSketch 
               canvasSketchRef={canvasSketchRef}
+              floatingKeyRef={floatingKeyRef}
               username={username}
               canvasText={canvasText}
               getBottomScrollMessage={getBottomScrollMessage}

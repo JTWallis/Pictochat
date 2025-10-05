@@ -40,6 +40,10 @@ function FloatingKey(props: any) {
             if(value) setLabelValue(value);
         },
 
+        setSize: (size: number) => {
+            setImgSize(size);
+        },
+
         apply: () => {
             // Draw value of FloatingKey onto canvas.
             if(labelVisible) {
