@@ -14,7 +14,6 @@ const rainbowPhaseR = 0;
 const rainbowPhaseG = 2;
 const rainbowPhaseB = 4;
 
-const canvasTextPosXOffset = 5;
 const incrImgSizeRatio = 0.75;
 
 /**
@@ -44,6 +43,7 @@ interface CanvasSketchProps {
     className: string,
     canvasText: string,
     canvasSketchRef: React.RefObject<any>,
+    canvasTextPos: Vector2,
     api: CanvasSketchFullAPI
 };
 
@@ -57,9 +57,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [canvasTextPosX, setCanvasTextPosX] = useState(-1);
-    const [canvasTextPosY, setCanvasTextPosY] = useState(-1);
 
     const [floatingKeyValue, setFloatingKeyValue] = useState("");
     const [floatingKeyPos, setFloatingKeyPos] = useState({
@@ -120,7 +117,8 @@ function CanvasSketch(props: CanvasSketchProps) {
         },
 
         getLastTextValue(): string | null {
-            return props.api.getLastMessageTextValue();
+            const lastText = props.api.getLastMessageText();
+            return lastText ? lastText.getValue() : null;
         },
 
         replaceLastTextValue(newVal: string) {
@@ -140,8 +138,8 @@ function CanvasSketch(props: CanvasSketchProps) {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
-    async function sendCurrentMessage() {
-        await props.api.sendMessage();
+    function sendCurrentMessage() {
+        props.api.sendMessage();
         props.api.clearCanvas();
     }
 
@@ -207,16 +205,15 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         const value: string = floatingKeyValue;
 
-        setCanvasTextPosX(pos.x);
-        setCanvasTextPosY(pos.y);
+        props.api.setCanvasTextPos(pos);
 
         drawPushText(pos, value);
     }
 
     function handleAppendFloatingKeyImage(img: HTMLImageElement, colorFill: string) {
-        const height = canvasTextPosY - img.height / 2;
-        drawPushImage(img, new Vector2(canvasTextPosX, height), colorFill);
-        incrementCanvasTextPosX(img.width * incrImgSizeRatio);
+        const height = props.canvasTextPos.y - img.height / 2;
+        drawPushImage(img, new Vector2(props.canvasTextPos.x, height), colorFill);
+        props.api.incrementCanvasTextPosX();
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -233,8 +230,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         if (imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
 
         // Set pos to the right and vertical center of the image.
-        setCanvasTextPosX(imgRight);
-        setCanvasTextPosY((pos.y + imgBottom) / 2);
+        props.api.setCanvasTextPos(new Vector2(imgRight, (pos.y + imgBottom) / 2));
 
         drawPushImage(img, pos, colorFill);
     }
@@ -252,33 +248,11 @@ function CanvasSketch(props: CanvasSketchProps) {
             if (command.getValue().length !== 1) return;
 
             const pos = unNormalizePos(command.getStartPos());
-            setCanvasTextPosX(pos.x);
-            setCanvasTextPosY(pos.y);
+            props.api.setCanvasTextPos(pos);
 
             props.api.clearCanvas();
             props.api.reconstructMessage();
         }
-    }
-
-    function incrementCanvasTextPosX(incr: number) {
-        const maxWidth = sketchContainerRef.current?.clientWidth! - canvasTextPosXOffset;
-        let x = canvasTextPosX + incr;
-
-        if (x >= maxWidth) {
-            x = canvasTextPosXOffset;
-            const y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
-            setCanvasTextPosY(y);
-        }
-
-        setCanvasTextPosX(x);
-    }
-
-    function handleCanvasResize() {
-        const height = sketchContainerRef.current?.clientHeight!;
-        const h = height / (stripeCount + 1);
-        const w = nameContainerRef.current?.clientWidth!;
-        setCanvasTextPosX(w + canvasTextPosXOffset);
-        setCanvasTextPosY(h - h / 2);
     }
 
     function isPenErase() {

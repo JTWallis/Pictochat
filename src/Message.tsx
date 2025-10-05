@@ -32,10 +32,10 @@ export class Message {
         this.updateLastTextCommandIndex();
     }
 
-    public getLastTextValue(): string | null {
+    public getLastText(): DrawCommand | null {
         if(this.lastTextCommandIndex < 0) return null;
         if(this.commands.length === 0) return null;
-        return this.commands.at(this.lastTextCommandIndex)!.getValue();
+        return this.commands.at(this.lastTextCommandIndex)!;
     }
 
     public removeLastTextCommand(): DrawCommand | null {
