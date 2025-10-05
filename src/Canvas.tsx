@@ -42,6 +42,9 @@ function Canvas(props: CanvasProps) {
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
+    const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
+
+    const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
     useEffect(() => {
@@ -70,6 +73,29 @@ function Canvas(props: CanvasProps) {
         const buttonWidth = width * lineCharSize;
 
         props.sketchProperties.floatingKeyRef.current!.setSize(buttonWidth);
+    }
+
+    function updateCanvasTextPos() {
+        if(!props.sketchProperties) return;
+        const height = canvasContainerRef.current?.clientHeight!;
+
+        const lastTextCommand = props.sketchProperties.api.getLastMessageText();
+        if(lastTextCommand) {
+            const width = canvasContainerRef.current?.clientWidth!;
+            const x = lastTextCommand.getStartPos().x * width;
+            const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
+            const pos = new Vector2(x, y);
+            incrementCanvasTextPosX(pos);
+            return;
+        }
+
+        const nameCurrent = nameContainerRef.current;
+        const xOffset =  nameCurrent ? nameCurrent.clientWidth : 0;
+        const yOffset = height / (stripeCount + 1);
+
+        const x = xOffset + canvasTextPosXOffset;
+        const y = yOffset - yOffset / 2;
+        setCanvasTextPos(new Vector2(x, y));
     }
 
     function updateCanvasSize() {
@@ -239,6 +265,8 @@ function Canvas(props: CanvasProps) {
                 drawText(posStart, command.getValue());
             }
         }
+
+        updateCanvasTextPos();
     }
 
     function clearCanvas() {
