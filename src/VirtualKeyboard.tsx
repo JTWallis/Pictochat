@@ -28,6 +28,8 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
 
     function handleButtonMouseDown(event: any) {
         if (mouseDown) return;
+        // TODO: Find better check for special button. Classname too brittle. Maybe there is a good metadata HTML property?
+        if((event.target.className as string).toLowerCase().includes("special")) return;
         setMouseDown(true);
 
         const targetType = event.target.nodeName;
