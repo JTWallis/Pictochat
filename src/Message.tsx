@@ -5,11 +5,13 @@ export class Message {
 
     public commands: DrawCommand[];
     private creatorName: string;
+    private isSpecial: boolean;
     private lastTextCommandIndex: number = -1;
 
-    constructor(commands: DrawCommand[], creatorName: string) {
+    constructor(commands: DrawCommand[], creatorName: string, isSpecial?: boolean) {
         this.commands = commands;
         this.creatorName = creatorName;
+        this.isSpecial = isSpecial ? isSpecial : false;
     }
     
     private pushDrawCommand(command: DrawCommand): void {
@@ -54,6 +56,10 @@ export class Message {
 
     public getUsername(): string {
         return this.creatorName;
+    }
+
+    public isSpecialMessage(): boolean {
+        return this.isSpecial;
     }
 
     private updateLastTextCommandIndex() {
