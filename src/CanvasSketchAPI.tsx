@@ -15,4 +15,6 @@ export interface CanvasSketchFullAPI extends CanvasSketchPartialAPI  {
     drawImage: (img: HTMLImageElement, pos: Vector2, colorFill: string) => void;
     reconstructMessage: () => void;
     clearCanvas: () => void;
+    setCanvasTextPos: (pos: Vector2) => void;
+    incrementCanvasTextPosX: (incrementFrom?: Vector2) => void;
 }

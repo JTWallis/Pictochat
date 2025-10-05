@@ -12,6 +12,7 @@ import type { CharRepresentation } from './CharRepresentation';
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
 const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
+const canvasTextPosXOffset = 5;
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -135,7 +136,9 @@ function Canvas(props: CanvasProps) {
             drawText,
             drawImage,
             reconstructMessage,
-            clearCanvas
+            clearCanvas,
+            setCanvasTextPos,
+            incrementCanvasTextPosX
         };
     }
 
@@ -160,6 +163,19 @@ function Canvas(props: CanvasProps) {
         const height = stripeBottom - canvasTop;
 
         updateCanvasHeight(height);
+    }
+
+    function incrementCanvasTextPosX(incrementFrom?: Vector2) {
+        const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
+        const pos = incrementFrom ? incrementFrom : canvasTextPos;
+        pos.x += buttonWidth;
+
+        if (pos.x >= maxWidth) {
+            pos.x = canvasTextPosXOffset;
+            pos.y = canvasTextPos.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+        }
+
+        setCanvasTextPos(pos);
     }
 
     /**
@@ -303,6 +319,7 @@ function Canvas(props: CanvasProps) {
                         className="canvasTypeContainer"
                         canvasText={props.sketchProperties.canvasText}
                         canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        canvasTextPos={canvasTextPos}
                         api={buildCanvasSketchFullAPI()}
                     />
                     :
