@@ -58,7 +58,7 @@ function App() {
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
 
-  const floatingKeyRef = useRef(null);
+  const floatingKeyRef = useRef<any>(null);
   const canvasSketchRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
@@ -120,6 +120,7 @@ function App() {
   function handleKeyDown(key: string) {
     if (isKeyValidChar(key)) {
       setCanvasText(prev => prev + key);
+      floatingKeyRef.current.applyImmediate(findCharRepFromValue(key)!.src, key);
     } else {
       switch (key.toLowerCase()) {
         case "enter":
