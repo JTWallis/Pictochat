@@ -15,6 +15,7 @@ const rainbowPhaseG = 2;
 const rainbowPhaseB = 4;
 
 const canvasTextPosXOffset = 5;
+const incrImgSizeRatio = 0.75;
 
 /**
  * Takes a single value between 0 and 255 and turns it into a 2-digit hex representation.
@@ -84,6 +85,10 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
+        },
+
+        drawImgAppend(img: HTMLImageElement, colorFill: string) {
+            handleAppendFloatingKeyImage(img, colorFill);
         },
 
         usePenDraw() {
@@ -208,6 +213,12 @@ function CanvasSketch(props: CanvasSketchProps) {
         drawPushText(pos, value);
     }
 
+    function handleAppendFloatingKeyImage(img: HTMLImageElement, colorFill: string) {
+        const height = canvasTextPosY - img.height / 2;
+        drawPushImage(img, new Vector2(canvasTextPosX, height), colorFill);
+        incrementCanvasTextPosX(img.width * incrImgSizeRatio);
+    }
+
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
         const offsetTop = sketchContainerRef.current?.offsetTop!;
         const offsetLeft = sketchContainerRef.current?.offsetLeft!;
@@ -216,7 +227,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         // Ignore Image that would be too far out of bounds.
         const canvasRight = sketchContainerRef.current!.offsetWidth;
         const canvasBottom = sketchContainerRef.current!.offsetHeight;
-        const imgRight = pos.x + img.width;
+        const imgRight = pos.x + img.width * incrImgSizeRatio;
         const imgBottom = pos.y + img.height;
 
         if (imgRight < 0 || pos.x > canvasRight || imgBottom < 0 || pos.y > canvasBottom) return;
@@ -246,27 +257,20 @@ function CanvasSketch(props: CanvasSketchProps) {
 
             props.api.clearCanvas();
             props.api.reconstructMessage();
-            return;
+        }
+    }
+
+    function incrementCanvasTextPosX(incr: number) {
+        const maxWidth = sketchContainerRef.current?.clientWidth! - canvasTextPosXOffset;
+        let x = canvasTextPosX + incr;
+
+        if (x >= maxWidth) {
+            x = canvasTextPosXOffset;
+            const y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            setCanvasTextPosY(y);
         }
 
-        const pos: Vector2 = new Vector2(canvasTextPosX, canvasTextPosY);
-
-        if (pos.x < 0 || pos.y < 0) return;
-
-        const width = sketchContainerRef.current?.clientWidth!;
-        const maxWidth = width - canvasTextPosXOffset;
-
-        if (pos.x >= maxWidth) {
-            pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
-            setCanvasTextPosX(pos.x);
-            setCanvasTextPosY(pos.y);
-        }
-
-        const incrementX = 8;
-        setCanvasTextPosX(prev => prev + incrementX);
-
-        drawPushText(pos, value);
+        setCanvasTextPosX(x);
     }
 
     function handleCanvasResize() {

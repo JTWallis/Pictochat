@@ -7,6 +7,7 @@ import imgBorder from './assets/img_keyboard_border.png';
 
 function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
     const [mouseDown, setMouseDown] = useState(false);
+    let mouseDragged = false;
 
     useEffect(() => {
 
@@ -28,12 +29,14 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
 
     function handleButtonMouseDown(event: any) {
         if (mouseDown) return;
+        // TODO: Find better check for special button. Classname too brittle. Maybe there is a good metadata HTML property?
+        if((event.target.className as string).toLowerCase().includes("special")) return;
         setMouseDown(true);
 
         const targetType = event.target.nodeName;
 
         if (targetType === "INPUT") {
-            floatingKeyRef.current.setImg(event.target.src, event.target.height, event.target.value);
+            floatingKeyRef.current.setImg(event.target.src, event.target.value);
         } else if (targetType === "BUTTON") {
             floatingKeyRef.current.setChar(event.target.value);
         }
@@ -42,12 +45,14 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
     function window_mouseup() {
         if (!mouseDown) return;
         setMouseDown(false);
-
+        if(!mouseDragged) return;
+        mouseDragged = false;
         floatingKeyRef.current.apply();
     }
 
     function window_mousemove(event: MouseEvent) {
         if (!mouseDown) return;
+        mouseDragged = true;
         floatingKeyRef.current.setPos(event.pageX, event.pageY);
     }
 
