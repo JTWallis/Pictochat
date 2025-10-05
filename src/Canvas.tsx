@@ -110,8 +110,9 @@ function Canvas(props: CanvasProps) {
         return stripes;
     }
 
-    function getNameRect() {
-        return nameContainerRef.current!.getBoundingClientRect();
+    function getNameRect(): DOMRect | null {
+        if(!nameContainerRef || !nameContainerRef.current) return null;
+        return nameContainerRef.current.getBoundingClientRect();
     }
 
     function getStripeRects() {
@@ -171,8 +172,11 @@ function Canvas(props: CanvasProps) {
     function updateCanvasHeight(newCanvasHeightPx: number) {
         setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
-        const nameHeight = nameContainerRef.current!.getBoundingClientRect().height;
-        nameContainerRef.current!.style.height = `${nameHeight}px`;
+        const nameRect = getNameRect();
+        if(nameRect) {
+            const nameHeight = nameRect.height;
+            nameContainerRef.current!.style.height = `${nameHeight}px`;
+        }
 
         const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
         const canvasWidth = canvasRect.width;
@@ -214,7 +218,7 @@ function Canvas(props: CanvasProps) {
                 img.width = Math.abs(posEnd.x - posStart.x);
                 img.height = Math.abs(posEnd.y - posStart.y);
                 img.src = src;
-                drawImage(img, posStart, "#000");
+                drawImage(img, posStart, "#AAA");
             } else {
                 drawText(posStart, command.getValue());
             }
@@ -234,6 +238,7 @@ function Canvas(props: CanvasProps) {
         const maxWidth = getCanvasWidth();
 
         context.font = "16px Courier New";
+        context.fillStyle = "#AAA";
         context.fillText(value, pos.x, pos.y, maxWidth);
     }
 

@@ -5,6 +5,6 @@ export interface CanvasDisplayAPI {
     setRenderStripes: (renderStripes: boolean) => void;
     setDrawOffsetY: (offsetY: number) => void;
     getStripeRects: () => DOMRect[];
-    getNameRect: () => DOMRect;
+    getNameRect: () => DOMRect | null;
     getMessageCommands: () => DrawCommand[];
 }

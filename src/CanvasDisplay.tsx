@@ -85,13 +85,15 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
         //   In that case, decrement the lowestStripePos by one step,
         //   so a drawing would not be accidentally hidden behind the name container.
         const nameRect = props.api.getNameRect();
-        const nameBottom = nameRect.bottom - canvasTop
-        const nameRight = nameRect.right - canvasRect.left;
-        const unnormLowY = lowestY * canvasHeight;
-        const unnormLowX = lowestX * canvasRect.width;
-        if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
-            lowestStripeIndex--;
-            if(lowestStripeIndex >= 0) lowestStripePos = positions[lowestStripeIndex];
+        if(nameRect) {
+            const nameBottom = nameRect.bottom - canvasTop
+            const nameRight = nameRect.right - canvasRect.left;
+            const unnormLowY = lowestY * canvasHeight;
+            const unnormLowX = lowestX * canvasRect.width;
+            if(unnormLowY >= nameBottom && unnormLowX <= nameRight) {
+                lowestStripeIndex--;
+                if(lowestStripeIndex >= 0) lowestStripePos = positions[lowestStripeIndex];
+            }
         }
 
         const stripeSteps = highestStripeIndex - lowestStripeIndex;
