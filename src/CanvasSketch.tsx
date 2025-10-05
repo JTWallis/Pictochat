@@ -266,7 +266,18 @@ function CanvasSketch(props: CanvasSketchProps) {
         const incrementX = 8;
         setCanvasTextPosX(prev => prev + incrementX);
 
-        drawPushText(pos, value);
+
+    function incrementCanvasTextPosX(incr: number) {
+        const maxWidth = sketchContainerRef.current?.clientWidth! - canvasTextPosXOffset;
+        let x = canvasTextPosX + incr;
+
+        if (x >= maxWidth) {
+            x = canvasTextPosXOffset;
+            const y = canvasTextPosY + sketchContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            setCanvasTextPosY(y);
+        }
+
+        setCanvasTextPosX(x);
     }
 
     function handleCanvasResize() {
