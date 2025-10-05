@@ -1,5 +1,5 @@
 import './FloatingKey.css'
-import { useImperativeHandle, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
 
 
 const VISIBLE = "visible";
@@ -14,6 +14,7 @@ function FloatingKey(props: any) {
     const [imgSrc, setImgSrc] = useState("");
     const [imgSize, setImgSize] = useState(10);
     const [imgVisible, setImgVisible] = useState(true);
+    const [send, setSend] = useState(false);
 
     const [imgDrawColor, setImgDrawColor] = useState("#000");
     const imageRef = useRef<HTMLImageElement>(null);
@@ -32,6 +33,7 @@ function FloatingKey(props: any) {
             
         },
 
+        setImg: (src: string, value: string) => {
             setImage(src, value);
         },
 
@@ -40,6 +42,8 @@ function FloatingKey(props: any) {
         },
 
         apply: () => {
+            setSend(true);
+        },
 
         applyImmediate: (src: string, value: string) => {
             setImage(src, value);
@@ -48,18 +52,36 @@ function FloatingKey(props: any) {
         }
     }));
 
+    // Wait for send to update because there is no guarantee that the ImgSrc is updated on time.
+    useEffect(() => {
+        if(send) {
+            if(posX < 0) {
+                props.canvasSketchRef.current.drawImgAppend(imageRef.current, imgDrawColor);
+            } else {
                 props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
             }
 
+            setSend(false);
+            hide();
+            resetPos();
+        }
+
+        return () => {
+            setSend(false);
+            hide();
+            resetPos();
+        }
+    }, [send]);
+
     function hide() {
-            setLabelVisible(false);
-            setImgVisible(false);
+        setLabelVisible(false);
+        setImgVisible(false);
     }
 
     function resetPos() {
-            setPosX(-100);
-            setPosY(-100);
-        }
+        setPosX(-100);
+        setPosY(-100);
+    }
 
     function setImage(src: string, value: string) {
         setLabelVisible(false);
