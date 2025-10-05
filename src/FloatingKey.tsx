@@ -32,12 +32,7 @@ function FloatingKey(props: any) {
             
         },
 
-        setImg: (src: string, size: number, value: string) => {
-            setLabelVisible(false);
-            setImgVisible(true);
-            setImgSrc(src);
-            setImgSize(size);
-            if(value) setLabelValue(value);
+            setImage(src, value);
         },
 
         setSize: (size: number) => {
@@ -58,7 +53,13 @@ function FloatingKey(props: any) {
             setPosX(-100);
             setPosY(-100);
         }
-    }));
+
+    function setImage(src: string, value: string) {
+        setLabelVisible(false);
+        setImgVisible(true);
+        setImgSrc(src);
+        if(value) setLabelValue(value);
+    }
 
     return (
         <div
