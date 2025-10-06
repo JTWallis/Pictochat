@@ -261,7 +261,7 @@ function Canvas(props: CanvasProps) {
         canvasStyle.width = `${canvasWidth}px`;
     }
 
-    function reconstructMessage() {
+    async function reconstructMessage() {
         if (!props.message) return;
 
         const drawingCommands = props.message.getCommands();
@@ -290,7 +290,7 @@ function Canvas(props: CanvasProps) {
 
                 const width = Math.abs(posEnd.x - posStart.x);
                 const height = Math.abs(posEnd.y - posStart.y);
-                const img = createImage(src, undefined, new Vector2(width, height));
+                const img = await createImage(src, undefined, new Vector2(width, height));
 
                 drawImage(img, posStart, command.getPenColor());
             } else {
@@ -324,8 +324,8 @@ function Canvas(props: CanvasProps) {
         context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
-    function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
-        const img = createImage(src, value);
+    async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
+        const img = await createImage(src, value);
         drawPushImage(img, canvasTextPos, colorFill);
         incrementCanvasTextPosX();
     }
