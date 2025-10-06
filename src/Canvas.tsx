@@ -301,16 +301,21 @@ function Canvas(props: CanvasProps) {
         updateCanvasTextPos();
     }
 
-    function createImage(src: string, value?: string, size?: Vector2) {
+    async function createImage(src: string, value?: string, size?: Vector2): Promise<HTMLImageElement> {
+        return new Promise((resolve) => {
         const width = size ? size.x : buttonWidth;
         const height = size ? size.y : buttonWidth;
+
         const img = document.createElement("img") as HTMLImageElement;
         img.src = src;
         img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
         img.height = Math.round(height);
         if(value) img.alt = value;
 
-        return img;
+            img.onload = () => {
+                resolve(img);
+            }
+        })
     }
 
     function clearCanvas() {
