@@ -195,20 +195,20 @@ function App() {
     return convertTextToCharRepresentations(charmaps, text);
   }
 
+  function addMessageElement(messageElement: JSX.Element) {
+    scrollbarRef.current!.addScrollsegment();
+    setMessageDisplays((prev) => [...prev, messageElement]);
+  }
+
+
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
-    const m = message.isSpecialMessage() ? 
-      (
-        <MessageSpecial key={"MessageSpecial-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue} />
-      )
-      :
-      (
+    const m = (
         <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
       );
 
-    scrollbarRef.current!.addScrollsegment();
-    setMessageDisplays((prev) => [...prev, m]);
+    addMessageElement(m);
   }
 
 
