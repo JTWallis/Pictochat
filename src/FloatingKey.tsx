@@ -87,8 +87,8 @@ function FloatingKey(props: any) {
                 ref={imageRef}
                 style={{
                     visibility: imgVisible ? VISIBLE : HIDDEN,
-                    width: imgSize,
-                    height: imgSize
+                    width: Math.round(imgSize),
+                    height: Math.round(imgSize)
                 }} />
         </div>
     );
