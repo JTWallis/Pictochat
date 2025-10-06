@@ -18,10 +18,23 @@ function CanvasSpecial(props: CanvasSpecialProps) {
         initHeight();
     }, []);
 
+    useEffect(() => {
+        if(firstMount) initMessage();
+    }, [canvasContainerRef.current?.clientHeight]);
+
     function initHeight() {
         setFirstMount(true);
         props.api.setStripeSteps(1);
         props.api.setRenderStripes(false);
+    }
+
+    async function initMessage() {
+        setFirstMount(false);
+        const charReps: CharRepresentation[] = props.api.convertTextToCharReps(props.messageText);
+
+        for(let charRep of charReps) {
+            await props.api.createAppendFloatingKeyImage(charRep.src, charRep.value, props.textColor);
+        }
     }
 
     return (
