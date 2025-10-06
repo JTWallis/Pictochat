@@ -53,6 +53,7 @@ function Canvas(props: CanvasProps) {
     const [drawOffsetY, setDrawOffsetY] = useState(0);
     const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
 
+    let appliedStripeSteps = stripeCount;
     const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
@@ -100,10 +101,10 @@ function Canvas(props: CanvasProps) {
 
         const nameCurrent = nameContainerRef.current;
         const xOffset =  nameCurrent ? nameCurrent.clientWidth : 0;
-        const yOffset = height / (stripeCount + 1);
+        const yOffset = (appliedStripeSteps === 1) ? (height / 2) : (height / (stripeCount + 1));
 
         const x = xOffset + canvasTextPosXOffset;
-        const y = yOffset - yOffset / 2;
+        const y = (appliedStripeSteps === 1) ? yOffset : (yOffset - yOffset / 2);
         setCanvasTextPos(new Vector2(x, y));
     }
 
@@ -212,6 +213,7 @@ function Canvas(props: CanvasProps) {
     function setStripeSteps(steps: number) {
         if(steps < 1) steps = 1;
         else if(steps > stripeCount) return;
+        appliedStripeSteps = steps;
 
         const rects = getStripeRects();
         const stripeBottom = rects[steps - 1].bottom;
