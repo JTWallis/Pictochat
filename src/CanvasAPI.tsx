@@ -2,6 +2,12 @@ import type { CharRepresentation } from "./CharRepresentation";
 import type { DrawCommand } from "./DrawCommand";
 import type { Vector2 } from "./Vector2";
 
+export const CanvasTypes = {
+    CANVAS_SKETCH: 0,
+    CANVAS_DISPLAY: 1,
+    CANVAS_SPECIAL: 2
+};
+
 export interface CanvasSketchPartialAPI {
     pushMessageCommand: (type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) => void;
     sendMessage: () => void;

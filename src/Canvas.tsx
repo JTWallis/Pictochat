@@ -390,7 +390,52 @@ function Canvas(props: CanvasProps) {
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
-        props.sketchProperties?.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
+    }
+
+    function getCanvasSubComponent() {
+        const className = "canvasTypeContainer";
+
+        switch(props.canvasType) {
+            case CanvasTypes.CANVAS_SKETCH:
+                if(!props.sketchProperties) return (
+                    <></>
+                );
+
+                return (
+                    <CanvasSketch
+                        className={className}
+                        canvasText={props.sketchProperties.canvasText}
+                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        canvasTextPos={canvasTextPos}
+                        api={buildCanvasSketchFullAPI()}
+                    />
+                );
+            case CanvasTypes.CANVAS_DISPLAY:
+                return (
+                    <CanvasDisplay
+                        className={className}
+                        api={buildCanvasDisplayAPI()}
+                    />
+                );
+            case CanvasTypes.CANVAS_SPECIAL:
+                if(!props.specialProperties) return (
+                    <></>
+                );
+                
+                return (
+                    <CanvasSpecial 
+                        className={className}
+                        messageText={props.specialProperties.messageText}
+                        textColor={props.specialProperties.textColor}
+                        api={buildCanvasSpecialAPI()}
+                    />
+                )
+            default:
+                return (
+                    <></>
+                );
+        }
     }
 
     return (
@@ -412,20 +457,7 @@ function Canvas(props: CanvasProps) {
                     ref={canvasRef}>
                 </canvas>
 
-                {props.sketchProperties ?
-                    <CanvasSketch
-                        className="canvasTypeContainer"
-                        canvasText={props.sketchProperties.canvasText}
-                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
-                        canvasTextPos={canvasTextPos}
-                        api={buildCanvasSketchFullAPI()}
-                    />
-                    :
-                    <CanvasDisplay
-                        className="canvasTypeContainer"
-                        api={buildCanvasDisplayAPI()}
-                    />
-                }
+                {getCanvasSubComponent()}
 
                 <div className="borderContainer">
                     {props.hideName ? (
