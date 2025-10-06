@@ -364,6 +364,9 @@ function Canvas(props: CanvasProps) {
         const context = getCanvasContext();
         if (!context) return;
 
+        const space = "space";
+        if(img.src.toLowerCase().includes(space) || img.alt.toLowerCase().includes(space)) return;
+
         const buffer = document.createElement("canvas");
         buffer.width = img.width;
         buffer.height = img.height;
