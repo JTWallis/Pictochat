@@ -279,7 +279,7 @@ function Canvas(props: CanvasProps) {
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
             } else if (command.getType() === DrawingCommandType.FLOATING_KEY) {
                 let src;
-                if (command.getValue().length > 1) {
+                if (command.getValue().endsWith(".png")) {
                     // Command Value should already be a src path.
                     src = command.getValue();
                 } else {
