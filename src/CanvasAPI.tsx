@@ -1,3 +1,4 @@
+import type { CharRepresentation } from "./CharRepresentation";
 import type { DrawCommand } from "./DrawCommand";
 import type { Vector2 } from "./Vector2";
 
@@ -29,3 +30,15 @@ export interface CanvasDisplayAPI {
     getMessageCommands: () => DrawCommand[];
 }
 
+export interface CanvasSpecialPartialAPI {
+    pushMessageCommand: (type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) => void;
+    convertTextToCharReps: (text: string) => CharRepresentation[];
+}
+
+export interface CanvasSpecialFullAPI extends CanvasSpecialPartialAPI {
+    setStripeSteps: (steps: number) => void;
+    setRenderStripes: (renderStripes: boolean) => void;
+    setCanvasTextPos: (pos: Vector2) => void;
+    createAppendFloatingKeyImage: (src: string, value: string, colorFill: string) => Promise<void>;
+    reconstructMessage: () => void;
+}
