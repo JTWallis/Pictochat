@@ -122,7 +122,9 @@ function App() {
   function handleKeyDown(key: string) {
     if (isKeyValidChar(key)) {
       setCanvasText(prev => prev + key);
-      floatingKeyRef.current.applyImmediate(findCharRepFromValue(key)!.src, key);
+      const charRep = findCharRepFromValue(key);
+      if(!charRep) return;
+      canvasSketchRef.current.createDrawImgAppend(charRep.src, key, "#000");
     } else {
       switch (key.toLowerCase()) {
         case "enter":

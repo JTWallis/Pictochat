@@ -84,8 +84,8 @@ function CanvasSketch(props: CanvasSketchProps) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },
 
-        drawImgAppend(img: HTMLImageElement, colorFill: string) {
-            handleAppendFloatingKeyImage(img, colorFill);
+        createDrawImgAppend(src: string, value: string, colorFill: string) {
+            props.api.createAppendFloatingKeyImage(src, value, colorFill);
         },
 
         usePenDraw() {
@@ -182,7 +182,7 @@ function CanvasSketch(props: CanvasSketchProps) {
             setPenColor(tickRainbow());
         }
 
-        drawPushStroke(posFirst, pos, penSize, penColor);
+        props.api.drawPushStroke(posFirst, pos, penSize, penColor);
 
 
         setPrevPosX(posX);
@@ -207,13 +207,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         props.api.setCanvasTextPos(pos);
 
-        drawPushText(pos, value);
-    }
-
-    function handleAppendFloatingKeyImage(img: HTMLImageElement, colorFill: string) {
-        const height = props.canvasTextPos.y - img.height / 2;
-        drawPushImage(img, new Vector2(props.canvasTextPos.x, height), colorFill);
-        props.api.incrementCanvasTextPosX();
+        props.api.drawPushText(pos, value);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -232,7 +226,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         // Set pos to the right and vertical center of the image.
         props.api.setCanvasTextPos(new Vector2(imgRight, (pos.y + imgBottom) / 2));
 
-        drawPushImage(img, pos, colorFill);
+        props.api.drawPushImage(img, pos, colorFill);
     }
 
     /**
@@ -339,32 +333,6 @@ function CanvasSketch(props: CanvasSketchProps) {
         //prevY = null;
     }
 
-    function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = sketchContainerRef.current?.clientWidth!;
-        const height = sketchContainerRef.current?.clientHeight!;
-
-        return new Vector2(canvasPos.x / width, canvasPos.y / height);
-    }
-
-    function drawPushText(pos: Vector2, value: string) {
-        props.api.drawText(pos, value);
-        const normalizedPos = normalizeCanvasPos(pos);
-        props.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, penSize, penColor);
-    }
-
-    function drawPushStroke(posSrc: Vector2, posDst: Vector2, size: number, color: string) {
-        const drawDot = posSrc.equals(posDst);
-        props.api.drawStroke(posSrc, posDst, drawDot, size, color);
-        props.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
-    }
-
-    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        props.api.drawImage(img, pos, colorFill);
-        const normalizedStartPos = normalizeCanvasPos(pos);
-        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
-        const value = img.alt.length > 0 ? img.alt : img.src;
-        props.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, penSize, penColor);
-    }
 
     return (
         <div className={props.className} ref={sketchContainerRef}

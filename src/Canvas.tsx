@@ -165,9 +165,10 @@ function Canvas(props: CanvasProps) {
     function buildCanvasSketchFullAPI(): CanvasSketchFullAPI {
         return {
             ...props.sketchProperties!.api,
-            drawStroke,
-            drawText,
-            drawImage,
+            drawPushStroke,
+            drawPushText,
+            drawPushImage,
+            createAppendFloatingKeyImage,
             reconstructMessage,
             clearCanvas,
             setCanvasTextPos,
@@ -263,10 +264,10 @@ function Canvas(props: CanvasProps) {
                 }
                 if (!src) continue;
 
-                const img = document.createElement("img") as HTMLImageElement;
-                img.width = Math.abs(posEnd.x - posStart.x);
-                img.height = Math.abs(posEnd.y - posStart.y);
-                img.src = src;
+                const width = Math.abs(posEnd.x - posStart.x);
+                const height = Math.abs(posEnd.y - posStart.y);
+                const img = createImage(src, undefined, new Vector2(width, height));
+
                 drawImage(img, posStart, "#AAA");
             } else {
                 drawText(posStart, command.getValue());
@@ -276,10 +277,26 @@ function Canvas(props: CanvasProps) {
         updateCanvasTextPos();
     }
 
+    function createImage(src: string, value?: string, size?: Vector2) {
+        const img = document.createElement("img") as HTMLImageElement;
+        img.src = src;
+        img.width = size ? size.x : buttonWidth;
+        img.height = size ? size.y : buttonWidth;
+        if(value) img.alt = value;
+
+        return img;
+    }
+
     function clearCanvas() {
         const context = getCanvasContext();
         const height = canvasRef.current?.height!;
         context?.clearRect(0, 0, getCanvasWidth(), height);
+    }
+
+    function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
+        const img = createImage(src, value);
+        drawPushImage(img, canvasTextPos, colorFill);
+        incrementCanvasTextPosX();
     }
 
     function drawText(pos: Vector2, value: string) {
@@ -328,6 +345,48 @@ function Canvas(props: CanvasProps) {
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
+    }
+
+    function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
+
+        return new Vector2(canvasPos.x / width, canvasPos.y / height);
+    }
+
+    function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        const drawDot = posSrc.equals(posDst);
+        drawStroke(posSrc, posDst, drawDot, penSize, penColor);
+        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+    }
+
+    function drawPushText(pos: Vector2, value: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        drawText(pos, value);
+        const normalizedPos = normalizeCanvasPos(pos);
+        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
+    }
+
+    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        drawImage(img, pos, colorFill);
+        const normalizedStartPos = normalizeCanvasPos(pos);
+        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
+        const value = img.alt.length > 0 ? img.alt : img.src;
+        props.sketchProperties?.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
     }
 
     return (

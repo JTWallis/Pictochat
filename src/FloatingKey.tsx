@@ -14,7 +14,6 @@ function FloatingKey(props: any) {
     const [imgSrc, setImgSrc] = useState("");
     const [imgSize, setImgSize] = useState(10);
     const [imgVisible, setImgVisible] = useState(true);
-    const [send, setSend] = useState(false);
 
     const [imgDrawColor, setImgDrawColor] = useState("#000");
     const imageRef = useRef<HTMLImageElement>(null);
@@ -42,36 +41,11 @@ function FloatingKey(props: any) {
         },
 
         apply: () => {
-            setSend(true);
-        },
-
-        applyImmediate: (src: string, value: string) => {
-            setImage(src, value);
+            props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
+            hide();
             resetPos();
-            setSend(true);
         }
     }));
-
-    // Wait for send to update because there is no guarantee that the ImgSrc is updated on time.
-    useEffect(() => {
-        if(send) {
-            if(posX < 0) {
-                props.canvasSketchRef.current.drawImgAppend(imageRef.current, imgDrawColor);
-            } else {
-                props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
-            }
-
-            setSend(false);
-            hide();
-            resetPos();
-        }
-
-        return () => {
-            setSend(false);
-            hide();
-            resetPos();
-        }
-    }, [send]);
 
     function hide() {
         setLabelVisible(false);
