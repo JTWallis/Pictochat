@@ -11,7 +11,18 @@ interface CanvasSpecialProps {
 
 function CanvasSpecial(props: CanvasSpecialProps) {
 
+    const [firstMount, setFirstMount] = useState(false);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        initHeight();
+    }, []);
+
+    function initHeight() {
+        setFirstMount(true);
+        props.api.setStripeSteps(1);
+        props.api.setRenderStripes(false);
+    }
 
     return (
         <div 
