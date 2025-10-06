@@ -263,10 +263,10 @@ function Canvas(props: CanvasProps) {
                 }
                 if (!src) continue;
 
-                const img = document.createElement("img") as HTMLImageElement;
-                img.width = Math.abs(posEnd.x - posStart.x);
-                img.height = Math.abs(posEnd.y - posStart.y);
-                img.src = src;
+                const width = Math.abs(posEnd.x - posStart.x);
+                const height = Math.abs(posEnd.y - posStart.y);
+                const img = createImage(src, undefined, new Vector2(width, height));
+
                 drawImage(img, posStart, "#AAA");
             } else {
                 drawText(posStart, command.getValue());
