@@ -344,7 +344,9 @@ function Canvas(props: CanvasProps) {
         bufferContext.globalCompositeOperation = "source-atop";
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
+        context.imageSmoothingEnabled = false;
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
+        context.imageSmoothingEnabled = true;
     }
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
