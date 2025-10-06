@@ -22,6 +22,7 @@ import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageWelcome } from './MessageSpecialHelper';
+import convertTextToCharRepresentations from './CharmapHelper';
 
 
 function isAlpha(char: string): boolean {
@@ -187,6 +188,11 @@ function App() {
     });
 
     return foundValue;
+  }
+
+  function convertTextToCharReps(text: string) {
+    const charmaps: CharmapBase[] = [charmapLatin, charmapSpecial, charmapPicto, charmapAccent, charmapHiragana, charmapKatakana];
+    return convertTextToCharRepresentations(charmaps, text);
   }
 
   function addMessage(message: Message) {
