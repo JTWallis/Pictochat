@@ -278,10 +278,12 @@ function Canvas(props: CanvasProps) {
     }
 
     function createImage(src: string, value?: string, size?: Vector2) {
+        const width = size ? size.x : buttonWidth;
+        const height = size ? size.y : buttonWidth;
         const img = document.createElement("img") as HTMLImageElement;
         img.src = src;
-        img.width = size ? size.x : buttonWidth;
-        img.height = size ? size.y : buttonWidth;
+        img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
+        img.height = Math.round(height);
         if(value) img.alt = value;
 
         return img;
