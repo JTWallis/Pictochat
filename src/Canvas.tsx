@@ -372,8 +372,8 @@ function Canvas(props: CanvasProps) {
     }
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = canvasContainerRef.current?.clientWidth!;
-        const height = canvasContainerRef.current?.clientHeight!;
+        const width = getCanvasWidth();
+        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
