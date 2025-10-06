@@ -378,30 +378,38 @@ function Canvas(props: CanvasProps) {
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
 
+    function pushMessageCommand(type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) {
+        if(props.sketchProperties) {
+            props.sketchProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
+        } else if(props.specialProperties) {
+            props.specialProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
+        }
+    }
+
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
-        if(!props.sketchProperties) {
+        if(!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
 
         const drawDot = posSrc.equals(posDst);
         drawStroke(posSrc, posDst, drawDot, penSize, penColor);
-        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+        pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        if(!props.sketchProperties) {
+        if(!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
 
         drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
-        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
+        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        if(!props.sketchProperties) {
+        if(!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
