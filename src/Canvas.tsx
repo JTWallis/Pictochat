@@ -268,7 +268,7 @@ function Canvas(props: CanvasProps) {
                 const height = Math.abs(posEnd.y - posStart.y);
                 const img = createImage(src, undefined, new Vector2(width, height));
 
-                drawImage(img, posStart, "#AAA");
+                drawImage(img, posStart, command.getPenColor());
             } else {
                 drawText(posStart, command.getValue());
             }
