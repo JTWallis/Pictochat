@@ -168,6 +168,7 @@ function Canvas(props: CanvasProps) {
             drawPushStroke,
             drawPushText,
             drawPushImage,
+            createAppendFloatingKeyImage,
             reconstructMessage,
             clearCanvas,
             setCanvasTextPos,
@@ -290,6 +291,12 @@ function Canvas(props: CanvasProps) {
         const context = getCanvasContext();
         const height = canvasRef.current?.height!;
         context?.clearRect(0, 0, getCanvasWidth(), height);
+    }
+
+    function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
+        const img = createImage(src, value);
+        drawPushImage(img, canvasTextPos, colorFill);
+        incrementCanvasTextPosX();
     }
 
     function drawText(pos: Vector2, value: string) {
