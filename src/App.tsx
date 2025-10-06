@@ -21,7 +21,7 @@ import { CharmapPicto } from './CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
-import { createMessageWelcome } from './MessageSpecialHelper';
+import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
 
 
