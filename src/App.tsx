@@ -200,6 +200,23 @@ function App() {
     setMessageDisplays((prev) => [...prev, messageElement]);
   }
 
+  function addNewSpecialMessage(messageText: string) {
+    const message = createSpecialMesssage(username);
+
+    const specialMessage = (
+      <MessageSpecial 
+        key={"MessageSpecial-" + messageDisplays.length}
+        message={message} 
+        messageText={messageText}
+        textColor={"#DDD"}
+        findCharRepFromValue={findCharRepFromValue}
+        convertTextToCharReps={convertTextToCharReps} 
+      />
+    )
+
+    setMessages(prev => [...prev, message]);
+    addMessageElement(specialMessage);
+  }
 
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
@@ -216,7 +233,7 @@ function App() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
 
-    addMessage(createMessageWelcome(username));
+    addNewSpecialMessage(createMessageTextWelcome());
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
