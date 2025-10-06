@@ -1,4 +1,8 @@
 
+function countNonEmptySlots(arr: any[]): number {
+    return arr.filter(e => e).length;
+}
+
 function searchCharReps(reps: CharRepresentation[], values: string[], handledValues: number) {
     const foundCharReps: CharRepresentation[] = Array(values.length);
 
