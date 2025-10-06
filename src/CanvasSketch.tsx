@@ -84,8 +84,8 @@ function CanvasSketch(props: CanvasSketchProps) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },
 
-        drawImgAppend(img: HTMLImageElement, colorFill: string) {
-            handleAppendFloatingKeyImage(img, colorFill);
+        createDrawImgAppend(src: string, value: string, colorFill: string) {
+            props.api.createAppendFloatingKeyImage(src, value, colorFill);
         },
 
         usePenDraw() {
@@ -207,13 +207,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         props.api.setCanvasTextPos(pos);
 
-        drawPushText(pos, value);
-    }
-
-    function handleAppendFloatingKeyImage(img: HTMLImageElement, colorFill: string) {
-        const height = props.canvasTextPos.y - img.height / 2;
-        drawPushImage(img, new Vector2(props.canvasTextPos.x, height), colorFill);
-        props.api.incrementCanvasTextPosX();
+        props.api.drawPushText(pos, value);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -232,7 +226,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         // Set pos to the right and vertical center of the image.
         props.api.setCanvasTextPos(new Vector2(imgRight, (pos.y + imgBottom) / 2));
 
-props.api.        drawPushImage(img, pos, colorFill);
+        props.api.drawPushImage(img, pos, colorFill);
     }
 
     /**
