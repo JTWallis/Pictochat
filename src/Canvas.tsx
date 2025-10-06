@@ -165,9 +165,9 @@ function Canvas(props: CanvasProps) {
     function buildCanvasSketchFullAPI(): CanvasSketchFullAPI {
         return {
             ...props.sketchProperties!.api,
-            drawStroke,
-            drawText,
-            drawImage,
+            drawPushStroke,
+            drawPushText,
+            drawPushImage,
             reconstructMessage,
             clearCanvas,
             setCanvasTextPos,
@@ -328,6 +328,48 @@ function Canvas(props: CanvasProps) {
         bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
         context.drawImage(buffer, pos.x, pos.y, buffer.width, buffer.height);
+    }
+
+    function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
+        const width = canvasContainerRef.current?.clientWidth!;
+        const height = canvasContainerRef.current?.clientHeight!;
+
+        return new Vector2(canvasPos.x / width, canvasPos.y / height);
+    }
+
+    function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        const drawDot = posSrc.equals(posDst);
+        drawStroke(posSrc, posDst, drawDot, penSize, penColor);
+        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+    }
+
+    function drawPushText(pos: Vector2, value: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        drawText(pos, value);
+        const normalizedPos = normalizeCanvasPos(pos);
+        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
+    }
+
+    function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
+        if(!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            return;
+        }
+
+        drawImage(img, pos, colorFill);
+        const normalizedStartPos = normalizeCanvasPos(pos);
+        const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
+        const value = img.alt.length > 0 ? img.alt : img.src;
+        props.sketchProperties?.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
     }
 
     return (
