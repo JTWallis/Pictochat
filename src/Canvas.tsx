@@ -4,7 +4,7 @@ import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
-import type { CanvasSketchFullAPI, CanvasSketchPartialAPI } from './CanvasSketchAPI';
+import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
 import type { Message } from './Message';
 import type { CharRepresentation } from './CharRepresentation';
