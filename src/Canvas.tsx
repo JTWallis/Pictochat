@@ -5,9 +5,10 @@ import { DrawingCommandType } from './DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
-import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
+import { CanvasTypes } from './CanvasAPI';
 import type { Message } from './Message';
 import type { CharRepresentation } from './CharRepresentation';
+import CanvasSpecial from './CanvasSpecial';
 
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
@@ -21,14 +22,22 @@ interface CanvasSketchProperties {
     floatingKeyRef: React.RefObject<any>
 }
 
+interface CanvasSpecialProperties {
+    messageText: string,
+    textColor: string,
+    api: CanvasSpecialPartialAPI
+}
+
 interface CanvasProps {
     className: string,
+    canvasType: number,
     message: Message,
     findCharRepFromValue: (value: string) => CharRepresentation | undefined,
     hideName?: boolean,
     userColor?: string,
     onCanvasResize?: () => void,
     sketchProperties?: CanvasSketchProperties
+    specialProperties?: CanvasSpecialProperties
 }
 
 function Canvas(props: CanvasProps) {
@@ -184,6 +193,17 @@ function Canvas(props: CanvasProps) {
             getStripeRects,
             getNameRect,
             getMessageCommands
+        }
+    }
+
+    function buildCanvasSpecialAPI(): CanvasSpecialFullAPI {
+        return {
+            ...props.specialProperties!.api,
+            setStripeSteps,
+            setRenderStripes,
+            setCanvasTextPos,
+            createAppendFloatingKeyImage,
+            reconstructMessage
         }
     }
 
