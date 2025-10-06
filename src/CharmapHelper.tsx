@@ -61,3 +61,41 @@ function findCharRepsFromTextValues(charmaps: CharmapBase[], values: string[]) {
 
     return charReps;
 }
+
+function convertTextToCharRepresentations(charmaps: CharmapBase[], text: string): CharRepresentation[] {
+    const values: string[] = [];
+
+    const escapeChar = "$";
+    const escapeOpen = "{";
+    const escapeClose = "}";
+    let escapeCharText = "";
+    let isEscape = false;
+
+    // Convert text-string with escape chars into array of values, each representing a CharRep value to look up.
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (i + 1 < text.length) {
+            const currAndNext = text.substring(i, i + 2);
+            if (!isEscape && currAndNext === (escapeChar + escapeOpen)) {
+                isEscape = true;
+                i++;
+                continue;
+            }
+
+            if (isEscape && currAndNext === (escapeChar + escapeClose)) {
+                values.push(escapeCharText);
+                escapeCharText = "";
+                isEscape = false;
+                i++;
+                continue;
+            }
+        }
+
+        if (isEscape) escapeCharText += char;
+        else values.push(char);
+    }
+
+    return findCharRepsFromTextValues(charmaps, values);
+}
+
+export default convertTextToCharRepresentations;
