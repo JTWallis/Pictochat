@@ -83,9 +83,10 @@ function Canvas(props: CanvasProps) {
     }
 
     function updateCanvasTextPos() {
-        if(!props.sketchProperties) return;
+        if(!props.sketchProperties && !props.specialProperties) return;
         const height = canvasContainerRef.current?.clientHeight!;
 
+        if(props.sketchProperties) {
         const lastTextCommand = props.sketchProperties.api.getLastMessageText();
         if(lastTextCommand) {
             const width = canvasContainerRef.current?.clientWidth!;
@@ -94,6 +95,7 @@ function Canvas(props: CanvasProps) {
             const pos = new Vector2(x, y);
             incrementCanvasTextPosX(pos);
             return;
+            }
         }
 
         const nameCurrent = nameContainerRef.current;
