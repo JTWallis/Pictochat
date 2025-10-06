@@ -1,32 +1,21 @@
-import { DrawingCommandType } from "./DrawCommand";
 import { Message } from "./Message";
-import { Vector2 } from "./Vector2";
 
-function createMessage(creator: string, text: string): Message {
-    const message = new Message([], creator, true);
-
-    message.pushCommand(DrawingCommandType.TEXT, new Vector2(0.05, 0.1), new Vector2(0.0, 0.0), text, 1.0, "#000");
-
-
-    return message;
+export function createSpecialMesssage(creator: string): Message {
+    return new Message([], creator, true);
 }
 
-export function createMessageWelcome(creator: string): Message {
-    const text = "Welcome to Pictochat!";
-    return createMessage(creator, text);
+export function createMessageTextWelcome(): string {
+    return "Welcome to Pict${PICTO_DPAD$}chat!";
 }
 
-export function createMessageJoin(creator: string, room: string): Message {
-    const text = `${creator} joined [${room}].`;
-    return createMessage(creator, text);
+export function createMessageTextJoin(creator: string, room: string): string {
+    return `${creator} joined [${room}].`;
 }
 
-export function createMessageLeave(creator: string, room: string): Message {
-    const text = `${creator} left [${room}].`;
-    return createMessage(creator, text);
+export function createMessageTextLeave(creator: string, room: string): string {
+    return `${creator} left [${room}].`;
 }
 
-export function createMessageBirthday(creator: string, room: string): Message {
-    const text = `Happy Birthday, ${creator}!`;
-    return createMessage(creator, text);
+export function createMessageTextBirthday(creator: string, room: string): string {
+    return `Happy Birthday, ${creator}!`;
 }

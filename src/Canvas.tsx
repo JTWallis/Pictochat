@@ -4,10 +4,11 @@ import { Vector2 } from './Vector2';
 import { DrawingCommandType } from './DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
-import type { CanvasSketchFullAPI, CanvasSketchPartialAPI } from './CanvasSketchAPI';
-import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
+import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
+import { CanvasTypes } from './CanvasAPI';
 import type { Message } from './Message';
 import type { CharRepresentation } from './CharRepresentation';
+import CanvasSpecial from './CanvasSpecial';
 
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
@@ -21,14 +22,22 @@ interface CanvasSketchProperties {
     floatingKeyRef: React.RefObject<any>
 }
 
+interface CanvasSpecialProperties {
+    messageText: string,
+    textColor: string,
+    api: CanvasSpecialPartialAPI
+}
+
 interface CanvasProps {
     className: string,
+    canvasType: number,
     message: Message,
     findCharRepFromValue: (value: string) => CharRepresentation | undefined,
     hideName?: boolean,
     userColor?: string,
     onCanvasResize?: () => void,
     sketchProperties?: CanvasSketchProperties
+    specialProperties?: CanvasSpecialProperties
 }
 
 function Canvas(props: CanvasProps) {
@@ -44,6 +53,7 @@ function Canvas(props: CanvasProps) {
     const [drawOffsetY, setDrawOffsetY] = useState(0);
     const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
 
+    let appliedStripeSteps = stripeCount;
     const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
@@ -65,7 +75,7 @@ function Canvas(props: CanvasProps) {
     }, [props.message]);
 
     function initFloatingKeySize() {
-        if(!props.sketchProperties) return;
+        if (!props.sketchProperties) return;
 
         const width = getCanvasWidth();
         const buttonWidth = width * lineCharSize;
@@ -74,25 +84,27 @@ function Canvas(props: CanvasProps) {
     }
 
     function updateCanvasTextPos() {
-        if(!props.sketchProperties) return;
+        if (!props.sketchProperties && !props.specialProperties) return;
         const height = canvasContainerRef.current?.clientHeight!;
 
-        const lastTextCommand = props.sketchProperties.api.getLastMessageText();
-        if(lastTextCommand) {
-            const width = canvasContainerRef.current?.clientWidth!;
-            const x = lastTextCommand.getStartPos().x * width;
-            const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
-            const pos = new Vector2(x, y);
-            incrementCanvasTextPosX(pos);
-            return;
+        if (props.sketchProperties) {
+            const lastTextCommand = props.sketchProperties.api.getLastMessageText();
+            if (lastTextCommand) {
+                const width = canvasContainerRef.current?.clientWidth!;
+                const x = lastTextCommand.getStartPos().x * width;
+                const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
+                const pos = new Vector2(x, y);
+                incrementCanvasTextPosX(pos);
+                return;
+            }
         }
 
         const nameCurrent = nameContainerRef.current;
-        const xOffset =  nameCurrent ? nameCurrent.clientWidth : 0;
-        const yOffset = height / (stripeCount + 1);
+        const xOffset = nameCurrent ? nameCurrent.clientWidth : 0;
+        const yOffset = (appliedStripeSteps === 1) ? (height / 2) : (height / (stripeCount + 1));
 
         const x = xOffset + canvasTextPosXOffset;
-        const y = yOffset - yOffset / 2;
+        const y = (appliedStripeSteps === 1) ? yOffset : (yOffset - yOffset / 2);
         setCanvasTextPos(new Vector2(x, y));
     }
 
@@ -145,13 +157,13 @@ function Canvas(props: CanvasProps) {
     }
 
     function getNameRect(): DOMRect | null {
-        if(!nameContainerRef || !nameContainerRef.current) return null;
+        if (!nameContainerRef || !nameContainerRef.current) return null;
         return nameContainerRef.current.getBoundingClientRect();
     }
 
     function getStripeRects() {
         const rects = [];
-        for(let i = 0; i < stripesContainerRef.current!.children.length; i++) {
+        for (let i = 0; i < stripesContainerRef.current!.children.length; i++) {
             rects.push(stripesContainerRef.current!.children[i].getBoundingClientRect());
         }
 
@@ -187,9 +199,21 @@ function Canvas(props: CanvasProps) {
         }
     }
 
+    function buildCanvasSpecialAPI(): CanvasSpecialFullAPI {
+        return {
+            ...props.specialProperties!.api,
+            setStripeSteps,
+            setRenderStripes,
+            setCanvasTextPos,
+            createAppendFloatingKeyImage,
+            reconstructMessage
+        }
+    }
+
     function setStripeSteps(steps: number) {
-        if(steps < 1) steps = 1;
-        else if(steps > stripeCount) return;
+        if (steps < 1) steps = 1;
+        else if (steps > stripeCount) return;
+        appliedStripeSteps = steps;
 
         const rects = getStripeRects();
         const stripeBottom = rects[steps - 1].bottom;
@@ -223,7 +247,7 @@ function Canvas(props: CanvasProps) {
         setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
         const nameRect = getNameRect();
-        if(nameRect) {
+        if (nameRect) {
             const nameHeight = nameRect.height;
             nameContainerRef.current!.style.height = `${nameHeight}px`;
         }
@@ -237,7 +261,7 @@ function Canvas(props: CanvasProps) {
         canvasStyle.width = `${canvasWidth}px`;
     }
 
-    function reconstructMessage() {
+    async function reconstructMessage() {
         if (!props.message) return;
 
         const drawingCommands = props.message.getCommands();
@@ -255,7 +279,7 @@ function Canvas(props: CanvasProps) {
                 drawStroke(posStart, posEnd, drawDot, command.getPenSize(), command.getPenColor());
             } else if (command.getType() === DrawingCommandType.FLOATING_KEY) {
                 let src;
-                if (command.getValue().length > 1) {
+                if (command.getValue().endsWith(".png")) {
                     // Command Value should already be a src path.
                     src = command.getValue();
                 } else {
@@ -266,7 +290,7 @@ function Canvas(props: CanvasProps) {
 
                 const width = Math.abs(posEnd.x - posStart.x);
                 const height = Math.abs(posEnd.y - posStart.y);
-                const img = createImage(src, undefined, new Vector2(width, height));
+                const img = await createImage(src, undefined, new Vector2(width, height));
 
                 drawImage(img, posStart, command.getPenColor());
             } else {
@@ -277,16 +301,21 @@ function Canvas(props: CanvasProps) {
         updateCanvasTextPos();
     }
 
-    function createImage(src: string, value?: string, size?: Vector2) {
-        const width = size ? size.x : buttonWidth;
-        const height = size ? size.y : buttonWidth;
-        const img = document.createElement("img") as HTMLImageElement;
-        img.src = src;
-        img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
-        img.height = Math.round(height);
-        if(value) img.alt = value;
+    async function createImage(src: string, value?: string, size?: Vector2): Promise<HTMLImageElement> {
+        return new Promise((resolve) => {
+            const width = size ? size.x : buttonWidth;
+            const height = size ? size.y : buttonWidth;
 
-        return img;
+            const img = document.createElement("img") as HTMLImageElement;
+            img.src = src;
+            img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
+            img.height = Math.round(height);
+            if (value) img.alt = value;
+
+            img.onload = () => {
+                resolve(img);
+            }
+        })
     }
 
     function clearCanvas() {
@@ -295,8 +324,8 @@ function Canvas(props: CanvasProps) {
         context?.clearRect(0, 0, getCanvasWidth(), height);
     }
 
-    function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
-        const img = createImage(src, value);
+    async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
+        const img = await createImage(src, value);
         drawPushImage(img, canvasTextPos, colorFill);
         incrementCanvasTextPosX();
     }
@@ -335,6 +364,9 @@ function Canvas(props: CanvasProps) {
         const context = getCanvasContext();
         if (!context) return;
 
+        const space = "space";
+        if (img.src.toLowerCase().includes(space) || img.alt.toLowerCase().includes(space)) return;
+
         const buffer = document.createElement("canvas");
         buffer.width = img.width;
         buffer.height = img.height;
@@ -352,36 +384,44 @@ function Canvas(props: CanvasProps) {
     }
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
-        const width = canvasContainerRef.current?.clientWidth!;
-        const height = canvasContainerRef.current?.clientHeight!;
+        const width = getCanvasWidth();
+        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
 
+    function pushMessageCommand(type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) {
+        if (props.sketchProperties) {
+            props.sketchProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
+        } else if (props.specialProperties) {
+            props.specialProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
+        }
+    }
+
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
-        if(!props.sketchProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
 
         const drawDot = posSrc.equals(posDst);
         drawStroke(posSrc, posDst, drawDot, penSize, penColor);
-        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
+        pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        if(!props.sketchProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
 
         drawText(pos, value);
         const normalizedPos = normalizeCanvasPos(pos);
-        props.sketchProperties.api.pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
+        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        if(!props.sketchProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
@@ -390,7 +430,52 @@ function Canvas(props: CanvasProps) {
         const normalizedStartPos = normalizeCanvasPos(pos);
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
-        props.sketchProperties?.api.pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
+    }
+
+    function getCanvasSubComponent() {
+        const className = "canvasTypeContainer";
+
+        switch (props.canvasType) {
+            case CanvasTypes.CANVAS_SKETCH:
+                if (!props.sketchProperties) return (
+                    <></>
+                );
+
+                return (
+                    <CanvasSketch
+                        className={className}
+                        canvasText={props.sketchProperties.canvasText}
+                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        canvasTextPos={canvasTextPos}
+                        api={buildCanvasSketchFullAPI()}
+                    />
+                );
+            case CanvasTypes.CANVAS_DISPLAY:
+                return (
+                    <CanvasDisplay
+                        className={className}
+                        api={buildCanvasDisplayAPI()}
+                    />
+                );
+            case CanvasTypes.CANVAS_SPECIAL:
+                if (!props.specialProperties) return (
+                    <></>
+                );
+
+                return (
+                    <CanvasSpecial
+                        className={className}
+                        messageText={props.specialProperties.messageText}
+                        textColor={props.specialProperties.textColor}
+                        api={buildCanvasSpecialAPI()}
+                    />
+                )
+            default:
+                return (
+                    <></>
+                );
+        }
     }
 
     return (
@@ -412,20 +497,7 @@ function Canvas(props: CanvasProps) {
                     ref={canvasRef}>
                 </canvas>
 
-                {props.sketchProperties ?
-                    <CanvasSketch
-                        className="canvasTypeContainer"
-                        canvasText={props.sketchProperties.canvasText}
-                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
-                        canvasTextPos={canvasTextPos}
-                        api={buildCanvasSketchFullAPI()}
-                    />
-                    :
-                    <CanvasDisplay
-                        className="canvasTypeContainer"
-                        api={buildCanvasDisplayAPI()}
-                    />
-                }
+                {getCanvasSubComponent()}
 
                 <div className="borderContainer">
                     {props.hideName ? (

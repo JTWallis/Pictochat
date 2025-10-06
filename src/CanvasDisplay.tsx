@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import './CanvasDisplay.css';
-import type { CanvasDisplayAPI } from './CanvasDisplayAPI';
+import type { CanvasDisplayAPI } from './CanvasAPI';
 
 interface CanvasDisplayProps {
     className: string,

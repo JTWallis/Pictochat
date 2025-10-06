@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Message } from './Message';
 import type { Vector2 } from './Vector2';
 import type { DrawCommand } from './DrawCommand';
-import type { CanvasSketchPartialAPI } from './CanvasSketchAPI';
+import type { CanvasSketchPartialAPI } from './CanvasAPI';
+import { CanvasTypes } from './CanvasAPI';
 
 
 function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef, floatingKeyRef}: any) {
@@ -45,6 +46,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
     return (
         <Canvas 
             className="messageSketchContainer"
+            canvasType={CanvasTypes.CANVAS_SKETCH}
             message={message}
             findCharRepFromValue={findCharRepFromValue}
             sketchProperties={{

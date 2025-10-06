@@ -21,7 +21,7 @@ import { CharmapPicto } from './CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
-import { createMessageWelcome } from './MessageSpecialHelper';
+import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
 
 
@@ -195,20 +195,37 @@ function App() {
     return convertTextToCharRepresentations(charmaps, text);
   }
 
+  function addMessageElement(messageElement: JSX.Element) {
+    scrollbarRef.current!.addScrollsegment();
+    setMessageDisplays((prev) => [...prev, messageElement]);
+  }
+
+  function addNewSpecialMessage(messageText: string) {
+    const message = createSpecialMesssage(username);
+
+    const specialMessage = (
+      <MessageSpecial 
+        key={"MessageSpecial-" + messageDisplays.length}
+        message={message} 
+        messageText={messageText}
+        textColor={"#DDD"}
+        findCharRepFromValue={findCharRepFromValue}
+        convertTextToCharReps={convertTextToCharReps} 
+      />
+    )
+
+    setMessages(prev => [...prev, message]);
+    addMessageElement(specialMessage);
+  }
+
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
-    const m = message.isSpecialMessage() ? 
-      (
-        <MessageSpecial key={"MessageSpecial-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue} />
-      )
-      :
-      (
+    const m = (
         <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
       );
 
-    scrollbarRef.current!.addScrollsegment();
-    setMessageDisplays((prev) => [...prev, m]);
+    addMessageElement(m);
   }
 
 
@@ -216,7 +233,7 @@ function App() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
 
-    addMessage(createMessageWelcome(username));
+    addNewSpecialMessage(createMessageTextWelcome());
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);

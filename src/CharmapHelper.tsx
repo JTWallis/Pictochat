@@ -92,6 +92,7 @@ function convertTextToCharRepresentations(charmaps: CharmapBase[], text: string)
         }
 
         if (isEscape) escapeCharText += char;
+        else if(char === " ") values.push("SPACE");
         else values.push(char);
     }
 
