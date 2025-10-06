@@ -276,6 +276,16 @@ function Canvas(props: CanvasProps) {
         updateCanvasTextPos();
     }
 
+    function createImage(src: string, value?: string, size?: Vector2) {
+        const img = document.createElement("img") as HTMLImageElement;
+        img.src = src;
+        img.width = size ? size.x : buttonWidth;
+        img.height = size ? size.y : buttonWidth;
+        if(value) img.alt = value;
+
+        return img;
+    }
+
     function clearCanvas() {
         const context = getCanvasContext();
         const height = canvasRef.current?.height!;
