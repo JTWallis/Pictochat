@@ -75,7 +75,7 @@ function Canvas(props: CanvasProps) {
     }, [props.message]);
 
     function initFloatingKeySize() {
-        if(!props.sketchProperties) return;
+        if (!props.sketchProperties) return;
 
         const width = getCanvasWidth();
         const buttonWidth = width * lineCharSize;
@@ -84,23 +84,23 @@ function Canvas(props: CanvasProps) {
     }
 
     function updateCanvasTextPos() {
-        if(!props.sketchProperties && !props.specialProperties) return;
+        if (!props.sketchProperties && !props.specialProperties) return;
         const height = canvasContainerRef.current?.clientHeight!;
 
-        if(props.sketchProperties) {
-        const lastTextCommand = props.sketchProperties.api.getLastMessageText();
-        if(lastTextCommand) {
-            const width = canvasContainerRef.current?.clientWidth!;
-            const x = lastTextCommand.getStartPos().x * width;
-            const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
-            const pos = new Vector2(x, y);
-            incrementCanvasTextPosX(pos);
-            return;
+        if (props.sketchProperties) {
+            const lastTextCommand = props.sketchProperties.api.getLastMessageText();
+            if (lastTextCommand) {
+                const width = canvasContainerRef.current?.clientWidth!;
+                const x = lastTextCommand.getStartPos().x * width;
+                const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
+                const pos = new Vector2(x, y);
+                incrementCanvasTextPosX(pos);
+                return;
             }
         }
 
         const nameCurrent = nameContainerRef.current;
-        const xOffset =  nameCurrent ? nameCurrent.clientWidth : 0;
+        const xOffset = nameCurrent ? nameCurrent.clientWidth : 0;
         const yOffset = (appliedStripeSteps === 1) ? (height / 2) : (height / (stripeCount + 1));
 
         const x = xOffset + canvasTextPosXOffset;
@@ -157,13 +157,13 @@ function Canvas(props: CanvasProps) {
     }
 
     function getNameRect(): DOMRect | null {
-        if(!nameContainerRef || !nameContainerRef.current) return null;
+        if (!nameContainerRef || !nameContainerRef.current) return null;
         return nameContainerRef.current.getBoundingClientRect();
     }
 
     function getStripeRects() {
         const rects = [];
-        for(let i = 0; i < stripesContainerRef.current!.children.length; i++) {
+        for (let i = 0; i < stripesContainerRef.current!.children.length; i++) {
             rects.push(stripesContainerRef.current!.children[i].getBoundingClientRect());
         }
 
@@ -211,8 +211,8 @@ function Canvas(props: CanvasProps) {
     }
 
     function setStripeSteps(steps: number) {
-        if(steps < 1) steps = 1;
-        else if(steps > stripeCount) return;
+        if (steps < 1) steps = 1;
+        else if (steps > stripeCount) return;
         appliedStripeSteps = steps;
 
         const rects = getStripeRects();
@@ -247,7 +247,7 @@ function Canvas(props: CanvasProps) {
         setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
 
         const nameRect = getNameRect();
-        if(nameRect) {
+        if (nameRect) {
             const nameHeight = nameRect.height;
             nameContainerRef.current!.style.height = `${nameHeight}px`;
         }
@@ -303,14 +303,14 @@ function Canvas(props: CanvasProps) {
 
     async function createImage(src: string, value?: string, size?: Vector2): Promise<HTMLImageElement> {
         return new Promise((resolve) => {
-        const width = size ? size.x : buttonWidth;
-        const height = size ? size.y : buttonWidth;
+            const width = size ? size.x : buttonWidth;
+            const height = size ? size.y : buttonWidth;
 
-        const img = document.createElement("img") as HTMLImageElement;
-        img.src = src;
-        img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
-        img.height = Math.round(height);
-        if(value) img.alt = value;
+            const img = document.createElement("img") as HTMLImageElement;
+            img.src = src;
+            img.width = Math.round(width);      // Img-style-width automatically rounds; Img-width does not.
+            img.height = Math.round(height);
+            if (value) img.alt = value;
 
             img.onload = () => {
                 resolve(img);
@@ -365,7 +365,7 @@ function Canvas(props: CanvasProps) {
         if (!context) return;
 
         const space = "space";
-        if(img.src.toLowerCase().includes(space) || img.alt.toLowerCase().includes(space)) return;
+        if (img.src.toLowerCase().includes(space) || img.alt.toLowerCase().includes(space)) return;
 
         const buffer = document.createElement("canvas");
         buffer.width = img.width;
@@ -391,15 +391,15 @@ function Canvas(props: CanvasProps) {
     }
 
     function pushMessageCommand(type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) {
-        if(props.sketchProperties) {
+        if (props.sketchProperties) {
             props.sketchProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
-        } else if(props.specialProperties) {
+        } else if (props.specialProperties) {
             props.specialProperties.api.pushMessageCommand(type, startPos, endPos, value, penSize, penColor);
         }
     }
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
-        if(!props.sketchProperties && !props.specialProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
@@ -410,7 +410,7 @@ function Canvas(props: CanvasProps) {
     }
 
     function drawPushText(pos: Vector2, value: string) {
-        if(!props.sketchProperties && !props.specialProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
@@ -421,7 +421,7 @@ function Canvas(props: CanvasProps) {
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
-        if(!props.sketchProperties && !props.specialProperties) {
+        if (!props.sketchProperties && !props.specialProperties) {
             console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
             return;
         }
@@ -436,9 +436,9 @@ function Canvas(props: CanvasProps) {
     function getCanvasSubComponent() {
         const className = "canvasTypeContainer";
 
-        switch(props.canvasType) {
+        switch (props.canvasType) {
             case CanvasTypes.CANVAS_SKETCH:
-                if(!props.sketchProperties) return (
+                if (!props.sketchProperties) return (
                     <></>
                 );
 
@@ -459,12 +459,12 @@ function Canvas(props: CanvasProps) {
                     />
                 );
             case CanvasTypes.CANVAS_SPECIAL:
-                if(!props.specialProperties) return (
+                if (!props.specialProperties) return (
                     <></>
                 );
-                
+
                 return (
-                    <CanvasSpecial 
+                    <CanvasSpecial
                         className={className}
                         messageText={props.specialProperties.messageText}
                         textColor={props.specialProperties.textColor}
