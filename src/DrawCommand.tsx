@@ -1,4 +1,4 @@
-import type { Vector2 } from "./Vector2";
+import { Vector2 } from "./Vector2";
 
 export const DrawingCommandType = {
     LINE_STROKE: 0,
@@ -58,5 +58,15 @@ export class DrawCommand {
         return `ID[${this.id}]; TYPE[${this.type}]; START[${this.startPos.x} | ${this.startPos.y}]; END[${this.endPos.x} | ${this.endPos.y}]; VALUE[${this.value}]; SIZE[${this.penSize}]; COLOR[${this.penColor}]`;
     }
 
+    public static createFromRaw(obj: any) : DrawCommand {
+        return new DrawCommand(obj.id,
+            obj.type,
+            Vector2.createFromRaw(obj.startPos),
+            Vector2.createFromRaw(obj.endPos),
+            obj.value,
+            obj.penSize,
+            obj.penColor
+        );
+    }
 
 }
