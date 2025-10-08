@@ -6,6 +6,7 @@ import type { Vector2 } from './Vector2';
 import type { DrawCommand } from './DrawCommand';
 import type { CanvasSketchPartialAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
+import { postMessage } from './MessageController';
 
 
 function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef, floatingKeyRef}: any) {
