@@ -23,6 +23,7 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
+import { startClient } from './StompClient';
 
 
 function isAlpha(char: string): boolean {
@@ -66,6 +67,13 @@ function App() {
   const scrollListRef = useRef<any>(null);
   const scrollbarRef = useRef<any>(null);
   const vkeyboardStaggeredRef = useRef<any>(null);
+
+  function initStompClient() {
+    startClient(stompClientConnectedCallback);
+  }
+
+  function stompClientConnectedCallback() {
+  }
 
   function onKeyDown(event: any) {
     switch(event.key) {
@@ -234,10 +242,12 @@ function App() {
     window.addEventListener("keyup", onKeyUp);
 
     addNewSpecialMessage(createMessageTextWelcome());
+    initStompClient();
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.addEventListener("keyup", onKeyUp);
+      // DisconnectStompClient
     }
   }, []);
 
