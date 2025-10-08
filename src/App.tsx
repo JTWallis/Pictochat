@@ -24,6 +24,7 @@ import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
 import { startClient } from './StompClient';
+import { subscribeMessages } from './MessageController';
 
 
 function isAlpha(char: string): boolean {
@@ -73,6 +74,7 @@ function App() {
   }
 
   function stompClientConnectedCallback() {
+    subscribeMessages(addMessage);
   }
 
   function onKeyDown(event: any) {
