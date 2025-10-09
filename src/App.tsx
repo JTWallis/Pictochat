@@ -23,8 +23,9 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { startClient, subscribeQueueReply } from './StompClient';
+import { startClient, subscribeQueueReply, subscribeTotalConnections } from './StompClient';
 import { subscribeMessages } from './MessageController';
+import type { IMessage } from '@stomp/stompjs';
 
 
 function isAlpha(char: string): boolean {
@@ -55,6 +56,8 @@ const charmapPicto = new CharmapPicto();
 const KEY_SHIFT = "Shift";
 const KEY_CAPS = "CapsLock";
 
+const rooms = ['a', 'b', 'c', 'd'];
+
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
@@ -62,6 +65,7 @@ function App() {
   const [username, setUsername] = useState("Unknown");
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
+  const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
 
   const floatingKeyRef = useRef<any>(null);
   const canvasSketchRef = useRef<any>(null);
@@ -75,6 +79,16 @@ function App() {
 
   function stompClientConnectedCallback() {
     subscribeQueueReply();
+
+    subscribeTotalConnections((e: IMessage) => {
+      const json = JSON.parse(e.body);
+      const counts: number[] = [];
+      json.rooms.forEach((room: any) => {
+        counts.push(room.connectionCount);
+      })
+      setRoomsUserCount(counts);
+    });
+    
     subscribeMessages(addMessage);
   }
 
