@@ -23,7 +23,7 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { startClient } from './StompClient';
+import { startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
 
 
@@ -74,6 +74,7 @@ function App() {
   }
 
   function stompClientConnectedCallback() {
+    subscribeQueueReply();
     subscribeMessages(addMessage);
   }
 
