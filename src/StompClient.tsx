@@ -17,6 +17,20 @@ export function startClient(onConnectCallback: any) {
     stompClient.activate();
 }
 
+export function registerUsername(username: string, registeredCallback: any) {
+    console.log("Publish Register");
+
+    const receiptSubscribe = stompClient.subscribe("/user/queue/receipts", (e) => {
+        registeredCallback();
+        receiptSubscribe.unsubscribe();
+    })
+
+    stompClient.publish({
+        destination: "/app/register",
+        body: username
+    });
+}
+
 export function subscribeQueueReply() {
     stompClient.subscribe("/user/queue/reply", (e) => {
         console.log("Got message at queue/reply!", e.body);
