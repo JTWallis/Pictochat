@@ -44,6 +44,13 @@ export function subscribeTotalConnections(totalConnectionCallback: any) {
     });
 }
 
+export function subscribeRoomConnections() {
+    console.log("Subscribing RoomConnections");
+    stompClient.subscribe("/topic/room/a/connections", (e) => {
+        console.log("Connection/Disconnection in Room a:", e.body);
+    })
+}
+
 export function clientEstablished(): boolean {
     return stompClient && stompClient.connected;
 }
