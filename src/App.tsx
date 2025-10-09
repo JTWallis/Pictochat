@@ -23,7 +23,7 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { startClient, subscribeQueueReply, subscribeTotalConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply, subscribeTotalConnections } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import type { IMessage } from '@stomp/stompjs';
 
@@ -78,6 +78,11 @@ function App() {
   }
 
   function stompClientConnectedCallback() {
+    registerUsername(username, stompClientRegisteredCallback);
+  }
+
+  function stompClientRegisteredCallback() {
+    console.log("Register Callback");
     subscribeQueueReply();
 
     subscribeTotalConnections((e: IMessage) => {
