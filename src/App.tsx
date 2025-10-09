@@ -56,13 +56,43 @@ const charmapPicto = new CharmapPicto();
 const KEY_SHIFT = "Shift";
 const KEY_CAPS = "CapsLock";
 
+function debugRandomUser() {
+  const str = performance.now().toString();
+  const last = str.charAt(str.length - 1);
+
+  switch(last) {
+    case '0':
+      return "Gustavo";
+    case '1':
+      return "Max";
+    case '2':
+      return "John";
+    case '3':
+      return "Liam";
+    case '4':
+      return "Etna";
+    case '5':
+      return "Mia";
+    case '6':
+      return "Andy";
+    case '7':
+      return "Fred";
+    case '8':
+      return "Dirk";
+    case '9':
+      return "Olaf";
+    default:
+      return "Unknown";
+  }
+}
+
 const rooms = ['a', 'b', 'c', 'd'];
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [username, setUsername] = useState("Unknown");
+  const [username, setUsername] = useState(debugRandomUser());
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
