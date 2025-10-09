@@ -23,6 +23,13 @@ export function subscribeQueueReply() {
     })
 }
 
+export function subscribeTotalConnections(totalConnectionCallback: any) {
+    stompClient.subscribe("/topic/connections", (e) => {
+        console.log("New room subscription!", e.body);
+        totalConnectionCallback(e);
+    });
+}
+
 export function clientEstablished(): boolean {
     return stompClient && stompClient.connected;
 }
