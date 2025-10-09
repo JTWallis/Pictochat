@@ -23,7 +23,7 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply, subscribeTotalConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections, subscribeTotalConnections } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import type { IMessage } from '@stomp/stompjs';
 
@@ -124,6 +124,7 @@ function App() {
       setRoomsUserCount(counts);
     });
     
+    subscribeRoomConnections();
     subscribeMessages(addMessage);
   }
 
