@@ -14,8 +14,9 @@ export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (c
 
 export function subscribeRoomConnections() {
     console.log("Subscribing RoomConnections");
-    stompClient.subscribe("/topic/room/a/connections", (e) => {
+    stompClient.subscribe("/topic/room/a/connections", (e: IMessage) => {
         console.log("Connection/Disconnection in Room a:", e.body);
+        onReceivedRoomConnection(e);
     })
 }
 
@@ -27,4 +28,8 @@ function onReceivedTotalConnections(message: IMessage, onReceivedTotalConnection
     })
 
     onReceivedTotalConnectionsCallback(counts);
+}
+
+function onReceivedRoomConnection(message: IMessage) {
+
 }
