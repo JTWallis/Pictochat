@@ -23,9 +23,9 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
-import { subscribeTotalConnections } from './UserConnectionController';
+import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
 
 
 function isAlpha(char: string): boolean {

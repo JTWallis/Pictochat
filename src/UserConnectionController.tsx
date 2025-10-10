@@ -12,6 +12,13 @@ export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (c
     });
 }
 
+export function subscribeRoomConnections() {
+    console.log("Subscribing RoomConnections");
+    stompClient.subscribe("/topic/room/a/connections", (e) => {
+        console.log("Connection/Disconnection in Room a:", e.body);
+    })
+}
+
 function onReceivedTotalConnections(message: IMessage, onReceivedTotalConnectionsCallback: totalConnectCallbackType) {
     const json = JSON.parse(message.body) as RoomsDto;
     const counts: number[] = [];
