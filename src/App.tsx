@@ -21,11 +21,11 @@ import { CharmapPicto } from './CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
-import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
+import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
-import { subscribeTotalConnections } from './UserConnectionController';
+import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
 
 
 function isAlpha(char: string): boolean {
@@ -124,7 +124,7 @@ function App() {
 
     subscribeTotalConnections(setRoomsUserCount);
     
-    subscribeRoomConnections();
+    subscribeRoomConnections("a", addNewSpecialMessage);
     subscribeMessages(addMessage);
   }
 
@@ -262,6 +262,8 @@ function App() {
   }
 
   function addNewSpecialMessage(messageText: string) {
+    if(messageText.length === 0) return;
+
     const message = createSpecialMesssage(username);
 
     const specialMessage = (
@@ -295,6 +297,7 @@ function App() {
     window.addEventListener("keyup", onKeyUp);
 
     addNewSpecialMessage(createMessageTextWelcome());
+    addNewSpecialMessage(createMessageTextJoin(username, "a"));
     initStompClient();
 
     return () => {
