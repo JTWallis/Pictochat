@@ -262,6 +262,8 @@ function App() {
   }
 
   function addNewSpecialMessage(messageText: string) {
+    if(messageText.length === 0) return;
+
     const message = createSpecialMesssage(username);
 
     const specialMessage = (
