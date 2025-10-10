@@ -21,7 +21,6 @@ function Scrollsegment( {color, width}: any ) {
 }
 
 function Scrollbar( {scrollbarRef}: any ) {
-
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [segmentCount, setSegmentCount] = useState(0);
     const [specialMessageIndices, setSpecialMessageIndices] = useState<number[]>([]);
@@ -139,13 +138,22 @@ function Scrollbar( {scrollbarRef}: any ) {
         return segmentWidthDefault;
     }
 
+    function getColor(index: number) {
+        const indexReverse = segmentCount - 1 - index;
+        if(isIndexInRange(index)) {
+            return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialSelect : segmentColorSelect;
+        } else {
+            return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialDefault : segmentColorDefault;  
+        }
+    }
+
     return(
         <div className="scrollbar" ref={scrollbarContainerRef}>
             {Array.from({length: segmentCount}).slice(0, (maxDisplayElements < 0 ? undefined : maxDisplayElements)).map( (_, index) => {
                 return (
                     <Scrollsegment 
                         key = {"Scrollsegment-" + index}
-                        color = {isIndexInRange(index) ? segmentSelectColor : segmentColorDefault}
+                        color = {getColor(index)}
                         width = { getSegmentWidth(index) }
                     />
                 );
