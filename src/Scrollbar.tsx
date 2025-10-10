@@ -2,8 +2,10 @@ import { useImperativeHandle, useRef, useState, type JSX } from 'react';
 import './Scrollbar.css';
 
 const segmentColorDefault = "#8AF";
+const segmentColorSpecialDefault = "#888";
 const segmentWidthDefault = 70;
 const segmentColorSelect = "#0A0";
+const segmentColorSpecialSelect = "#444";
 const segmentWidthSmall = 50;
 const segmentWidthSmallest = 30;
 
