@@ -21,7 +21,7 @@ import { CharmapPicto } from './CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
-import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
+import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
@@ -297,6 +297,7 @@ function App() {
     window.addEventListener("keyup", onKeyUp);
 
     addNewSpecialMessage(createMessageTextWelcome());
+    addNewSpecialMessage(createMessageTextJoin(username, "a"));
     initStompClient();
 
     return () => {
