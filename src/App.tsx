@@ -256,8 +256,8 @@ function App() {
     return convertTextToCharRepresentations(charmaps, text);
   }
 
-  function addMessageElement(messageElement: JSX.Element) {
-    scrollbarRef.current!.addScrollsegment();
+  function addMessageElement(messageElement: JSX.Element, isSpecial: boolean) {
+    scrollbarRef.current!.addScrollsegment(isSpecial);
     setMessageDisplays((prev) => [...prev, messageElement]);
   }
 
@@ -278,7 +278,8 @@ function App() {
     )
 
     setMessages(prev => [...prev, message]);
-    addMessageElement(specialMessage);
+    const isSpecial = true;
+    addMessageElement(specialMessage, isSpecial);
   }
 
   function addMessage(message: Message) {
@@ -290,7 +291,8 @@ function App() {
           findCharRepFromValue={findCharRepFromValue}/>
       );
 
-    addMessageElement(m);
+    const isSpecial = false;
+    addMessageElement(m, isSpecial);
   }
 
 
