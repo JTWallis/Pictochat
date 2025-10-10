@@ -58,7 +58,10 @@ function Scrollbar( {scrollbarRef}: any ) {
             initEstimateMaxDisplaySegments();
         }
 
-        setSegmentCount(prev => prev + 1);
+        setSegmentCount(prevSegment => {
+            if(isSpecial) setSpecialMessageIndices(prevSpecial => [...prevSpecial, prevSegment]);
+            return prevSegment + 1;
+        });
     }
 
     function scrollReset() {
