@@ -23,9 +23,9 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections, subscribeTotalConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections } from './StompClient';
 import { subscribeMessages } from './MessageController';
-import type { IMessage } from '@stomp/stompjs';
+import { subscribeTotalConnections } from './UserConnectionController';
 
 
 function isAlpha(char: string): boolean {
@@ -122,14 +122,7 @@ function App() {
     console.log("Register Callback");
     subscribeQueueReply();
 
-    subscribeTotalConnections((e: IMessage) => {
-      const json = JSON.parse(e.body);
-      const counts: number[] = [];
-      json.rooms.forEach((room: any) => {
-        counts.push(room.connectionCount);
-      })
-      setRoomsUserCount(counts);
-    });
+    subscribeTotalConnections(setRoomsUserCount);
     
     subscribeRoomConnections();
     subscribeMessages(addMessage);
