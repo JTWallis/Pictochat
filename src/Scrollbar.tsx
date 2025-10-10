@@ -2,8 +2,10 @@ import { useImperativeHandle, useRef, useState, type JSX } from 'react';
 import './Scrollbar.css';
 
 const segmentColorDefault = "#8AF";
+const segmentColorSpecialDefault = "#888";
 const segmentWidthDefault = 70;
-const segmentSelectColor = "#0A0";
+const segmentColorSelect = "#0A0";
+const segmentColorSpecialSelect = "#444";
 const segmentWidthSmall = 50;
 const segmentWidthSmallest = 30;
 
@@ -19,9 +21,9 @@ function Scrollsegment( {color, width}: any ) {
 }
 
 function Scrollbar( {scrollbarRef}: any ) {
-
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [segmentCount, setSegmentCount] = useState(0);
+    const [specialMessageIndices, setSpecialMessageIndices] = useState<number[]>([]);
     const [maxDisplayElements, setMaxDisplayElements] = useState(-1);
     const [overflowUpCount, setOverflowUpCount] = useState(0);
     const [overflowDownCount, setOverflowDownCount] = useState(0);
@@ -29,8 +31,8 @@ function Scrollbar( {scrollbarRef}: any ) {
     const scrollbarContainerRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(scrollbarRef, () => ({
-        addScrollsegment: () => {
-            addSegment();
+        addScrollsegment: (isSpecial?: boolean) => {
+            addSegment(isSpecial);
         },
 
         scrollReset: () => {
@@ -46,7 +48,7 @@ function Scrollbar( {scrollbarRef}: any ) {
         }
     }));
 
-    function addSegment() {
+    function addSegment(isSpecial?: boolean) {
         if(maxDisplayElements > 0 && segmentCount + 1 > maxDisplayElements) {
             setOverflowUpCount(prev => prev + 1);
         }
@@ -55,7 +57,10 @@ function Scrollbar( {scrollbarRef}: any ) {
             initEstimateMaxDisplaySegments();
         }
 
-        setSegmentCount(prev => prev + 1);
+        setSegmentCount(prevSegment => {
+            if(isSpecial) setSpecialMessageIndices(prevSpecial => [...prevSpecial, prevSegment]);
+            return prevSegment + 1;
+        });
     }
 
     function scrollReset() {
@@ -133,13 +138,22 @@ function Scrollbar( {scrollbarRef}: any ) {
         return segmentWidthDefault;
     }
 
+    function getColor(index: number) {
+        const indexReverse = segmentCount - 1 - index;
+        if(isIndexInRange(index)) {
+            return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialSelect : segmentColorSelect;
+        } else {
+            return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialDefault : segmentColorDefault;  
+        }
+    }
+
     return(
         <div className="scrollbar" ref={scrollbarContainerRef}>
             {Array.from({length: segmentCount}).slice(0, (maxDisplayElements < 0 ? undefined : maxDisplayElements)).map( (_, index) => {
                 return (
                     <Scrollsegment 
                         key = {"Scrollsegment-" + index}
-                        color = {isIndexInRange(index) ? segmentSelectColor : segmentColorDefault}
+                        color = {getColor(index)}
                         width = { getSegmentWidth(index) }
                     />
                 );
