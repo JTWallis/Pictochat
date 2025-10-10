@@ -3,6 +3,7 @@ import type { RoomsDto } from "./RoomsDto";
 import type { RoomDto } from "./RoomDto";
 import { stompClient } from "./StompClient";
 import type { UserConnectionDto } from "./UserConnectionDto";
+import { createMessageTextJoin, createMessageTextLeave } from "./MessageSpecialHelper";
 
 type totalConnectCallbackType = (counts: number[]) => void;
 type roomConnectCallbackType = (connectMessageText: string) => void;
@@ -38,7 +39,21 @@ function onReceivedTotalConnections(message: IMessage, onReceivedTotalConnection
 }
 
 function onReceivedRoomConnection(message: IMessage, room: string, onReceivedRoomConnectionCallback: roomConnectCallbackType) {
-    let messageText = "";
+    const userConnection = JSON.parse(message.body) as UserConnectionDto;
+    const creator = userConnection.nickname;
+    let messageText;
+
+    switch(userConnection.connectionType) {
+        case UserConnectionTypes.CONNECT:
+            messageText = createMessageTextJoin(creator, room);
+            break;
+        case UserConnectionTypes.DISCONNECT:
+            messageText = createMessageTextLeave(creator, room);
+            break;
+        default:
+            messageText = "";
+            break;
+    }
 
     onReceivedRoomConnectionCallback(messageText);
 }
