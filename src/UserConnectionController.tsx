@@ -7,6 +7,11 @@ import type { UserConnectionDto } from "./UserConnectionDto";
 type totalConnectCallbackType = (counts: number[]) => void;
 type roomConnectCallbackType = (connectMessageText: string) => void;
 
+const UserConnectionTypes = {
+    CONNECT: "CONNECT",
+    DISCONNECT: "DISCONNECT"
+}
+
 export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (counts: number[]) => void) {
     stompClient.subscribe("/topic/connections", (e: IMessage) => {
         console.log("New room subscription!", e.body);
