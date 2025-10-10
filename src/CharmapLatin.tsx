@@ -162,8 +162,8 @@ export class CharmapLatin extends CharmapBaseDouble {
             { lower: { value: ";", src: specialSemicolon }, upper: { value: ":", src: specialColon } },
             { lower: { value: "´", src: specialAcute }, upper: { value: "˜", src: specialTildeSmall } },
             { lower: { value: "SPACE", src: miscSpace }, upper: { value: "", src: miscSpace } },
-            { lower: { value: "[", src: specialBracketClose }, upper: { value: "{", src: specialBraceOpen } },
-            { lower: { value: "]", src: specialBracketOpen }, upper: { value: "} }", src: specialBraceClose } },
+            { lower: { value: "[", src: specialBracketOpen }, upper: { value: "{", src: specialBraceOpen } },
+            { lower: { value: "]", src: specialBracketClose }, upper: { value: "} }", src: specialBraceClose } },
 
         ];
 
