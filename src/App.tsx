@@ -57,6 +57,9 @@ const KEY_SHIFT = "Shift";
 const KEY_CAPS = "CapsLock";
 
 function debugRandomUser() {
+  const name = prompt("Please enter username:");
+  if(name && name.length > 0) return name;
+
   const str = performance.now().toString();
   const last = str.charAt(str.length - 1);
 
@@ -86,13 +89,17 @@ function debugRandomUser() {
   }
 }
 
+const debugLocalStorageUser = localStorage.getItem("username");
+const debugUser = debugLocalStorageUser ? debugLocalStorageUser : debugRandomUser();
+localStorage.setItem("username", debugUser);
+
 const rooms = ['a', 'b', 'c', 'd'];
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [username, setUsername] = useState(debugRandomUser());
+  const [username, setUsername] = useState(debugUser);
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
