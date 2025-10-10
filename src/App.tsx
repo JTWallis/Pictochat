@@ -268,7 +268,7 @@ function App() {
 
     const specialMessage = (
       <MessageSpecial 
-        key={"MessageSpecial-" + messageDisplays.length}
+        key={"MessageSpecial-" + messageDisplays.length + "-" + crypto.randomUUID()}
         message={message} 
         messageText={messageText}
         textColor={"#DDD"}
@@ -285,7 +285,9 @@ function App() {
     setMessages(prev => [...prev, message]);
 
     const m = (
-        <MessageDisplay key={"MessageDisplay-" + messageDisplays.length} message={message} findCharRepFromValue={findCharRepFromValue}/>
+        <MessageDisplay key={"MessageDisplay-" + messageDisplays.length + "-" + crypto.randomUUID()}
+          message={message}
+          findCharRepFromValue={findCharRepFromValue}/>
       );
 
     addMessageElement(m);
