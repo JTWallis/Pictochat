@@ -31,9 +31,12 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         setMessage(new Message([], username));
     }
 
-    function concatBottomScrollMessage() {
-        const msg = getBottomScrollMessage();
+    function concatBottomScrollMessage(): boolean {
+        const msg = getBottomScrollMessage() as Message;
+        if(msg.isSpecialMessage()) return false;
+
         message.concatCommands(msg.getCommands());
+        return true;
     }
 
     function removeLastMessageTextCommand(): DrawCommand | null {

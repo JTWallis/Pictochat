@@ -152,7 +152,9 @@ function CanvasSketch(props: CanvasSketchProps) {
     }
 
     function copyOnCanvas() {
-        props.api.concatBottomScrollMessage();
+        const success = props.api.concatBottomScrollMessage();
+        if(!success) return;
+        
         props.api.reconstructMessage();
     }
 
