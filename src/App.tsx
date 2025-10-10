@@ -23,9 +23,9 @@ import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
 import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections, subscribeTotalConnections } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply, subscribeRoomConnections } from './StompClient';
 import { subscribeMessages } from './MessageController';
-import type { IMessage } from '@stomp/stompjs';
+import { subscribeTotalConnections } from './UserConnectionController';
 
 
 function isAlpha(char: string): boolean {
@@ -57,6 +57,9 @@ const KEY_SHIFT = "Shift";
 const KEY_CAPS = "CapsLock";
 
 function debugRandomUser() {
+  const name = prompt("Please enter username:");
+  if(name && name.length > 0) return name;
+
   const str = performance.now().toString();
   const last = str.charAt(str.length - 1);
 
@@ -86,13 +89,17 @@ function debugRandomUser() {
   }
 }
 
+const debugLocalStorageUser = localStorage.getItem("username");
+const debugUser = debugLocalStorageUser ? debugLocalStorageUser : debugRandomUser();
+localStorage.setItem("username", debugUser);
+
 const rooms = ['a', 'b', 'c', 'd'];
 
 function App() {
   const [canvasText, setCanvasText] = useState("");
   const [messageDisplays, setMessageDisplays] = useState<JSX.Element[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [username, setUsername] = useState(debugRandomUser());
+  const [username, setUsername] = useState(debugUser);
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
@@ -115,14 +122,7 @@ function App() {
     console.log("Register Callback");
     subscribeQueueReply();
 
-    subscribeTotalConnections((e: IMessage) => {
-      const json = JSON.parse(e.body);
-      const counts: number[] = [];
-      json.rooms.forEach((room: any) => {
-        counts.push(room.connectionCount);
-      })
-      setRoomsUserCount(counts);
-    });
+    subscribeTotalConnections(setRoomsUserCount);
     
     subscribeRoomConnections();
     subscribeMessages(addMessage);
