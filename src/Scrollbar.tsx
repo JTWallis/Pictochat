@@ -32,8 +32,8 @@ function Scrollbar( {scrollbarRef}: any ) {
     const scrollbarContainerRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(scrollbarRef, () => ({
-        addScrollsegment: () => {
-            addSegment();
+        addScrollsegment: (isSpecial?: boolean) => {
+            addSegment(isSpecial);
         },
 
         scrollReset: () => {
@@ -49,7 +49,7 @@ function Scrollbar( {scrollbarRef}: any ) {
         }
     }));
 
-    function addSegment() {
+    function addSegment(isSpecial?: boolean) {
         if(maxDisplayElements > 0 && segmentCount + 1 > maxDisplayElements) {
             setOverflowUpCount(prev => prev + 1);
         }
