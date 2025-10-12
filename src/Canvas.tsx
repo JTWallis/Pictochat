@@ -263,7 +263,8 @@ function Canvas(props: CanvasProps) {
     }
 
     function reconstructMessage() {
-        handleReconstructMessage();
+        const ac = new AbortController();
+        setOngoingReconstruct(ac);
     }
 
     async function handleReconstructMessage() {
