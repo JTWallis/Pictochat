@@ -52,6 +52,7 @@ function Canvas(props: CanvasProps) {
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
     const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
+    const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
 
     let appliedStripeSteps = stripeCount;
     const buttonWidth = getCanvasWidth() * lineCharSize;
