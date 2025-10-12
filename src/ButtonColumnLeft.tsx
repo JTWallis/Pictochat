@@ -80,6 +80,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div 
                 className={"buttonContainer pixelated marginTop maskFull "}
+                style={getBackgroundPenMode(PenModes.PEN_MODE_WRITE)}
             >
                 <input 
                     type="image"
@@ -93,6 +94,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div 
                 className="buttonContainer pixelated marginTop maskFull"
+                style={getBackgroundPenMode(PenModes.PEN_MODE_ERASE)}
             >
                 <input
                     type="image"
@@ -111,6 +113,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
             
             <div
                 className="buttonContainer pixelated marginTop maskFull"
+                style={getBackgroundPenSize(PenSizes.PEN_SIZE_BIG)}
             >
                 <input
                     type="image"
@@ -124,6 +127,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div
                 className="buttonContainer pixelated marginTop marginBot maskFull"
+                style={getBackgroundPenSize(PenSizes.PEN_SIZE_SMALL)}
             >
                 <input
                     type="image"
@@ -142,6 +146,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div
                 className="buttonContainer pixelated marginTop maskRounded"
+                style={getBackgroundCharmap(Charmaps.CHARMAP_LATIN)}
             >
                 <input
                     type="image"
@@ -154,6 +159,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
             
             <div
                 className="buttonContainer pixelated marginTop maskRounded"
+                style={getBackgroundCharmap(Charmaps.CHARMAP_ACCENT)}
             >
                 <input
                     type="image"
@@ -166,6 +172,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
             
             <div
                 className="buttonContainer pixelated marginTop maskRounded"
+                style={getBackgroundCharmap(Charmaps.CHARMAP_JAPANESE)}
             >
                 <input
                     type="image"
@@ -179,6 +186,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div
                 className="buttonContainer pixelated marginTop maskRounded"
+                style={getBackgroundCharmap(Charmaps.CHARMAP_SPECIAL)}
             >
                 <input
                     type="image"
@@ -192,6 +200,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             <div
                 className="buttonContainer pixelated marginTop marginBot maskRounded"
+                style={getBackgroundCharmap(Charmaps.CHARMAP_PICTO)}
             >
                 <input
                     type="image"
