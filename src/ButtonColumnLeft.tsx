@@ -12,13 +12,23 @@ import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
+
+const defaultBackgroundColor = "#a2a2a2";
 
 function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
 
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
     const [selectionPenSize, setSelectionPenSize] = useState(PenSizes.PEN_SIZE_BIG);
     const [selectionCharmap, setSelectionCharmap] = useState(Charmaps.CHARMAP_LATIN);
+
+    const styleBackgroundSelect = {
+        backgroundColor: userColor
+    } as CSSProperties;
+
+    const styleBackgroundDefault = {
+        backgroundColor: defaultBackgroundColor
+    } as CSSProperties;
 
     return (
         <div className="buttonColumn">
