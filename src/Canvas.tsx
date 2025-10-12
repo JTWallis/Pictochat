@@ -52,6 +52,7 @@ function Canvas(props: CanvasProps) {
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
     const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
+    const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
 
     let appliedStripeSteps = stripeCount;
     const buttonWidth = getCanvasWidth() * lineCharSize;
@@ -261,12 +262,23 @@ function Canvas(props: CanvasProps) {
         canvasStyle.width = `${canvasWidth}px`;
     }
 
-    async function reconstructMessage() {
+    function reconstructMessage() {
+        if(ongoingReconstruct) {
+            ongoingReconstruct.abort();
+        }
+
+        const ac = new AbortController();
+        setOngoingReconstruct(ac);
+        handleReconstructMessage(ac.signal);
+    }
+
+    async function handleReconstructMessage(signal: AbortSignal) {
         if (!props.message) return;
 
         const drawingCommands = props.message.getCommands();
 
         for (let i = 0; i < drawingCommands.length; i++) {
+            if(signal.aborted) return;
             const command = drawingCommands[i];
             const offsetY = (!drawOffsetY) ? 0 : drawOffsetY;
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - offsetY);
@@ -292,12 +304,15 @@ function Canvas(props: CanvasProps) {
                 const height = Math.abs(posEnd.y - posStart.y);
                 const img = await createImage(src, undefined, new Vector2(width, height));
 
+                if(signal.aborted) return;
+
                 drawImage(img, posStart, command.getPenColor());
             } else {
                 drawText(posStart, command.getValue());
             }
         }
 
+        setOngoingReconstruct(null);
         updateCanvasTextPos();
     }
 
