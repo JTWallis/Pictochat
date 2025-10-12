@@ -15,6 +15,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         pushMessageCommand,
         sendMessage,
         concatBottomScrollMessage,
+        resetMessage,
         removeLastMessageTextCommand,
         getLastMessageText
     };

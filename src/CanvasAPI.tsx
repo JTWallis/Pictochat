@@ -12,6 +12,7 @@ export interface CanvasSketchPartialAPI {
     pushMessageCommand: (type: number, startPos: Vector2, endPos: Vector2, value: string, penSize: number, penColor: string) => void;
     sendMessage: () => void;
     concatBottomScrollMessage: () => boolean;
+    resetMessage: () => void;
     removeLastMessageTextCommand: () => DrawCommand | null ;
     getLastMessageText: () => DrawCommand | null;
 }
