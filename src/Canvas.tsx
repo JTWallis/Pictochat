@@ -312,6 +312,7 @@ function Canvas(props: CanvasProps) {
             }
         }
 
+        setOngoingReconstruct(null);
         updateCanvasTextPos();
     }
 
