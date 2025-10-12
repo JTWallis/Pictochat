@@ -65,11 +65,17 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
             {/* ScrollButtons */}
 
-            <div className="buttonContainer pixelated maskFull">
+            <div
+                className="buttonContainer pixelated maskFull"
+                style={styleBackgroundDefault}
+            >
                 <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()} />
             </div>
 
-            <div className="buttonContainer pixelated marginTop maskFull">
+            <div
+                className="buttonContainer pixelated marginTop maskFull"
+                style={styleBackgroundDefault}
+            >
                 <input type="image" className="button" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()} />
             </div>
 
