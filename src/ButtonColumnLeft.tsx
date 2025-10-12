@@ -12,7 +12,8 @@ import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
 
 const PenModes = {
     PEN_MODE_WRITE: 0,
@@ -39,6 +40,24 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
     const [selectionPenSize, setSelectionPenSize] = useState(PenSizes.PEN_SIZE_BIG);
     const [selectionCharmap, setSelectionCharmap] = useState(Charmaps.CHARMAP_LATIN);
+    const [selectionPenModeRainbow, setSelectionPenModeRainbow] = useState(false);
+    const [rainbowInterval, setRainbowInterval] = useState<number>(-1);
+    const [rainbowHex, setRainbowHex] = useState("#FFF");
+
+    let rainbowTick = 0;
+
+    useEffect(() => {
+        if(selectionPenModeRainbow) {
+            setRainbowInterval(() => setInterval(tickRainbow, 200));
+        } else {
+            if(rainbowInterval >= 0) clearInterval(rainbowInterval);
+            setRainbowInterval(-1);
+        }
+
+        return () => {
+            if(rainbowInterval >= 0) clearInterval(rainbowInterval);
+        }
+    }, [selectionPenModeRainbow]);
 
     const styleBackgroundSelect = {
         backgroundColor: userColor
@@ -48,8 +67,13 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
         backgroundColor: defaultBackgroundColor
     } as CSSProperties;
 
+    const styleBackgroundRainbow = {
+        backgroundColor: rainbowHex
+    } as CSSProperties;
+
     function getBackgroundPenMode(state: number): CSSProperties {
-        return state === selectionPenMode ? styleBackgroundSelect : styleBackgroundDefault;
+        if(state !== selectionPenMode) return styleBackgroundDefault;
+        return selectionPenModeRainbow ? styleBackgroundRainbow : styleBackgroundSelect;
     }
 
     function getBackgroundPenSize(state: number): CSSProperties {
@@ -58,6 +82,11 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
     function getBackgroundCharmap(state: number): CSSProperties {
         return state === selectionCharmap ? styleBackgroundSelect : styleBackgroundDefault;
+    }
+
+    function tickRainbow(): void {
+        rainbowTick = incrementTickRainbow(rainbowTick);
+        setRainbowHex(getTickRainbowHex(rainbowTick));
     }
 
     return (
@@ -93,6 +122,9 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImagePenDraw}
                     onClick={() => {
+                        if(selectionPenMode === PenModes.PEN_MODE_WRITE) {
+                            setSelectionPenModeRainbow(!selectionPenModeRainbow);
+                        }
                         setSelectionPenMode(PenModes.PEN_MODE_WRITE);
                         canvasSketchRef.current.usePenDraw();
                     }}
