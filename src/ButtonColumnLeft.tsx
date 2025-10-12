@@ -93,7 +93,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImagePenDraw}
                     onClick={() => {
-                        canvasSketchRef.current.usePenDraw()
+                        setSelectionPenMode(PenModes.PEN_MODE_WRITE);
+                        canvasSketchRef.current.usePenDraw();
                     }}
                 />
             </div>
@@ -107,8 +108,9 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImagePenErase}
                     onClick={() => {
-                        canvasSketchRef.current.usePenErase()}
-                    }
+                        setSelectionPenMode(PenModes.PEN_MODE_ERASE);
+                        canvasSketchRef.current.usePenErase();
+                    }}
                 />
             </div>
 
@@ -126,7 +128,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImagePenBig}
                     onClick={() => {
-                        canvasSketchRef.current.usePenBig()
+                        setSelectionPenSize(PenSizes.PEN_SIZE_BIG);
+                        canvasSketchRef.current.usePenBig();
                     }}
                 />
             </div>
@@ -140,7 +143,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImagePenSmall}
                     onClick={() => {
-                        canvasSketchRef.current.usePenSmall()
+                        setSelectionPenSize(PenSizes.PEN_SIZE_SMALL);
+                        canvasSketchRef.current.usePenSmall();
                     }}
                 />
             </div>
@@ -158,7 +162,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     type="image"
                     className="button"
                     src={ImageMapLatin} onClick={() => {
-                        onCharmapButtonClick(CharmapStates.LATIN)
+                        setSelectionCharmap(Charmaps.CHARMAP_LATIN);
+                        onCharmapButtonClick(CharmapStates.LATIN);
                     }}
                 />
             </div>
@@ -171,7 +176,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     type="image"
                     className="button"
                     src={ImageMapAccent} onClick={() => {
-                        onCharmapButtonClick(CharmapStates.ACCENT)
+                        setSelectionCharmap(Charmaps.CHARMAP_ACCENT);
+                        onCharmapButtonClick(CharmapStates.ACCENT);
                     }}
                 />
             </div>
@@ -185,7 +191,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImageMapJapan}
                     onClick={() => {
-                        onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA)
+                        setSelectionCharmap(Charmaps.CHARMAP_JAPANESE);
+                        onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
                     }}
                 />
             </div>
@@ -199,7 +206,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImageMapSpecial}
                     onClick={() => {
-                        onCharmapButtonClick(CharmapStates.SPECIAL)
+                        setSelectionCharmap(Charmaps.CHARMAP_SPECIAL);
+                        onCharmapButtonClick(CharmapStates.SPECIAL);
                     }}
                 />
             </div>
@@ -213,7 +221,8 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImageMapPicto}
                     onClick={() => {
-                        onCharmapButtonClick(CharmapStates.PICTO)
+                        setSelectionCharmap(Charmaps.CHARMAP_PICTO);
+                        onCharmapButtonClick(CharmapStates.PICTO);
                     }}
                 />
             </div>
