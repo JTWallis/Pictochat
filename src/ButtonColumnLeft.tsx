@@ -48,6 +48,18 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
         backgroundColor: defaultBackgroundColor
     } as CSSProperties;
 
+    function getBackgroundPenMode(state: number): CSSProperties {
+        return state === selectionPenMode ? styleBackgroundSelect : styleBackgroundDefault;
+    }
+
+    function getBackgroundPenSize(state: number): CSSProperties {
+        return state === selectionPenSize ? styleBackgroundSelect : styleBackgroundDefault;
+    }
+
+    function getBackgroundCharmap(state: number): CSSProperties {
+        return state === selectionCharmap ? styleBackgroundSelect : styleBackgroundDefault;
+    }
+
     return (
         <div className="buttonColumn">
             <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
