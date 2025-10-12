@@ -137,6 +137,11 @@ function CanvasSketch(props: CanvasSketchProps) {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
+    function resetCanvas() {
+        props.api.resetMessage();
+        props.api.clearCanvas();
+    }
+
     function sendCurrentMessage() {
         props.api.sendMessage();
         props.api.clearCanvas();
