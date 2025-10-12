@@ -62,24 +62,147 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
     return (
         <div className="buttonColumn">
-            <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
-            <input type="image" className="button marginTop" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()}></input>
+
+            {/* ScrollButtons */}
+
+            <div className="buttonContainer pixelated maskFull">
+                <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()} />
+            </div>
+
+            <div className="buttonContainer pixelated marginTop maskFull">
+                <input type="image" className="button" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()} />
+            </div>
+
+
+            {/* PenModes */}
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop" src={ImagePenDraw} onClick={() => canvasSketchRef.current.usePenDraw()} />
-            <input type="image" className="button marginTop" src={ImagePenErase} onClick={() => canvasSketchRef.current.usePenErase()} ></input>
+            <div 
+                className={"buttonContainer pixelated marginTop maskFull "}
+            >
+                <input 
+                    type="image"
+                    className="button"
+                    src={ImagePenDraw}
+                    onClick={() => {
+                        canvasSketchRef.current.usePenDraw()
+                    }}
+                />
+            </div>
+
+            <div 
+                className="buttonContainer pixelated marginTop maskFull"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImagePenErase}
+                    onClick={() => {
+                        canvasSketchRef.current.usePenErase()}
+                    }
+                />
+            </div>
+
+
+            {/* PenSizes */}
+            
             <hr className="borderInvisible marginTop marginBot"></hr>
-            <input type="image" className="button marginTop" src={ImagePenBig} onClick={() => canvasSketchRef.current.usePenBig()} ></input>
-            <input type="image" className="button marginTop marginBot" src={ImagePenSmall} onClick={() => canvasSketchRef.current.usePenSmall()} ></input>
+            
+            <div
+                className="buttonContainer pixelated marginTop maskFull"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImagePenBig}
+                    onClick={() => {
+                        canvasSketchRef.current.usePenBig()
+                    }}
+                />
+            </div>
+
+            <div
+                className="buttonContainer pixelated marginTop marginBot maskFull"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImagePenSmall}
+                    onClick={() => {
+                        canvasSketchRef.current.usePenSmall()
+                    }}
+                />
+            </div>
+
+
+            {/* Charmaps */}
 
             <hr className="borderDotted marginTop marginBot"></hr>
 
-            <input type="image" className="button marginTop" src={ImageMapLatin} onClick={() => onCharmapButtonClick(CharmapStates.LATIN)}></input>
-            <input type="image" className="button marginTop" src={ImageMapAccent} onClick={() => onCharmapButtonClick(CharmapStates.ACCENT)}></input>
-            <input type="image" className="button marginTop" src={ImageMapJapan} onClick={() => onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA)}></input>
-            <input type="image" className="button marginTop" src={ImageMapSpecial} onClick={() => onCharmapButtonClick(CharmapStates.SPECIAL)}></input>
-            <input type="image" className="button marginTop marginBot" src={ImageMapPicto} onClick={() => onCharmapButtonClick(CharmapStates.PICTO)}></input>
+            <div
+                className="buttonContainer pixelated marginTop maskRounded"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImageMapLatin} onClick={() => {
+                        onCharmapButtonClick(CharmapStates.LATIN)
+                    }}
+                />
+            </div>
+            
+            <div
+                className="buttonContainer pixelated marginTop maskRounded"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImageMapAccent} onClick={() => {
+                        onCharmapButtonClick(CharmapStates.ACCENT)
+                    }}
+                />
+            </div>
+            
+            <div
+                className="buttonContainer pixelated marginTop maskRounded"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImageMapJapan}
+                    onClick={() => {
+                        onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA)
+                    }}
+                />
+            </div>
+
+            <div
+                className="buttonContainer pixelated marginTop maskRounded"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImageMapSpecial}
+                    onClick={() => {
+                        onCharmapButtonClick(CharmapStates.SPECIAL)
+                    }}
+                />
+            </div>
+
+            <div
+                className="buttonContainer pixelated marginTop marginBot maskRounded"
+            >
+                <input
+                    type="image"
+                    className="button"
+                    src={ImageMapPicto}
+                    onClick={() => {
+                        onCharmapButtonClick(CharmapStates.PICTO)
+                    }}
+                />
+            </div>
+        
         </div>
     );
 }
