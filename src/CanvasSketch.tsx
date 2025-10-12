@@ -112,7 +112,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         },
 
         discardMessage() {
-            props.api.clearCanvas();
+            resetCanvas();
         },
 
         getLastTextValue(): string | null {
