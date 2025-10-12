@@ -144,7 +144,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function sendCurrentMessage() {
         props.api.sendMessage();
-        props.api.clearCanvas();
+        resetCanvas();
     }
 
     function replaceLastMessageText(newVal: string) {
