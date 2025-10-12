@@ -278,6 +278,7 @@ function Canvas(props: CanvasProps) {
         const drawingCommands = props.message.getCommands();
 
         for (let i = 0; i < drawingCommands.length; i++) {
+            if(signal.aborted) return;
             const command = drawingCommands[i];
             const offsetY = (!drawOffsetY) ? 0 : drawOffsetY;
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - offsetY);
@@ -302,6 +303,8 @@ function Canvas(props: CanvasProps) {
                 const width = Math.abs(posEnd.x - posStart.x);
                 const height = Math.abs(posEnd.y - posStart.y);
                 const img = await createImage(src, undefined, new Vector2(width, height));
+
+                if(signal.aborted) return;
 
                 drawImage(img, posStart, command.getPenColor());
             } else {
