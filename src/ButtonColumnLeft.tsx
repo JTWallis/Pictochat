@@ -12,8 +12,9 @@ import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
+import { useState } from 'react';
 
-function ButtonColumnLeft( {scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
+function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
 
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
     const [selectionPenSize, setSelectionPenSize] = useState(PenSizes.PEN_SIZE_BIG);
