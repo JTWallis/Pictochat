@@ -14,6 +14,24 @@ import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
 import { useState, type CSSProperties } from 'react';
 
+const PenModes = {
+    PEN_MODE_WRITE: 0,
+    PEN_MODE_ERASE: 1
+};
+
+const PenSizes = {
+    PEN_SIZE_SMALL: 0,
+    PEN_SIZE_BIG: 1
+};
+
+const Charmaps = {
+    CHARMAP_LATIN: 0,
+    CHARMAP_ACCENT: 1,
+    CHARMAP_JAPANESE: 2,
+    CHARMAP_SPECIAL: 3,
+    CHARMAP_PICTO: 4
+};
+
 const defaultBackgroundColor = "#a2a2a2";
 
 function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
