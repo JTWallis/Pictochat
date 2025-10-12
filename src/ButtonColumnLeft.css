@@ -45,6 +45,22 @@ img {
     cursor: default;
 }
 
+.maskRounded {
+    --mask-rounded: url('assets/img_button_toolbox_background_rounded.png') no-repeat center;
+    -webkit-mask: var(--mask-rounded);
+    mask: var(--mask-rounded);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.maskFull {
+    --mask-full: url('assets/img_button_toolbox_background_full.png') no-repeat center;
+    -webkit-mask: var(--mask-full);
+    mask: var(--mask-full);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
 .roundTopLeft {
     border-top-left-radius: 4px;
 }
