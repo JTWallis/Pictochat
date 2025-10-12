@@ -265,9 +265,10 @@ function Canvas(props: CanvasProps) {
     function reconstructMessage() {
         const ac = new AbortController();
         setOngoingReconstruct(ac);
+        handleReconstructMessage(ac.signal);
     }
 
-    async function handleReconstructMessage() {
+    async function handleReconstructMessage(signal: AbortSignal) {
         if (!props.message) return;
 
         const drawingCommands = props.message.getCommands();
