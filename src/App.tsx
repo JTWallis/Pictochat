@@ -331,7 +331,12 @@ function App() {
       </div>
       <div className="bottom">
         <div className="botLeft">
-          <ButtonColumnLeft scrollListRef={scrollListRef} canvasSketchRef={canvasSketchRef} onCharmapButtonClick={handleCharmapButtonClick}/>
+          <ButtonColumnLeft 
+            userColor={userColor}
+            scrollListRef={scrollListRef}
+            canvasSketchRef={canvasSketchRef}
+            onCharmapButtonClick={handleCharmapButtonClick}
+          />
         </div>
         <div className="botRight">
           <div className="botRightTop">
