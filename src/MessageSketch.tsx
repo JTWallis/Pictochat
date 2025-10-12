@@ -33,7 +33,6 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
     function sendMessage() {
         addMessage(message);
         postMessage(message);
-        setMessage(new Message([], username));
     }
 
     function concatBottomScrollMessage(): boolean {
