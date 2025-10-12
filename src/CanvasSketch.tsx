@@ -112,7 +112,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         },
 
         discardMessage() {
-            props.api.clearCanvas();
+            resetCanvas();
         },
 
         getLastTextValue(): string | null {
@@ -137,9 +137,14 @@ function CanvasSketch(props: CanvasSketchProps) {
         handleFloatingKeyAttachment();
     }, [floatingKeyValue, floatingKeyPos]);
 
+    function resetCanvas() {
+        props.api.resetMessage();
+        props.api.clearCanvas();
+    }
+
     function sendCurrentMessage() {
         props.api.sendMessage();
-        props.api.clearCanvas();
+        resetCanvas();
     }
 
     function replaceLastMessageText(newVal: string) {

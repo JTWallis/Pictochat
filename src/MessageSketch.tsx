@@ -15,6 +15,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         pushMessageCommand,
         sendMessage,
         concatBottomScrollMessage,
+        resetMessage,
         removeLastMessageTextCommand,
         getLastMessageText
     };
@@ -25,10 +26,13 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         message.pushCommand(type, startPos, endPos, value, penSize, penColor);
     }
 
+    function resetMessage() {
+        setMessage(new Message([], username));
+    }
+
     function sendMessage() {
         addMessage(message);
         postMessage(message);
-        setMessage(new Message([], username));
     }
 
     function concatBottomScrollMessage(): boolean {
