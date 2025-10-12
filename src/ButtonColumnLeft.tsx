@@ -14,6 +14,11 @@ import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
 
 function ButtonColumnLeft( {scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
+
+    const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
+    const [selectionPenSize, setSelectionPenSize] = useState(PenSizes.PEN_SIZE_BIG);
+    const [selectionCharmap, setSelectionCharmap] = useState(Charmaps.CHARMAP_LATIN);
+
     return (
         <div className="buttonColumn">
             <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()}></input>
