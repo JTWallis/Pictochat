@@ -262,7 +262,11 @@ function Canvas(props: CanvasProps) {
         canvasStyle.width = `${canvasWidth}px`;
     }
 
-    async function reconstructMessage() {
+    function reconstructMessage() {
+        handleReconstructMessage();
+    }
+
+    async function handleReconstructMessage() {
         if (!props.message) return;
 
         const drawingCommands = props.message.getCommands();
