@@ -66,8 +66,10 @@ function Scrollbar( {scrollbarRef}: any ) {
     function scrollReset() {
         setSelectedIndex(0);
         setOverflowDownCount(0);
-        const overflowUp = maxDisplayElements > 0 ? (segmentCount - maxDisplayElements) : 0;
-        setOverflowUpCount(overflowUp);
+        const segmentDisplayDiff = segmentCount - maxDisplayElements;
+        if(maxDisplayElements > 0 && segmentDisplayDiff > 0) {
+            setOverflowUpCount(segmentDisplayDiff);
+        }
     }
 
     function scrollUp() {
@@ -140,7 +142,8 @@ function Scrollbar( {scrollbarRef}: any ) {
     }
 
     function getColor(index: number) {
-        const indexReverse = segmentCount - 1 - index;
+        const borderUp = (maxDisplayElements > 0 && segmentCount > maxDisplayElements) ? maxDisplayElements : segmentCount;
+        const indexReverse = (borderUp + overflowUpCount) - 1 - index;
         if(isIndexInRange(index)) {
             return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialSelect : segmentColorSelect;
         } else {
