@@ -142,7 +142,8 @@ function Scrollbar( {scrollbarRef}: any ) {
     }
 
     function getColor(index: number) {
-        const indexReverse = segmentCount - 1 - index;
+        const borderUp = (maxDisplayElements > 0 && segmentCount > maxDisplayElements) ? maxDisplayElements : segmentCount;
+        const indexReverse = (borderUp + overflowUpCount) - 1 - index;
         if(isIndexInRange(index)) {
             return specialMessageIndices.includes(indexReverse) ? segmentColorSpecialSelect : segmentColorSelect;
         } else {
