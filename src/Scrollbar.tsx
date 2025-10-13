@@ -66,7 +66,8 @@ function Scrollbar( {scrollbarRef}: any ) {
     function scrollReset() {
         setSelectedIndex(0);
         setOverflowDownCount(0);
-        setOverflowUpCount(Math.max(0, segmentCount - maxDisplayElements));
+        const overflowUp = maxDisplayElements > 0 ? (segmentCount - maxDisplayElements) : 0;
+        setOverflowUpCount(overflowUp);
     }
 
     function scrollUp() {
