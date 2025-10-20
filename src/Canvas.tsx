@@ -14,6 +14,7 @@ const stripeCount = 4;
 const lineCharSize = 1 / 24;
 const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
 const canvasTextPosXOffset = 5;
+const canvasDisplayMarginPx = 2;
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -29,7 +30,7 @@ interface CanvasSpecialProperties {
 }
 
 interface CanvasProps {
-    className: string,
+    defaultHeightPercent: number,
     canvasType: number,
     message: Message,
     findCharRepFromValue: (value: string) => CharRepresentation | undefined,
@@ -47,6 +48,7 @@ function Canvas(props: CanvasProps) {
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
 
+    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
@@ -216,12 +218,12 @@ function Canvas(props: CanvasProps) {
         else if (steps > stripeCount) return;
         appliedStripeStepsRef.current = steps;
 
-        const rects = getStripeRects();
-        const stripeBottom = rects[steps - 1].bottom;
-        const canvasTop = canvasContainerRef.current!.getBoundingClientRect().top;
-        const height = stripeBottom - canvasTop;
+        const currentHeightPx = canvasContainerRef.current!.getBoundingClientRect().height;
+        setOriginalCanvasHeight(currentHeightPx);
 
-        updateCanvasHeight(height);
+        const stepsRatio = steps / (stripeCount + 1);
+        const heightPercent = props.defaultHeightPercent * stepsRatio;
+        setContainerHeightPercent(heightPercent);
     }
 
     function incrementCanvasTextPosX(incrementFrom?: Vector2) {
@@ -469,7 +471,15 @@ function Canvas(props: CanvasProps) {
     }
 
     return (
-        <div className={props.className} ref={canvasContainerRef}>
+        <div 
+        ref={canvasContainerRef}
+        style={{
+            display: "flex",
+            height: `${containerHeightPercent}%`,
+            aspectRatio: "16 / 9",
+            margin: `${props.canvasType === CanvasTypes.CANVAS_SKETCH ? 0 : canvasDisplayMarginPx}px auto`,
+        }}
+        >
             <div className="canvasContainer">
                 <div className="canvasBackground">
 
