@@ -31,6 +31,7 @@ interface CanvasSpecialProperties {
 
 interface CanvasProps {
     defaultHeightPercent: number,
+    backgroundColor?: string,
     canvasType: number,
     message: Message,
     findCharRepFromValue: (value: string) => CharRepresentation | undefined,
@@ -481,9 +482,12 @@ function Canvas(props: CanvasProps) {
         }}
         >
             <div className="canvasContainer">
-                <div className="canvasBackground">
-
-                </div>
+                <div 
+                    className="canvasBackground"
+                    style={{
+                        backgroundColor: props.backgroundColor ? props.backgroundColor : "white"
+                    }}
+                />
                 {renderStripes ? (
                     <div className="stripes" ref={stripesContainerRef}>
                         {getStripes()}
