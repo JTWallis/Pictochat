@@ -51,10 +51,10 @@ function Canvas(props: CanvasProps) {
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
-    const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
     const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
 
-    let appliedStripeSteps = stripeCount;
+    const canvasTextPosRef = useRef(new Vector2(-1, -1));
+    const appliedStripeStepsRef = useRef(stripeCount);
     const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
@@ -84,6 +84,10 @@ function Canvas(props: CanvasProps) {
         props.sketchProperties.floatingKeyRef.current!.setSize(buttonWidth);
     }
 
+    function setCanvasTextPos(pos: Vector2) {
+        canvasTextPosRef.current = pos;
+    }
+
     function updateCanvasTextPos() {
         if (!props.sketchProperties && !props.specialProperties) return;
         const height = canvasContainerRef.current?.clientHeight!;
@@ -102,10 +106,10 @@ function Canvas(props: CanvasProps) {
 
         const nameCurrent = nameContainerRef.current;
         const xOffset = nameCurrent ? nameCurrent.clientWidth : 0;
-        const yOffset = (appliedStripeSteps === 1) ? (height / 2) : (height / (stripeCount + 1));
+        const yOffset = (appliedStripeStepsRef.current === 1) ? (height / 2) : (height / (stripeCount + 1));
 
         const x = xOffset + canvasTextPosXOffset;
-        const y = (appliedStripeSteps === 1) ? yOffset : (yOffset - yOffset / 2);
+        const y = (appliedStripeStepsRef.current === 1) ? yOffset : (yOffset - yOffset / 2);
         setCanvasTextPos(new Vector2(x, y));
     }
 
@@ -214,7 +218,7 @@ function Canvas(props: CanvasProps) {
     function setStripeSteps(steps: number) {
         if (steps < 1) steps = 1;
         else if (steps > stripeCount) return;
-        appliedStripeSteps = steps;
+        appliedStripeStepsRef.current = steps;
 
         const rects = getStripeRects();
         const stripeBottom = rects[steps - 1].bottom;
@@ -226,12 +230,12 @@ function Canvas(props: CanvasProps) {
 
     function incrementCanvasTextPosX(incrementFrom?: Vector2) {
         const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
-        const pos = incrementFrom ? incrementFrom : canvasTextPos;
+        const pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
         pos.x += buttonWidth;
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPos.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            pos.y = canvasTextPosRef.current.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
         }
 
         setCanvasTextPos(pos);
@@ -316,7 +320,7 @@ function Canvas(props: CanvasProps) {
 
     async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
         const img = await createImage(src, value);
-        drawPushImage(img, canvasTextPos, colorFill);
+        drawPushImage(img, canvasTextPosRef.current, colorFill);
         incrementCanvasTextPosX();
     }
 
@@ -437,7 +441,7 @@ function Canvas(props: CanvasProps) {
                         className={className}
                         canvasText={props.sketchProperties.canvasText}
                         canvasSketchRef={props.sketchProperties.canvasSketchRef}
-                        canvasTextPos={canvasTextPos}
+                        canvasTextPos={canvasTextPosRef.current}
                         api={buildCanvasSketchFullAPI()}
                     />
                 );
