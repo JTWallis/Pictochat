@@ -51,7 +51,7 @@ function Canvas(props: CanvasProps) {
 
     const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
-    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
+    const originalCanvasHeightRef = useRef<number>(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const drawOffsetYRef = useRef<number>(0);
     const ongoingReconstructRef = useRef<AbortController | null>(null);
@@ -142,7 +142,7 @@ function Canvas(props: CanvasProps) {
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
-        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
         return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
     }
 
@@ -224,7 +224,7 @@ function Canvas(props: CanvasProps) {
         appliedStripeStepsRef.current = steps;
 
         const currentHeightPx = canvasContainerRef.current!.getBoundingClientRect().height;
-        setOriginalCanvasHeight(currentHeightPx);
+        originalCanvasHeightRef.current = currentHeightPx;
 
         const stepsRatio = steps / (stripeCount + 1);
         const heightPercent = props.defaultHeightPercent * stepsRatio;
@@ -382,7 +382,7 @@ function Canvas(props: CanvasProps) {
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
         const width = getCanvasWidth();
-        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }
