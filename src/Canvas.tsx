@@ -14,6 +14,7 @@ const stripeCount = 4;
 const lineCharSize = 1 / 24;
 const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
 const canvasTextPosXOffset = 5;
+const canvasDisplayMarginPx = 2;
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -29,7 +30,8 @@ interface CanvasSpecialProperties {
 }
 
 interface CanvasProps {
-    className: string,
+    defaultHeightPercent: number,
+    backgroundColor?: string,
     canvasType: number,
     message: Message,
     findCharRepFromValue: (value: string) => CharRepresentation | undefined,
@@ -47,14 +49,15 @@ function Canvas(props: CanvasProps) {
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
 
+    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
-    const [canvasTextPos, setCanvasTextPos] = useState(new Vector2(-1, -1));
     const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
 
-    let appliedStripeSteps = stripeCount;
+    const canvasTextPosRef = useRef(new Vector2(-1, -1));
+    const appliedStripeStepsRef = useRef(stripeCount);
     const buttonWidth = getCanvasWidth() * lineCharSize;
 
 
@@ -84,6 +87,10 @@ function Canvas(props: CanvasProps) {
         props.sketchProperties.floatingKeyRef.current!.setSize(buttonWidth);
     }
 
+    function setCanvasTextPos(pos: Vector2) {
+        canvasTextPosRef.current = pos;
+    }
+
     function updateCanvasTextPos() {
         if (!props.sketchProperties && !props.specialProperties) return;
         const height = canvasContainerRef.current?.clientHeight!;
@@ -102,19 +109,11 @@ function Canvas(props: CanvasProps) {
 
         const nameCurrent = nameContainerRef.current;
         const xOffset = nameCurrent ? nameCurrent.clientWidth : 0;
-        const yOffset = (appliedStripeSteps === 1) ? (height / 2) : (height / (stripeCount + 1));
+        const yOffset = (appliedStripeStepsRef.current === 1) ? (height / 2) : (height / (stripeCount + 1));
 
         const x = xOffset + canvasTextPosXOffset;
-        const y = (appliedStripeSteps === 1) ? yOffset : (yOffset - yOffset / 2);
+        const y = (appliedStripeStepsRef.current === 1) ? yOffset : (yOffset - yOffset / 2);
         setCanvasTextPos(new Vector2(x, y));
-    }
-
-
-    function handleCanvasResize() {
-        clearCanvas();
-        reconstructMessage();
-        updateCanvasTextPos();
-        if (props.onCanvasResize) props.onCanvasResize();
     }
 
     function updateCanvasSize() {
@@ -123,7 +122,11 @@ function Canvas(props: CanvasProps) {
 
         setCanvasSize(new Vector2(width, height + canvasSizeAddPx));
         initFloatingKeySize();
-        handleCanvasResize();
+        
+        clearCanvas();
+        reconstructMessage();
+        updateCanvasTextPos();
+        if (props.onCanvasResize) props.onCanvasResize();
     }
 
     function getCanvasWidth(): number {
@@ -214,52 +217,27 @@ function Canvas(props: CanvasProps) {
     function setStripeSteps(steps: number) {
         if (steps < 1) steps = 1;
         else if (steps > stripeCount) return;
-        appliedStripeSteps = steps;
+        appliedStripeStepsRef.current = steps;
 
-        const rects = getStripeRects();
-        const stripeBottom = rects[steps - 1].bottom;
-        const canvasTop = canvasContainerRef.current!.getBoundingClientRect().top;
-        const height = stripeBottom - canvasTop;
+        const currentHeightPx = canvasContainerRef.current!.getBoundingClientRect().height;
+        setOriginalCanvasHeight(currentHeightPx);
 
-        updateCanvasHeight(height);
+        const stepsRatio = steps / (stripeCount + 1);
+        const heightPercent = props.defaultHeightPercent * stepsRatio;
+        setContainerHeightPercent(heightPercent);
     }
 
     function incrementCanvasTextPosX(incrementFrom?: Vector2) {
         const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
-        const pos = incrementFrom ? incrementFrom : canvasTextPos;
+        const pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
         pos.x += buttonWidth;
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPos.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            pos.y = canvasTextPosRef.current.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
         }
 
         setCanvasTextPos(pos);
-    }
-
-    /**
-     * Fixes the width and height of the Canvas and Name container, by getting their current rect sizes
-     *   and applying the width and height with a px value, instead of percentage.
-     * The styles need to be set at a percentage at the start to correctly set the stripe positions and
-     *   calculate the new height based on the DrawingCommand positions.
-     * @param newCanvasHeightNormalized Percentage of the current Canvas height to shrink the Canvas to.
-     */
-    function updateCanvasHeight(newCanvasHeightPx: number) {
-        setOriginalCanvasHeight(canvasContainerRef.current!.getBoundingClientRect().height);
-
-        const nameRect = getNameRect();
-        if (nameRect) {
-            const nameHeight = nameRect.height;
-            nameContainerRef.current!.style.height = `${nameHeight}px`;
-        }
-
-        const canvasRect = canvasContainerRef.current!.getBoundingClientRect();
-        const canvasWidth = canvasRect.width;
-
-        const canvasStyle = canvasContainerRef.current!.style;
-        canvasStyle.aspectRatio = "";
-        canvasStyle.height = `${newCanvasHeightPx}px`;
-        canvasStyle.width = `${canvasWidth}px`;
     }
 
     function reconstructMessage() {
@@ -341,7 +319,7 @@ function Canvas(props: CanvasProps) {
 
     async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
         const img = await createImage(src, value);
-        drawPushImage(img, canvasTextPos, colorFill);
+        drawPushImage(img, canvasTextPosRef.current, colorFill);
         incrementCanvasTextPosX();
     }
 
@@ -462,7 +440,7 @@ function Canvas(props: CanvasProps) {
                         className={className}
                         canvasText={props.sketchProperties.canvasText}
                         canvasSketchRef={props.sketchProperties.canvasSketchRef}
-                        canvasTextPos={canvasTextPos}
+                        canvasTextPos={canvasTextPosRef.current}
                         api={buildCanvasSketchFullAPI()}
                     />
                 );
@@ -494,11 +472,22 @@ function Canvas(props: CanvasProps) {
     }
 
     return (
-        <div className={props.className} ref={canvasContainerRef}>
+        <div 
+        ref={canvasContainerRef}
+        style={{
+            display: "flex",
+            height: `${containerHeightPercent}%`,
+            aspectRatio: "16 / 9",
+            margin: `${props.canvasType === CanvasTypes.CANVAS_SKETCH ? 0 : canvasDisplayMarginPx}px auto`,
+        }}
+        >
             <div className="canvasContainer">
-                <div className="canvasBackground">
-
-                </div>
+                <div 
+                    className="canvasBackground"
+                    style={{
+                        backgroundColor: props.backgroundColor ? props.backgroundColor : "white"
+                    }}
+                />
                 {renderStripes ? (
                     <div className="stripes" ref={stripesContainerRef}>
                         {getStripes()}

@@ -8,6 +8,7 @@ import type { CanvasSketchPartialAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import { postMessage } from './MessageController';
 
+const INIT_HEIGHT_PERCENT = 100;
 
 function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRepFromValue, addMessage, canvasSketchRef, floatingKeyRef}: any) {
 
@@ -53,7 +54,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
 
     return (
         <Canvas 
-            className="messageSketchContainer"
+            defaultHeightPercent={INIT_HEIGHT_PERCENT}
             canvasType={CanvasTypes.CANVAS_SKETCH}
             message={message}
             findCharRepFromValue={findCharRepFromValue}

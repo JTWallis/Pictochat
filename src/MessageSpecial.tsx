@@ -4,6 +4,8 @@ import './MessageDisplay.css';
 import { CanvasTypes, type CanvasSpecialPartialAPI } from './CanvasAPI';
 import type { Vector2 } from './Vector2';
 
+const INIT_HEIGHT_PERCENT = 50;
+
 function MessageSpecial( {message, messageText, textColor, findCharRepFromValue, convertTextToCharReps}: any ) {
 
     const api: CanvasSpecialPartialAPI = {
@@ -17,7 +19,8 @@ function MessageSpecial( {message, messageText, textColor, findCharRepFromValue,
 
     return (
         <Canvas
-            className="messageDisplayContainer messageSpecialContainer"
+            defaultHeightPercent={INIT_HEIGHT_PERCENT}
+            backgroundColor='black'
             canvasType={CanvasTypes.CANVAS_SPECIAL}
             message={message} 
             findCharRepFromValue={findCharRepFromValue}
