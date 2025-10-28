@@ -84,10 +84,6 @@ function CanvasSketch(props: CanvasSketchProps) {
     }));
 
     useEffect(() => {
-        handleStrokePosChange();
-    }, [mousePos]);
-
-    useEffect(() => {
         handleCanvasTextChange();
     }, [props.canvasText]);
 
@@ -128,6 +124,8 @@ function CanvasSketch(props: CanvasSketchProps) {
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
     function handleStrokePosChange() {
+        if(mousePos.x < 0 || mousePos.y < 0) return;
+
         const offsetTop = sketchContainerRef.current?.offsetTop!;
         const offsetLeft = sketchContainerRef.current?.offsetLeft!;
 
@@ -229,6 +227,8 @@ function CanvasSketch(props: CanvasSketchProps) {
     function setMousePos(x: number, y: number) {
         mousePos.x = x;
         mousePos.y = y;
+
+        handleStrokePosChange();
     }
 
     function setMousePosPage(event: MouseEvent) {
