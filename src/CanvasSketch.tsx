@@ -40,14 +40,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
 
     useImperativeHandle(props.canvasSketchRef, () => ({
-        drawText(text: string, screenX: number, screenY: number) {
-            setFloatingKeyPos({
-                x: screenX,
-                y: screenY
-            })
-            setFloatingKeyValue(text);
-        },
-
         drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },
@@ -102,9 +94,6 @@ function CanvasSketch(props: CanvasSketchProps) {
         handleCanvasTextChange();
     }, [props.canvasText]);
 
-    useEffect(() => {
-        handleFloatingKeyAttachment();
-    }, [floatingKeyValue, floatingKeyPos]);
 
     function resetCanvas() {
         props.api.resetMessage();
@@ -162,27 +151,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         setPrevPosX(posX);
         setPrevPosY(posY);
-    }
-
-    /**
-     * Draws the dragged Floating Key onto the Canvas.
-     */
-    function handleFloatingKeyAttachment() {
-        // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
-        //  resulting in a "pop effect". This offset makes the position accurate again.
-        const offsetPopFixY = -13;
-        const offsetTop = sketchContainerRef.current?.offsetTop! + offsetPopFixY;
-        const offsetLeft = sketchContainerRef.current?.offsetLeft!;
-
-        const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
-
-        if (pos.x < 0 || pos.y < 0) return;
-
-        const value: string = floatingKeyValue;
-
-        props.api.setCanvasTextPos(pos);
-
-        props.api.drawPushText(pos, value);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
