@@ -23,10 +23,8 @@ function CanvasSketch(props: CanvasSketchProps) {
     console.log("Canvas Sketch Rerender!");
 
     let mouseDown = false;
-    let posX = -1;
-    let posY = -1;
-    let prevPosX = -1;
-    let prevPosY = -1;
+    let mousePos = new Vector2(-1, -1);
+    let mousePrevPos = new Vector2(-1, -1);
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -87,7 +85,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     useEffect(() => {
         handleStrokePosChange();
-    }, [posX, posY]);
+    }, [mousePos]);
 
     useEffect(() => {
         handleCanvasTextChange();
@@ -133,10 +131,10 @@ function CanvasSketch(props: CanvasSketchProps) {
         const offsetTop = sketchContainerRef.current?.offsetTop!;
         const offsetLeft = sketchContainerRef.current?.offsetLeft!;
 
-        const drawDot = prevPosX < 0;
+        const drawDot = mousePrevPos.x < 0;
 
-        const posPrev: Vector2 = new Vector2(prevPosX - offsetLeft, prevPosY - offsetTop);
-        const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
+        const posPrev: Vector2 = new Vector2(mousePrevPos.x - offsetLeft, mousePrevPos.y - offsetTop);
+        const pos: Vector2 = new Vector2(mousePos.x - offsetLeft, mousePos.y - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
         if (posFirst.x < 0 || posFirst.y < 0) return;
@@ -148,8 +146,7 @@ function CanvasSketch(props: CanvasSketchProps) {
         props.api.drawPushStroke(posFirst, pos, penSizeRef.current, penColorRef.current);
 
 
-        prevPosX = posX;
-        prevPosY = posY;
+        setMousePrevPos(mousePos.x, mousePos.y);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -229,23 +226,29 @@ function CanvasSketch(props: CanvasSketchProps) {
         return hex;
     }
 
+    function setMousePos(x: number, y: number) {
+        mousePos.x = x;
+        mousePos.y = y;
+    }
+
+    function setMousePrevPos(x: number, y: number) {
+        mousePrevPos.x = x;
+        mousePrevPos.y = y;
+    }
+
     function resetPos() {
-        posX = -1;
-        posY = -1;
-        prevPosX = -1;
-        prevPosY = -1;
+        setMousePos(-1, -1);
+        setMousePrevPos(-1, -1);
     }
 
     function canvas_mousedown(event: any) {
         mouseDown = true;
-        posX = event.pageX;
-        posY = event.pageY;
+        setMousePos(event.pageX, event.pageY);
     }
 
     function canvas_mousemove(event: any) {
         if (!mouseDown) return;
-        posX = event.pageX;
-        posY = event.pageY;
+        setMousePos(event.pageX, event.pageY);
     }
 
     function canvas_mouseup(event: any) {
@@ -255,9 +258,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function canvas_mouseenter(event: any) {
         if (!mouseDown) return;
-
-        posX = event.pageX;
-        posY = event.pageY;
+        setMousePos(event.pageX, event.pageY);
     }
 
     function canvas_mouseleave(event: any) {
