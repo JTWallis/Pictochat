@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef } from 'react';
 import './CanvasSketch.css'
 import { Vector2 } from './Vector2';
 import type { CanvasSketchFullAPI } from './CanvasAPI';
@@ -20,16 +20,11 @@ interface CanvasSketchProps {
 
 function CanvasSketch(props: CanvasSketchProps) {
 
-    console.log("Canvas Sketch Rerender!");
-
     let mouseDown = false;
     let mousePos = new Vector2(-1, -1);
     let mousePrevPos = new Vector2(-1, -1);
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
-
-
-
     const penSizeRef = useRef<number>(sizeLarge);
     const penColorRef = useRef<string>(colorForeground);
     const penRainbowRef = useRef<boolean>(false);
