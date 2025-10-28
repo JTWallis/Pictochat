@@ -29,7 +29,6 @@ function CanvasSketch(props: CanvasSketchProps) {
     const [prevPosY, setPrevPosY] = useState(-1);
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
-    const nameContainerRef = useRef<HTMLDivElement>(null);
 
 
 
