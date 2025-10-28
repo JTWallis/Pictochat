@@ -231,6 +231,10 @@ function CanvasSketch(props: CanvasSketchProps) {
         mousePos.y = y;
     }
 
+    function setMousePosPage(event: MouseEvent) {
+        setMousePos(event.pageX, event.pageY);
+    }
+
     function setMousePrevPos(x: number, y: number) {
         mousePrevPos.x = x;
         mousePrevPos.y = y;
@@ -243,12 +247,12 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function canvas_mousedown(event: any) {
         mouseDown = true;
-        setMousePos(event.pageX, event.pageY);
+        setMousePosPage(event);
     }
 
     function canvas_mousemove(event: any) {
         if (!mouseDown) return;
-        setMousePos(event.pageX, event.pageY);
+        setMousePosPage(event);
     }
 
     function canvas_mouseup(event: any) {
@@ -258,7 +262,7 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function canvas_mouseenter(event: any) {
         if (!mouseDown) return;
-        setMousePos(event.pageX, event.pageY);
+        setMousePosPage(event);
     }
 
     function canvas_mouseleave(event: any) {
