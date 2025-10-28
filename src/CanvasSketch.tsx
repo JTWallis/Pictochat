@@ -4,8 +4,6 @@ import { Vector2 } from './Vector2';
 import type { CanvasSketchFullAPI } from './CanvasAPI';
 import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
 
-const stripeCount = 4;
-
 const colorBackground = "#FFF";
 const colorForeground = "#000";
 const sizeSmall = 1.0;
