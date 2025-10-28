@@ -54,7 +54,7 @@ function Canvas(props: CanvasProps) {
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
     const [drawOffsetY, setDrawOffsetY] = useState(0);
-    const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
+    const ongoingReconstructRef = useRef<AbortController | null>(null);
 
     const canvasTextPosRef = useRef(new Vector2(-1, -1));
     const appliedStripeStepsRef = useRef(stripeCount);
@@ -241,12 +241,12 @@ function Canvas(props: CanvasProps) {
     }
 
     function reconstructMessage() {
-        if(ongoingReconstruct) {
-            ongoingReconstruct.abort();
+        if(ongoingReconstructRef.current) {
+            ongoingReconstructRef.current.abort();
         }
 
         const ac = new AbortController();
-        setOngoingReconstruct(ac);
+        ongoingReconstructRef.current = ac;
         handleReconstructMessage(ac.signal);
     }
 
@@ -290,7 +290,7 @@ function Canvas(props: CanvasProps) {
             }
         }
 
-        setOngoingReconstruct(null);
+        ongoingReconstructRef.current = null;
         updateCanvasTextPos();
     }
 
