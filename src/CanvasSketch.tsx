@@ -20,11 +20,13 @@ interface CanvasSketchProps {
 
 function CanvasSketch(props: CanvasSketchProps) {
 
-    const [mouseDown, setMouseDown] = useState(false);
-    const [posX, setPosX] = useState(-1);
-    const [posY, setPosY] = useState(-1);
-    const [prevPosX, setPrevPosX] = useState(-1);
-    const [prevPosY, setPrevPosY] = useState(-1);
+    console.log("Canvas Sketch Rerender!");
+
+    let mouseDown = false;
+    let posX = -1;
+    let posY = -1;
+    let prevPosX = -1;
+    let prevPosY = -1;
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -146,8 +148,8 @@ function CanvasSketch(props: CanvasSketchProps) {
         props.api.drawPushStroke(posFirst, pos, penSizeRef.current, penColorRef.current);
 
 
-        setPrevPosX(posX);
-        setPrevPosY(posY);
+        prevPosX = posX;
+        prevPosY = posY;
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -228,34 +230,34 @@ function CanvasSketch(props: CanvasSketchProps) {
     }
 
     function resetPos() {
-        setPosX(-1);
-        setPosY(-1);
-        setPrevPosX(-1);
-        setPrevPosY(-1);
+        posX = -1;
+        posY = -1;
+        prevPosX = -1;
+        prevPosY = -1;
     }
 
     function canvas_mousedown(event: any) {
-        setMouseDown(true);
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        mouseDown = true;
+        posX = event.pageX;
+        posY = event.pageY;
     }
 
     function canvas_mousemove(event: any) {
         if (!mouseDown) return;
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        posX = event.pageX;
+        posY = event.pageY;
     }
 
     function canvas_mouseup(event: any) {
-        setMouseDown(false);
+        mouseDown = false;
         resetPos();
     }
 
     function canvas_mouseenter(event: any) {
         if (!mouseDown) return;
 
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        posX = event.pageX;
+        posY = event.pageY;
     }
 
     function canvas_mouseleave(event: any) {
