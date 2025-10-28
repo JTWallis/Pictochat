@@ -31,11 +31,6 @@ function CanvasSketch(props: CanvasSketchProps) {
     const sketchContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
 
-    const [floatingKeyValue, setFloatingKeyValue] = useState("");
-    const [floatingKeyPos, setFloatingKeyPos] = useState({
-        x: 0,
-        y: 0
-    });
 
 
     const [penSize, setPenSize] = useState(sizeLarge);
