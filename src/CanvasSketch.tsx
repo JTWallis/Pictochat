@@ -30,10 +30,10 @@ function CanvasSketch(props: CanvasSketchProps) {
 
 
 
-    const [penSize, setPenSize] = useState(sizeLarge);
-    const [penColor, setPenColor] = useState(colorForeground);
-    const [penRainbow, setPenRainbow] = useState(false);
-    const [rainbowTick, setRainbowTick] = useState(0);
+    const penSizeRef = useRef<number>(sizeLarge);
+    const penColorRef = useRef<string>(colorForeground);
+    const penRainbowRef = useRef<boolean>(false);
+    const rainbowTickRef = useRef<number>(0);
 
 
     useImperativeHandle(props.canvasSketchRef, () => ({
@@ -139,11 +139,11 @@ function CanvasSketch(props: CanvasSketchProps) {
 
         if (posFirst.x < 0 || posFirst.y < 0) return;
 
-        if (penRainbow && !isPenErase()) {
-            setPenColor(tickRainbow());
+        if (penRainbowRef.current && !isPenErase()) {
+            penColorRef.current = tickRainbow();
         }
 
-        props.api.drawPushStroke(posFirst, pos, penSize, penColor);
+        props.api.drawPushStroke(posFirst, pos, penSizeRef.current, penColorRef.current);
 
 
         setPrevPosX(posX);
@@ -190,31 +190,31 @@ function CanvasSketch(props: CanvasSketchProps) {
     }
 
     function isPenErase() {
-        return penColor === colorBackground;
+        return penColorRef.current === colorBackground;
     }
 
     function setPenSmall() {
-        setPenSize(sizeSmall);
+        penSizeRef.current = sizeSmall;
     }
 
     function setPenBig() {
-        setPenSize(sizeLarge);
+        penSizeRef.current = sizeLarge;
     }
 
     function setPenDraw() {
-        if (penColor === colorForeground) {
-            setPenRainbow(true);
+        if (penColorRef.current === colorForeground) {
+            penRainbowRef.current = true;
         } else {
-            setPenColor(colorForeground);
+            penColorRef.current = colorForeground;
 
             if (!isPenErase()) {
-                setPenRainbow(false);
+                penRainbowRef.current = false;
             }
         }
     }
 
     function setPenErase() {
-        setPenColor(colorBackground);
+        penColorRef.current = colorBackground;
     }
 
     /**
@@ -222,8 +222,8 @@ function CanvasSketch(props: CanvasSketchProps) {
      * @returns Hex-representation of the RGB values for the current color of the rainbow.
      */
     function tickRainbow(): string {
-        const hex = getTickRainbowHex(rainbowTick);
-        setRainbowTick(incrementTickRainbow(rainbowTick));
+        const hex = getTickRainbowHex(rainbowTickRef.current);
+        rainbowTickRef.current = incrementTickRainbow(rainbowTickRef.current);
         return hex;
     }
 
