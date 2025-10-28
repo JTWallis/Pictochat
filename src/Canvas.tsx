@@ -53,7 +53,7 @@ function Canvas(props: CanvasProps) {
     const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
     const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
     const [renderStripes, setRenderStripes] = useState(true);
-    const [drawOffsetY, setDrawOffsetY] = useState(0);
+    const drawOffsetYRef = useRef<number>(0);
     const ongoingReconstructRef = useRef<AbortController | null>(null);
 
     const canvasTextPosRef = useRef(new Vector2(-1, -1));
@@ -89,6 +89,10 @@ function Canvas(props: CanvasProps) {
 
     function setCanvasTextPos(pos: Vector2) {
         canvasTextPosRef.current = pos;
+    }
+
+    function setDrawOffsetY(offset: number) {
+        drawOffsetYRef.current = offset;
     }
 
     function updateCanvasTextPos() {
@@ -258,7 +262,7 @@ function Canvas(props: CanvasProps) {
         for (let i = 0; i < drawingCommands.length; i++) {
             if(signal.aborted) return;
             const command = drawingCommands[i];
-            const offsetY = (!drawOffsetY) ? 0 : drawOffsetY;
+            const offsetY = (!drawOffsetYRef.current) ? 0 : drawOffsetYRef.current;
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - offsetY);
             const posStart = unNormalizePos(offsetStart);
             const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - offsetY);
