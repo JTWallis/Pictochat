@@ -48,17 +48,17 @@ function Canvas(props: CanvasProps) {
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
-    const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
+    
     const originalCanvasHeightRef = useRef<number>(-1);
-    const [renderStripes, setRenderStripes] = useState(true);
     const drawOffsetYRef = useRef<number>(0);
     const ongoingReconstructRef = useRef<AbortController | null>(null);
-
     const canvasTextPosRef = useRef(new Vector2(-1, -1));
     const appliedStripeStepsRef = useRef(stripeCount);
     const buttonWidth = getCanvasWidth() * lineCharSize;
+
+    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
+    const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
+    const [renderStripes, setRenderStripes] = useState(true);
 
 
     useEffect(() => {
