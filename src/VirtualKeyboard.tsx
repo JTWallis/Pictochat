@@ -25,6 +25,11 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
         window.removeEventListener("mouseup", window_mouseup);
     }
 
+    
+    function setMouseDown(isMouseDown: boolean) {
+        mouseDown = isMouseDown;
+        isMouseDown ? bindWindowMouse() : unbindWindowMouse();
+    }
 
     function handleButtonMouseDown(event: any) {
         if (mouseDown) return;
