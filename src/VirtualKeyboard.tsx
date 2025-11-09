@@ -1,27 +1,19 @@
 import './VirtualKeyboard.css'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import VirtualKeyboardOrtholinear from './VirtualKeyboardOrtholinear';
 import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
 import imgBorder from './assets/img_keyboard_border.png';
 
 
 function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
-    const [mouseDown, setMouseDown] = useState(false);
+    let mouseDown = false;
     let mouseDragged = false;
 
     useEffect(() => {
-
-        if (mouseDown === true) {
-            bindWindowMouse();
-        } else {
-            unbindWindowMouse();
-        }
-
-
         return () => {
             unbindWindowMouse();
         }
-    }, [mouseDown]);
+    }, []);
 
     function bindWindowMouse() {
         window.addEventListener("mousemove", window_mousemove);
