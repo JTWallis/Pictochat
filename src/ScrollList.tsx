@@ -4,7 +4,7 @@ import './ScrollList.css';
 function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [index, setIndex] = useState(0);
+    const [scrollIndex, setScrollIndex] = useState(0);
 
     useImperativeHandle(scrollListRef, () => ({
         scrollDown: () => {
@@ -18,7 +18,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
         },
 
         getBottomMessageIndex: () => {
-            return index - 1;
+            return scrollIndex - 1;
         }
     }));
 
@@ -62,7 +62,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
             const rect = scrollChildren[i].getBoundingClientRect();
 
             if(isInBoundThreshold(rect.bottom, boundBot)) {
-                setIndex(i);
+                setScrollIndex(i);
                 break;
             }
         }
@@ -79,7 +79,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 
         const target = scrollChildren[index];
         target.scrollIntoView({ block: "end" });
-        setIndex(index);
+        setScrollIndex(index);
 
         // Decremented index because first padding element is not part of Scrollbar.
         
@@ -104,11 +104,11 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 
         let indexNext;
         if(scrollDown) {
-            indexNext = index + 1;
+            indexNext = scrollIndex + 1;
             if(indexNext >= scrollChildren.length) return;
             scrollbarRef.current.scrollDown();
         } else {
-            indexNext = index - 1;
+            indexNext = scrollIndex - 1;
             if(indexNext < boundLower) return;
             scrollbarRef.current.scrollUp();
         }
