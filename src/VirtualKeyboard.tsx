@@ -12,19 +12,26 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
     useEffect(() => {
 
         if (mouseDown === true) {
-            window.addEventListener("mousemove", window_mousemove);
-            window.addEventListener("mouseup", window_mouseup);
+            bindWindowMouse();
         } else {
-            window.removeEventListener("mousemove", window_mousemove);
-            window.removeEventListener("mouseup", window_mouseup);
+            unbindWindowMouse();
         }
 
 
         return () => {
-            window.removeEventListener("mousemove", window_mousemove);
-            window.removeEventListener("mouseup", window_mouseup);
+            unbindWindowMouse();
         }
     }, [mouseDown]);
+
+    function bindWindowMouse() {
+        window.addEventListener("mousemove", window_mousemove);
+        window.addEventListener("mouseup", window_mouseup);
+    }
+
+    function unbindWindowMouse() {
+        window.removeEventListener("mousemove", window_mousemove);
+        window.removeEventListener("mouseup", window_mouseup);
+    }
 
 
     function handleButtonMouseDown(event: any) {
