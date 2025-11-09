@@ -1,10 +1,8 @@
-import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef } from 'react';
 import './CanvasSketch.css'
 import { Vector2 } from './Vector2';
 import type { CanvasSketchFullAPI } from './CanvasAPI';
 import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
-
-const stripeCount = 4;
 
 const colorBackground = "#FFF";
 const colorForeground = "#000";
@@ -22,37 +20,18 @@ interface CanvasSketchProps {
 
 function CanvasSketch(props: CanvasSketchProps) {
 
-    const [mouseDown, setMouseDown] = useState(false);
-    const [posX, setPosX] = useState(-1);
-    const [posY, setPosY] = useState(-1);
-    const [prevPosX, setPrevPosX] = useState(-1);
-    const [prevPosY, setPrevPosY] = useState(-1);
+    let mouseDown = false;
+    let mousePos = new Vector2(-1, -1);
+    let mousePrevPos = new Vector2(-1, -1);
 
     const sketchContainerRef = useRef<HTMLDivElement>(null);
-    const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [floatingKeyValue, setFloatingKeyValue] = useState("");
-    const [floatingKeyPos, setFloatingKeyPos] = useState({
-        x: 0,
-        y: 0
-    });
-
-
-    const [penSize, setPenSize] = useState(sizeLarge);
-    const [penColor, setPenColor] = useState(colorForeground);
-    const [penRainbow, setPenRainbow] = useState(false);
-    const [rainbowTick, setRainbowTick] = useState(0);
+    const penSizeRef = useRef<number>(sizeLarge);
+    const penColorRef = useRef<string>(colorForeground);
+    const penRainbowRef = useRef<boolean>(false);
+    const rainbowTickRef = useRef<number>(0);
 
 
     useImperativeHandle(props.canvasSketchRef, () => ({
-        drawText(text: string, screenX: number, screenY: number) {
-            setFloatingKeyPos({
-                x: screenX,
-                y: screenY
-            })
-            setFloatingKeyValue(text);
-        },
-
         drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },
@@ -100,16 +79,9 @@ function CanvasSketch(props: CanvasSketchProps) {
     }));
 
     useEffect(() => {
-        handleStrokePosChange();
-    }, [posX, posY]);
-
-    useEffect(() => {
         handleCanvasTextChange();
     }, [props.canvasText]);
 
-    useEffect(() => {
-        handleFloatingKeyAttachment();
-    }, [floatingKeyValue, floatingKeyPos]);
 
     function resetCanvas() {
         props.api.resetMessage();
@@ -147,47 +119,27 @@ function CanvasSketch(props: CanvasSketchProps) {
      * Draws a stroke onto the Canvas based on the previous and current cursor position.
      */
     function handleStrokePosChange() {
+        if(mousePos.x < 0 || mousePos.y < 0) return;
+
         const offsetTop = sketchContainerRef.current?.offsetTop!;
         const offsetLeft = sketchContainerRef.current?.offsetLeft!;
 
-        const drawDot = prevPosX < 0;
+        const drawDot = mousePrevPos.x < 0;
 
-        const posPrev: Vector2 = new Vector2(prevPosX - offsetLeft, prevPosY - offsetTop);
-        const pos: Vector2 = new Vector2(posX - offsetLeft, posY - offsetTop);
+        const posPrev: Vector2 = new Vector2(mousePrevPos.x - offsetLeft, mousePrevPos.y - offsetTop);
+        const pos: Vector2 = new Vector2(mousePos.x - offsetLeft, mousePos.y - offsetTop);
         const posFirst: Vector2 = drawDot ? pos : posPrev;
 
         if (posFirst.x < 0 || posFirst.y < 0) return;
 
-        if (penRainbow && !isPenErase()) {
-            setPenColor(tickRainbow());
+        if (penRainbowRef.current && !isPenErase()) {
+            penColorRef.current = tickRainbow();
         }
 
-        props.api.drawPushStroke(posFirst, pos, penSize, penColor);
+        props.api.drawPushStroke(posFirst, pos, penSizeRef.current, penColorRef.current);
 
 
-        setPrevPosX(posX);
-        setPrevPosY(posY);
-    }
-
-    /**
-     * Draws the dragged Floating Key onto the Canvas.
-     */
-    function handleFloatingKeyAttachment() {
-        // Drawn FloatingKey value onto canvas is slightly offset from the dragged one,
-        //  resulting in a "pop effect". This offset makes the position accurate again.
-        const offsetPopFixY = -13;
-        const offsetTop = sketchContainerRef.current?.offsetTop! + offsetPopFixY;
-        const offsetLeft = sketchContainerRef.current?.offsetLeft!;
-
-        const pos: Vector2 = new Vector2(floatingKeyPos.x - offsetLeft, floatingKeyPos.y - offsetTop);
-
-        if (pos.x < 0 || pos.y < 0) return;
-
-        const value: string = floatingKeyValue;
-
-        props.api.setCanvasTextPos(pos);
-
-        props.api.drawPushText(pos, value);
+        setMousePrevPos(mousePos.x, mousePos.y);
     }
 
     function handleFloatingKeyImage(img: HTMLImageElement, screenPos: Vector2, colorFill: string) {
@@ -230,31 +182,31 @@ function CanvasSketch(props: CanvasSketchProps) {
     }
 
     function isPenErase() {
-        return penColor === colorBackground;
+        return penColorRef.current === colorBackground;
     }
 
     function setPenSmall() {
-        setPenSize(sizeSmall);
+        penSizeRef.current = sizeSmall;
     }
 
     function setPenBig() {
-        setPenSize(sizeLarge);
+        penSizeRef.current = sizeLarge;
     }
 
     function setPenDraw() {
-        if (penColor === colorForeground) {
-            setPenRainbow(true);
+        if (penColorRef.current === colorForeground) {
+            penRainbowRef.current = true;
         } else {
-            setPenColor(colorForeground);
+            penColorRef.current = colorForeground;
 
             if (!isPenErase()) {
-                setPenRainbow(false);
+                penRainbowRef.current = false;
             }
         }
     }
 
     function setPenErase() {
-        setPenColor(colorBackground);
+        penColorRef.current = colorBackground;
     }
 
     /**
@@ -262,40 +214,50 @@ function CanvasSketch(props: CanvasSketchProps) {
      * @returns Hex-representation of the RGB values for the current color of the rainbow.
      */
     function tickRainbow(): string {
-        const hex = getTickRainbowHex(rainbowTick);
-        setRainbowTick(incrementTickRainbow(rainbowTick));
+        const hex = getTickRainbowHex(rainbowTickRef.current);
+        rainbowTickRef.current = incrementTickRainbow(rainbowTickRef.current);
         return hex;
     }
 
+    function setMousePos(x: number, y: number) {
+        mousePos.x = x;
+        mousePos.y = y;
+
+        handleStrokePosChange();
+    }
+
+    function setMousePosPage(event: MouseEvent) {
+        setMousePos(event.pageX, event.pageY);
+    }
+
+    function setMousePrevPos(x: number, y: number) {
+        mousePrevPos.x = x;
+        mousePrevPos.y = y;
+    }
+
     function resetPos() {
-        setPosX(-1);
-        setPosY(-1);
-        setPrevPosX(-1);
-        setPrevPosY(-1);
+        setMousePos(-1, -1);
+        setMousePrevPos(-1, -1);
     }
 
     function canvas_mousedown(event: any) {
-        setMouseDown(true);
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        mouseDown = true;
+        setMousePosPage(event);
     }
 
     function canvas_mousemove(event: any) {
         if (!mouseDown) return;
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        setMousePosPage(event);
     }
 
     function canvas_mouseup(event: any) {
-        setMouseDown(false);
+        mouseDown = false;
         resetPos();
     }
 
     function canvas_mouseenter(event: any) {
         if (!mouseDown) return;
-
-        setPosX(event.pageX);
-        setPosY(event.pageY);
+        setMousePosPage(event);
     }
 
     function canvas_mouseleave(event: any) {

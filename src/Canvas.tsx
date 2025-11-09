@@ -48,17 +48,17 @@ function Canvas(props: CanvasProps) {
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const stripesContainerRef = useRef<HTMLDivElement>(null);
     const nameContainerRef = useRef<HTMLDivElement>(null);
-
-    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
-    const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
-    const [originalCanvasHeight, setOriginalCanvasHeight] = useState(-1);
-    const [renderStripes, setRenderStripes] = useState(true);
-    const [drawOffsetY, setDrawOffsetY] = useState(0);
-    const [ongoingReconstruct, setOngoingReconstruct] = useState<AbortController | null>(null);
-
+    
+    const originalCanvasHeightRef = useRef<number>(-1);
+    const drawOffsetYRef = useRef<number>(0);
+    const ongoingReconstructRef = useRef<AbortController | null>(null);
     const canvasTextPosRef = useRef(new Vector2(-1, -1));
     const appliedStripeStepsRef = useRef(stripeCount);
     const buttonWidth = getCanvasWidth() * lineCharSize;
+
+    const [containerHeightPercent, setContainerHeightPercent] = useState(props.defaultHeightPercent);
+    const [canvasSize, setCanvasSize] = useState(new Vector2(300, 150));
+    const [renderStripes, setRenderStripes] = useState(true);
 
 
     useEffect(() => {
@@ -89,6 +89,10 @@ function Canvas(props: CanvasProps) {
 
     function setCanvasTextPos(pos: Vector2) {
         canvasTextPosRef.current = pos;
+    }
+
+    function setDrawOffsetY(offset: number) {
+        drawOffsetYRef.current = offset;
     }
 
     function updateCanvasTextPos() {
@@ -138,7 +142,7 @@ function Canvas(props: CanvasProps) {
     }
 
     function unNormalizePos(pos: Vector2): Vector2 {
-        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
         return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
     }
 
@@ -220,7 +224,7 @@ function Canvas(props: CanvasProps) {
         appliedStripeStepsRef.current = steps;
 
         const currentHeightPx = canvasContainerRef.current!.getBoundingClientRect().height;
-        setOriginalCanvasHeight(currentHeightPx);
+        originalCanvasHeightRef.current = currentHeightPx;
 
         const stepsRatio = steps / (stripeCount + 1);
         const heightPercent = props.defaultHeightPercent * stepsRatio;
@@ -241,12 +245,12 @@ function Canvas(props: CanvasProps) {
     }
 
     function reconstructMessage() {
-        if(ongoingReconstruct) {
-            ongoingReconstruct.abort();
+        if(ongoingReconstructRef.current) {
+            ongoingReconstructRef.current.abort();
         }
 
         const ac = new AbortController();
-        setOngoingReconstruct(ac);
+        ongoingReconstructRef.current = ac;
         handleReconstructMessage(ac.signal);
     }
 
@@ -258,7 +262,7 @@ function Canvas(props: CanvasProps) {
         for (let i = 0; i < drawingCommands.length; i++) {
             if(signal.aborted) return;
             const command = drawingCommands[i];
-            const offsetY = (!drawOffsetY) ? 0 : drawOffsetY;
+            const offsetY = (!drawOffsetYRef.current) ? 0 : drawOffsetYRef.current;
             const offsetStart = new Vector2(command.getStartPos().x, command.getStartPos().y - offsetY);
             const posStart = unNormalizePos(offsetStart);
             const offsetEnd = new Vector2(command.getEndPos().x, command.getEndPos().y - offsetY);
@@ -290,7 +294,7 @@ function Canvas(props: CanvasProps) {
             }
         }
 
-        setOngoingReconstruct(null);
+        ongoingReconstructRef.current = null;
         updateCanvasTextPos();
     }
 
@@ -378,7 +382,7 @@ function Canvas(props: CanvasProps) {
 
     function normalizeCanvasPos(canvasPos: Vector2): Vector2 {
         const width = getCanvasWidth();
-        const height = originalCanvasHeight < 0 ? canvasSize.y : originalCanvasHeight;
+        const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
 
         return new Vector2(canvasPos.x / width, canvasPos.y / height);
     }

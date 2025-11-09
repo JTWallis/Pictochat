@@ -1,31 +1,35 @@
 import './VirtualKeyboard.css'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import VirtualKeyboardOrtholinear from './VirtualKeyboardOrtholinear';
 import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
 import imgBorder from './assets/img_keyboard_border.png';
 
 
 function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
-    const [mouseDown, setMouseDown] = useState(false);
+    let mouseDown = false;
     let mouseDragged = false;
 
     useEffect(() => {
-
-        if (mouseDown === true) {
-            window.addEventListener("mousemove", window_mousemove);
-            window.addEventListener("mouseup", window_mouseup);
-        } else {
-            window.removeEventListener("mousemove", window_mousemove);
-            window.removeEventListener("mouseup", window_mouseup);
-        }
-
-
         return () => {
-            window.removeEventListener("mousemove", window_mousemove);
-            window.removeEventListener("mouseup", window_mouseup);
+            unbindWindowMouse();
         }
-    }, [mouseDown]);
+    }, []);
 
+    function bindWindowMouse() {
+        window.addEventListener("mousemove", window_mousemove);
+        window.addEventListener("mouseup", window_mouseup);
+    }
+
+    function unbindWindowMouse() {
+        window.removeEventListener("mousemove", window_mousemove);
+        window.removeEventListener("mouseup", window_mouseup);
+    }
+
+    
+    function setMouseDown(isMouseDown: boolean) {
+        mouseDown = isMouseDown;
+        isMouseDown ? bindWindowMouse() : unbindWindowMouse();
+    }
 
     function handleButtonMouseDown(event: any) {
         if (mouseDown) return;
