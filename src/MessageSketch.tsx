@@ -1,12 +1,13 @@
 import './MessageSketch.css';
 import Canvas from "./Canvas";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Message } from './Message';
 import type { Vector2 } from './Vector2';
 import type { DrawCommand } from './DrawCommand';
 import type { CanvasSketchPartialAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import { postMessage } from './MessageController';
+import { ThemeContext } from './ThemeContext';
 
 const INIT_HEIGHT_PERCENT = 100;
 
@@ -20,6 +21,8 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
         removeLastMessageTextCommand,
         getLastMessageText
     };
+
+    const theme = useContext(ThemeContext);
 
     const [message, setMessage] = useState(new Message([], username));
 
@@ -55,6 +58,7 @@ function MessageSketch({username, canvasText, getBottomScrollMessage, findCharRe
     return (
         <Canvas 
             defaultHeightPercent={INIT_HEIGHT_PERCENT}
+            backgroundColor={theme.canvas}
             canvasType={CanvasTypes.CANVAS_SKETCH}
             message={message}
             findCharRepFromValue={findCharRepFromValue}

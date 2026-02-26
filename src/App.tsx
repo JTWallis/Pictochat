@@ -349,7 +349,7 @@ function App() {
               <Scrollbar scrollbarRef={scrollbarRef}/>
             </div>
           </div>
-          <div className="topRight">
+          <div className="topRight" style={{backgroundColor: theme.background_primary}}>
             <div className="totalMessagesScreen">
               <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
             </div>
@@ -367,7 +367,7 @@ function App() {
             />
           </div>
           <div className="botRight">
-            <div className="botRightTop">
+            <div className="botRightTop" style={{backgroundColor: theme.background_primary}}>
               <MessageSketch 
                 canvasSketchRef={canvasSketchRef}
                 floatingKeyRef={floatingKeyRef}
@@ -378,7 +378,7 @@ function App() {
                 addMessage={addMessage}
               />
             </div>
-            <div className="botRightBot">
+            <div className="botRightBot" style={{backgroundColor: theme.background_secondary}}>
               <div className="emptyLeftKeyboardContainer"></div>
               <VirtualKeyboard 
                 vkeyboardStaggeredRef={vkeyboardStaggeredRef}

@@ -1,13 +1,16 @@
 import './VirtualKeyboard.css'
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import VirtualKeyboardOrtholinear from './VirtualKeyboardOrtholinear';
 import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
 import imgBorder from './assets/img_keyboard_border.png';
+import { ThemeContext } from './ThemeContext';
 
 
 function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
     let mouseDown = false;
     let mouseDragged = false;
+
+    const theme = useContext(ThemeContext);
 
     useEffect(() => {
         return () => {
@@ -67,7 +70,7 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
 
     return (
         <>
-            <div className="keyboardContainer">
+            <div className="keyboardContainer" style={{backgroundColor: theme.background_secondary}}>
                 <input type="image" src={imgBorder} className="keyboardBorder" />
                 <div className="keyboardMaskedContainer">
                     {
