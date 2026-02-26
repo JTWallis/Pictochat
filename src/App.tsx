@@ -130,7 +130,7 @@ function App() {
     subscribeTotalConnections(setRoomsUserCount);
     
     subscribeRoomConnections("a", addNewSpecialMessage);
-    subscribeMessages(addMessage);
+    subscribeMessages(addFetchedMessage);
   }
 
   function onKeyDown(event: any) {
