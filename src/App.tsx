@@ -265,6 +265,14 @@ function App() {
     setMessageDisplays((prev) => [...prev, messageElement]);
   }
 
+  function addFetchedNewSpecialMessage(messageText: string, creatorUuid: string) {
+    if(isUuidEqual(creatorUuid)) {
+      return;
+    }
+
+    addNewSpecialMessage(messageText);
+  }
+
   function addNewSpecialMessage(messageText: string) {
     if(messageText.length === 0) return;
 
