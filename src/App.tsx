@@ -129,7 +129,7 @@ function App() {
 
     subscribeTotalConnections(setRoomsUserCount);
     
-    subscribeRoomConnections("a", addNewSpecialMessage);
+    subscribeRoomConnections("a", addFetchedNewSpecialMessage);
     subscribeMessages(addFetchedMessage);
   }
 
