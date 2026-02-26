@@ -6,7 +6,7 @@ import type { UserConnectionDto } from "./UserConnectionDto";
 import { createMessageTextJoin, createMessageTextLeave } from "./MessageSpecialHelper";
 
 type totalConnectCallbackType = (counts: number[]) => void;
-type roomConnectCallbackType = (connectMessageText: string) => void;
+type roomConnectCallbackType = (connectMessageText: string, creatorUuid: string) => void;
 
 const UserConnectionTypes = {
     CONNECT: "CONNECT",
@@ -20,7 +20,7 @@ export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (c
     });
 }
 
-export function subscribeRoomConnections(room: string, onReceivedRoomConnectionCallback: (connectMessageText: string) => void) {
+export function subscribeRoomConnections(room: string, onReceivedRoomConnectionCallback: roomConnectCallbackType) {
     console.log("Subscribing RoomConnections");
     stompClient.subscribe("/topic/room/a/connections", (e: IMessage) => {
         console.log("Connection/Disconnection in Room a:", e.body);
@@ -40,6 +40,7 @@ function onReceivedTotalConnections(message: IMessage, onReceivedTotalConnection
 
 function onReceivedRoomConnection(message: IMessage, room: string, onReceivedRoomConnectionCallback: roomConnectCallbackType) {
     const userConnection = JSON.parse(message.body) as UserConnectionDto;
+    const uuid = userConnection.uuid;
     const creator = userConnection.nickname;
     let messageText;
 
@@ -55,5 +56,5 @@ function onReceivedRoomConnection(message: IMessage, room: string, onReceivedRoo
             break;
     }
 
-    onReceivedRoomConnectionCallback(messageText);
+    onReceivedRoomConnectionCallback(messageText, uuid);
 }

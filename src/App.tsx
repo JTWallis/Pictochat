@@ -26,6 +26,8 @@ import convertTextToCharRepresentations from './CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
+import type { MessageFetchDto } from './MessageFetchDto';
+import type { UserRegisterDto } from './UserRegisterDto';
 
 
 function isAlpha(char: string): boolean {
@@ -105,6 +107,7 @@ function App() {
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
 
+  const uuidRef = useRef<string>("");
   const floatingKeyRef = useRef<any>(null);
   const canvasSketchRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
@@ -119,14 +122,15 @@ function App() {
     registerUsername(username, stompClientRegisteredCallback);
   }
 
-  function stompClientRegisteredCallback() {
-    console.log("Register Callback");
+  function stompClientRegisteredCallback(userRegisterDto: UserRegisterDto) {
+    console.log(`Register Callback with uuid ${userRegisterDto.uuid}`);
+    uuidRef.current = userRegisterDto.uuid
     subscribeQueueReply();
 
     subscribeTotalConnections(setRoomsUserCount);
     
-    subscribeRoomConnections("a", addNewSpecialMessage);
-    subscribeMessages(addMessage);
+    subscribeRoomConnections("a", addFetchedNewSpecialMessage);
+    subscribeMessages(addFetchedMessage);
   }
 
   function onKeyDown(event: any) {
@@ -262,6 +266,14 @@ function App() {
     setMessageDisplays((prev) => [...prev, messageElement]);
   }
 
+  function addFetchedNewSpecialMessage(messageText: string, creatorUuid: string) {
+    if(isUuidEqual(creatorUuid)) {
+      return;
+    }
+
+    addNewSpecialMessage(messageText);
+  }
+
   function addNewSpecialMessage(messageText: string) {
     if(messageText.length === 0) return;
 
@@ -283,6 +295,16 @@ function App() {
     addMessageElement(specialMessage, isSpecial);
   }
 
+  function addFetchedMessage(message: MessageFetchDto) {
+    if(isUuidEqual(message.creatorUuid)) {
+      return;
+    }
+
+    const msg = message.toMessage();
+
+    addMessage(msg)
+  }
+
   function addMessage(message: Message) {
     setMessages(prev => [...prev, message]);
 
@@ -294,6 +316,10 @@ function App() {
 
     const isSpecial = false;
     addMessageElement(m, isSpecial);
+  }
+
+  function isUuidEqual(uuid: string) {
+    return uuid === uuidRef.current;
   }
 
 
