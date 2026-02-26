@@ -26,6 +26,7 @@ import convertTextToCharRepresentations from './CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
+import type { MessageFetchDto } from './MessageFetchDto';
 import type { UserRegisterDto } from './UserRegisterDto';
 
 
@@ -292,6 +293,16 @@ function App() {
     setMessages(prev => [...prev, message]);
     const isSpecial = true;
     addMessageElement(specialMessage, isSpecial);
+  }
+
+  function addFetchedMessage(message: MessageFetchDto) {
+    if(isUuidEqual(message.creatorUuid)) {
+      return;
+    }
+
+    const msg = message.toMessage();
+
+    addMessage(msg)
   }
 
   function addMessage(message: Message) {
