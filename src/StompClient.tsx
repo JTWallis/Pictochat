@@ -1,4 +1,5 @@
 import { Client } from '@stomp/stompjs';
+import type { UserRegisterDto } from './UserRegisterDto';
 
 const url = "ws://localhost:8100/pictochat"
 
@@ -17,11 +18,12 @@ export function startClient(onConnectCallback: any) {
     stompClient.activate();
 }
 
-export function registerUsername(username: string, registeredCallback: any) {
+export function registerUsername(username: string, registeredCallback: (userRegisterDto: UserRegisterDto) => void) {
     console.log("Publish Register");
 
     const receiptSubscribe = stompClient.subscribe("/user/queue/receipts", (e) => {
-        registeredCallback();
+        const registerDto = JSON.parse(e.body) as UserRegisterDto;
+        registeredCallback(registerDto);
         receiptSubscribe.unsubscribe();
     })
 

@@ -26,6 +26,7 @@ import convertTextToCharRepresentations from './CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
+import type { UserRegisterDto } from './UserRegisterDto';
 
 
 function isAlpha(char: string): boolean {
@@ -105,6 +106,7 @@ function App() {
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
 
+  const uuidRef = useRef<string>("");
   const floatingKeyRef = useRef<any>(null);
   const canvasSketchRef = useRef<any>(null);
   const scrollListRef = useRef<any>(null);
@@ -119,8 +121,9 @@ function App() {
     registerUsername(username, stompClientRegisteredCallback);
   }
 
-  function stompClientRegisteredCallback() {
-    console.log("Register Callback");
+  function stompClientRegisteredCallback(userRegisterDto: UserRegisterDto) {
+    console.log(`Register Callback with uuid ${userRegisterDto.uuid}`);
+    uuidRef.current = userRegisterDto.uuid
     subscribeQueueReply();
 
     subscribeTotalConnections(setRoomsUserCount);
