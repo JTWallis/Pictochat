@@ -299,6 +299,10 @@ function App() {
     addMessageElement(m, isSpecial);
   }
 
+  function isUuidEqual(uuid: string) {
+    return uuid === uuidRef.current;
+  }
+
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
