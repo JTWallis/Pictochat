@@ -1,8 +1,12 @@
 import './VirtualKeyboardOrtholinear.css'
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseSingle } from './CharmapBaseSingle';
+import { ThemeContext } from './ThemeContext';
+import { useContext } from 'react';
 
 function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any) {
+
+    const theme = useContext(ThemeContext);
 
     function getButtonContainers() {
         const rows: any = [];
@@ -14,24 +18,32 @@ function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any)
 
                 const value = representations[i].value;
                 let buttonClass;
+                let bgColor;
                 let containerClass = "";
                 let isRightEdge = false;
                 if(value === "SPACE" || value === "BACK" || value === "ENTER") {
                     buttonClass = "keyboardImageButtonSpecial";
+                    bgColor = theme.button_special;
                     isRightEdge = true;
 
                     if(value === "ENTER") containerClass += " keyboardColSpanTwo"
                 } else if((charmap as CharmapBaseSingle).isGridCellSpecial(i)) {
                     buttonClass = "keyboardImageButtonSpecial";
+                    bgColor = theme.button_special;
                 } else {
                     buttonClass = "keyboardImageButtonRegular";
+                    bgColor = theme.button;
                 }
 
                 if(i === rowRangeIndices[k].x) containerClass += " keyboardMarginLeft";
                 else if(isRightEdge || (i === rowRangeIndices[k].y && rowRangeIndices[k].y - rowRangeIndices[k].x === 11)) containerClass += " keyboardMarginRight";
 
                 rows.push(
-                    <div key={"Keyboard-Button-Container-" + i} className={"keyboardImageButtonContainer keyboardImageButtonOrtholinearContainer" + containerClass}>
+                    <div
+                        key={"Keyboard-Button-Container-" + i}
+                        className={"keyboardImageButtonContainer keyboardImageButtonOrtholinearContainer" + containerClass}
+                        style={{ backgroundColor: bgColor }}
+                    >
                         <VirtualKeyboardButton
                             key={"Keyboard-Button-" + i}
                             className={buttonClass}

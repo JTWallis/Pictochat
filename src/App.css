@@ -37,7 +37,6 @@ button {
 }
 
 .topRight {
-    background-color: magenta;
     width: 96%;
 }
 
@@ -63,13 +62,11 @@ button {
 }
 
 .botRightTop {
-    background-color: blue;
     height: 50%;
     width: 100%;
 }
 
 .botRightBot {
-    background-color: aqua;
     width: 100%;
     height: 50%;
 

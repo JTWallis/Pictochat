@@ -28,7 +28,7 @@ import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
 import type { MessageFetchDto } from './MessageFetchDto';
 import type { UserRegisterDto } from './UserRegisterDto';
-
+import { themes, type Theme, ThemeContext } from './ThemeContext'
 
 function isAlpha(char: string): boolean {
   return ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z"));
@@ -106,6 +106,7 @@ function App() {
   const [selectedCharmap, setSelectedCharmap] = useState<CharmapBase>(charmapLatin);
   const [selectedCharmapState, setSelectedCharmapState] = useState(CharmapStates.LATIN);
   const [roomsUserCount, setRoomsUserCount] = useState<number[]>(rooms.map((_) => 0));
+  const [theme, setTheme] = useState<Theme>(themes.light)
 
   const uuidRef = useRef<string>("");
   const floatingKeyRef = useRef<any>(null);
@@ -340,59 +341,61 @@ function App() {
 
   return (
     <>
-      <div className="top">
-        <div className="topLeft">
+    <ThemeContext.Provider value={theme}>
+        <div className="top">
+          <div className="topLeft">
 
-          <div className="scrollwheel">
-            <Scrollbar scrollbarRef={scrollbarRef}/>
+            <div className="scrollwheel">
+              <Scrollbar scrollbarRef={scrollbarRef}/>
+            </div>
           </div>
-        </div>
-        <div className="topRight">
-          <div className="totalMessagesScreen">
-            <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
+          <div className="topRight" style={{backgroundColor: theme.background_primary}}>
+            <div className="totalMessagesScreen">
+              <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
+            </div>
           </div>
-        </div>
 
 
-      </div>
-      <div className="bottom">
-        <div className="botLeft">
-          <ButtonColumnLeft 
-            userColor={userColor}
-            scrollListRef={scrollListRef}
-            canvasSketchRef={canvasSketchRef}
-            onCharmapButtonClick={handleCharmapButtonClick}
-          />
         </div>
-        <div className="botRight">
-          <div className="botRightTop">
-            <MessageSketch 
+        <div className="bottom">
+          <div className="botLeft">
+            <ButtonColumnLeft 
+              userColor={userColor}
+              scrollListRef={scrollListRef}
               canvasSketchRef={canvasSketchRef}
-              floatingKeyRef={floatingKeyRef}
-              username={username}
-              canvasText={canvasText}
-              getBottomScrollMessage={getBottomScrollMessage}
-              findCharRepFromValue={findCharRepFromValue}
-              addMessage={addMessage}
+              onCharmapButtonClick={handleCharmapButtonClick}
             />
           </div>
-          <div className="botRightBot">
-            <div className="emptyLeftKeyboardContainer"></div>
-            <VirtualKeyboard 
-              vkeyboardStaggeredRef={vkeyboardStaggeredRef}
-              onKeyboardButtonClick={onKeyboardButtonClick} 
-              floatingKeyRef={floatingKeyRef}
-              charmap={selectedCharmap}
-              charmapState={selectedCharmapState}
+          <div className="botRight">
+            <div className="botRightTop" style={{backgroundColor: theme.background_primary}}>
+              <MessageSketch 
+                canvasSketchRef={canvasSketchRef}
+                floatingKeyRef={floatingKeyRef}
+                username={username}
+                canvasText={canvasText}
+                getBottomScrollMessage={getBottomScrollMessage}
+                findCharRepFromValue={findCharRepFromValue}
+                addMessage={addMessage}
               />
-            <div className="buttonColumnRightContainer">
-              <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
             </div>
-            <div className="emptyRightKeyboardContainer" />
+            <div className="botRightBot" style={{backgroundColor: theme.background_secondary}}>
+              <div className="emptyLeftKeyboardContainer"></div>
+              <VirtualKeyboard 
+                vkeyboardStaggeredRef={vkeyboardStaggeredRef}
+                onKeyboardButtonClick={onKeyboardButtonClick} 
+                floatingKeyRef={floatingKeyRef}
+                charmap={selectedCharmap}
+                charmapState={selectedCharmapState}
+                />
+              <div className="buttonColumnRightContainer">
+                <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
+              </div>
+              <div className="emptyRightKeyboardContainer" />
+            </div>
           </div>
         </div>
-      </div>
-      <FloatingKey floatingKeyRef={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
+        <FloatingKey floatingKeyRef={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
+      </ThemeContext.Provider>
     </>
   )
 }

@@ -1,5 +1,6 @@
-import { useImperativeHandle, useRef, useState, type JSX } from 'react';
+import { useContext, useImperativeHandle, useRef, useState, type JSX } from 'react';
 import './Scrollbar.css';
+import { ThemeContext } from './ThemeContext';
 
 const segmentColorDefault = "#8AF";
 const segmentColorSpecialDefault = "#888";
@@ -21,6 +22,8 @@ function Scrollsegment( {color, width}: any ) {
 }
 
 function Scrollbar( {scrollbarRef}: any ) {
+    const theme = useContext(ThemeContext)
+
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [segmentCount, setSegmentCount] = useState(0);
     const [specialMessageIndices, setSpecialMessageIndices] = useState<number[]>([]);
@@ -152,7 +155,7 @@ function Scrollbar( {scrollbarRef}: any ) {
     }
 
     return(
-        <div className="scrollbar" ref={scrollbarContainerRef}>
+        <div className="scrollbar" ref={scrollbarContainerRef} style={{backgroundColor: theme.background_ternary}}>
             {Array.from({length: segmentCount}).slice(0, (maxDisplayElements < 0 ? undefined : maxDisplayElements)).map( (_, index) => {
                 return (
                     <Scrollsegment 

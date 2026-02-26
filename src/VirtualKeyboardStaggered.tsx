@@ -1,8 +1,9 @@
 import './VirtualKeyboardStaggered.css'
-import { useImperativeHandle, useState } from 'react';
+import { useContext, useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from './CharmapBaseDouble';
 import type { CharRepresentation } from './CharRepresentation';
+import { ThemeContext } from './ThemeContext';
 
 const SPECIAL_CAPS = "CAPS";
 const SPECIAL_SHIFT = "SHIFT";
@@ -22,6 +23,8 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
             setIsUpper(!isUpper);
         }
     }));
+
+    const theme = useContext(ThemeContext);
 
     const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
@@ -76,6 +79,7 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
 
             for (let i = rowRangeIndices[k].x; i <= rowRangeIndices[k].y; i++) {
                 let buttonClass: string;
+                let bgColor = theme.button_special;
                 let imageClass = "keyboardImageButtonSpecial";
 
                 switch (representations[i].lower.value) {
@@ -96,12 +100,17 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
                         break;
                     default:
                         buttonClass = "";
+                        bgColor = theme.button;
                         imageClass = "keyboardImageButtonRegular";
                         break;
                 }
 
                 rows[k].push(
-                    <div key={"Keyboard-Button-Container-" + i} className={"keyboardImageButtonContainer keyboardImageButtonStaggeredContainer " + buttonClass}>
+                    <div
+                        key={"Keyboard-Button-Container-" + i}
+                        className={"keyboardImageButtonContainer keyboardImageButtonStaggeredContainer " + buttonClass}
+                        style={{ backgroundColor: bgColor }}
+                    >
                         <VirtualKeyboardButton
                             key={"Keyboard-Button-" + i}
                             className={imageClass}

@@ -12,8 +12,9 @@ import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
+import { ThemeContext } from './ThemeContext';
 
 const PenModes = {
     PEN_MODE_WRITE: 0,
@@ -37,6 +38,7 @@ const defaultBackgroundColor = "#a2a2a2";
 
 function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
 
+    const theme = useContext(ThemeContext);
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
     const [selectionPenSize, setSelectionPenSize] = useState(PenSizes.PEN_SIZE_BIG);
     const [selectionCharmap, setSelectionCharmap] = useState(Charmaps.CHARMAP_LATIN);
@@ -90,7 +92,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
     }
 
     return (
-        <div className="buttonColumn">
+        <div className="buttonColumn" style={{backgroundColor: theme.background_ternary}}>
 
             {/* ScrollButtons */}
 

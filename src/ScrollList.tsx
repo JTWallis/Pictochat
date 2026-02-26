@@ -1,7 +1,10 @@
-import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './ScrollList.css';
+import { ThemeContext } from './ThemeContext';
 
 function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
+
+    const theme = useContext(ThemeContext);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     let scrollIndex = 0;
@@ -117,8 +120,8 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
     }
 
     return (
-        <div ref={scrollContainerRef} className="scrollList">
-            <div className="scrollPadding" />
+        <div ref={scrollContainerRef} className="scrollList" style={{backgroundColor: theme.background_primary}}>
+            <div className="scrollPadding" style={{backgroundColor: theme.background_primary}} />
             {scrollListElements}
         </div>
     );
