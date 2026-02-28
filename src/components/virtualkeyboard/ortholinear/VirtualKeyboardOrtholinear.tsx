@@ -1,5 +1,5 @@
 import './VirtualKeyboardOrtholinear.css'
-import VirtualKeyboardButton from './VirtualKeyboardButton';
+import VirtualKeyboardButton from '../keyboardbutton/VirtualKeyboardButton';
 import type { CharmapBaseSingle } from '@models/charmaps/base/CharmapBaseSingle';
 import { ThemeContext } from '@contexts/ThemeContext';
 import { useContext } from 'react';

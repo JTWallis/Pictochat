@@ -7,7 +7,7 @@ import ScrollList from '@components/scrolllist/ScrollList';
 import type { Message } from '@models/Message';
 import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
 import Scrollbar from '@components/scrollbar/Scrollbar';
-import VirtualKeyboard from './VirtualKeyboard';
+import VirtualKeyboard from '@components/virtualkeyboard/VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { CharmapBase } from '@models/charmaps/base/CharmapBase';
 import type { CharmapBaseJapanese } from '@models/charmaps/base/CharmapBaseJapanese';

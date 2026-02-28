@@ -1,8 +1,8 @@
 import './VirtualKeyboard.css'
 import { useContext, useEffect } from 'react';
-import VirtualKeyboardOrtholinear from './VirtualKeyboardOrtholinear';
-import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
-import imgBorder from './assets/img_keyboard_border.png';
+import VirtualKeyboardOrtholinear from './ortholinear/VirtualKeyboardOrtholinear';
+import VirtualKeyboardStaggered from './staggered/VirtualKeyboardStaggered';
+import imgBorder from '@assets/img_keyboard_border.png';
 import { ThemeContext } from '@contexts/ThemeContext';
 
 

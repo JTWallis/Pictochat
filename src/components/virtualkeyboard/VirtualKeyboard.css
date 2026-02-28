@@ -19,7 +19,7 @@
 .keyboardMaskedContainer {
     height: 100%;
     aspect-ratio: 2.5 / 1;
-    mask-image: url('assets/img_keyboard_mask.png');
+    mask-image: url('@assets/img_keyboard_mask.png');
     mask-size: cover;
     mask-position: center;
 }
