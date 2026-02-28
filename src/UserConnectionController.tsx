@@ -3,7 +3,7 @@ import type { RoomsDto } from "./RoomsDto";
 import type { RoomDto } from "./RoomDto";
 import { stompClient } from "./StompClient";
 import type { UserConnectionDto } from "./UserConnectionDto";
-import { createMessageTextJoin, createMessageTextLeave } from "./MessageSpecialHelper";
+import { createMessageTextJoin, createMessageTextLeave } from "@utils/MessageSpecialHelper";
 
 type totalConnectCallbackType = (counts: number[]) => void;
 type roomConnectCallbackType = (connectMessageText: string, creatorUuid: string) => void;

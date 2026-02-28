@@ -21,7 +21,7 @@ import { CharmapPicto } from '@models/charmaps/implementations/CharmapPicto';
 import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
-import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
+import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
