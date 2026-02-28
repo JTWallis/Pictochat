@@ -2,7 +2,7 @@ import './VirtualKeyboardStaggered.css'
 import { useContext, useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from '@models/charmaps/base/CharmapBaseDouble';
-import type { CharRepresentation } from './CharRepresentation';
+import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { ThemeContext } from './ThemeContext';
 
 const SPECIAL_CAPS = "CAPS";

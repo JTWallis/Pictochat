@@ -1,6 +1,6 @@
 import { CharmapBase } from "./CharmapBase";
-import type { CharRepresentation } from "../../../CharRepresentation";
-import type { CharRepresentationLowerUpper } from "../../../CharRepresentationLowerUpper";
+import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
+import type { CharRepresentationLowerUpper } from "@models/charrepresentations/CharRepresentationLowerUpper";
 import { Vector2 } from "../../../Vector2";
 
 export abstract class CharmapBaseDouble extends CharmapBase {

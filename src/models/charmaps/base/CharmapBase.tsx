@@ -1,4 +1,4 @@
-import type { CharRepresentation } from "../../../CharRepresentation";
+import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 import { Vector2 } from "../../../Vector2";
 
 export abstract class CharmapBase {

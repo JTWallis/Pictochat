@@ -8,7 +8,7 @@ import type { Message } from './Message';
 import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
 import VirtualKeyboard from './VirtualKeyboard';
-import type { CharRepresentation } from './CharRepresentation';
+import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { CharmapBase } from '@models/charmaps/base/CharmapBase';
 import type { CharmapBaseJapanese } from '@models/charmaps/base/CharmapBaseJapanese';
 import { CharmapStates } from './CharmapStates';

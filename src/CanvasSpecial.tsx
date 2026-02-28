@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { CanvasSpecialFullAPI } from "./CanvasAPI";
-import type { CharRepresentation } from "./CharRepresentation";
+import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 
 interface CanvasSpecialProps {
     className: string,

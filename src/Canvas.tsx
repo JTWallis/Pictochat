@@ -7,7 +7,7 @@ import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import type { Message } from './Message';
-import type { CharRepresentation } from './CharRepresentation';
+import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import CanvasSpecial from './CanvasSpecial';
 
 const stripeCount = 4;

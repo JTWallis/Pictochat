@@ -1,4 +1,4 @@
-import type { CharRepresentation } from "./CharRepresentation";
+import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 import type { DrawCommand } from "./DrawCommand";
 import type { Vector2 } from "./Vector2";
 

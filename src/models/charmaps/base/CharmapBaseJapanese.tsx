@@ -1,5 +1,5 @@
 import { CharmapBaseSingle } from "./CharmapBaseSingle";
-import type { CharRepresentation } from "../../../CharRepresentation";
+import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 
 export abstract class CharmapBaseJapanese extends CharmapBaseSingle {
     protected representationsDakuten: Map<number, CharRepresentation> = new Map();
