@@ -1,4 +1,4 @@
-import { Vector2 } from '../../../Vector2';
+import { Vector2 } from '@models/Vector2';
 
 import aGraveLower from '@assets/CharacterMaps/Accents/img_char_a_lower_grave.png';
 import aAcuteLower from '@assets/CharacterMaps/Accents/img_char_a_lower_acute.png';

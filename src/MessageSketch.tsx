@@ -2,7 +2,7 @@ import './MessageSketch.css';
 import Canvas from "./Canvas";
 import { useContext, useState } from 'react';
 import { Message } from '@models/Message';
-import type { Vector2 } from './Vector2';
+import type { Vector2 } from '@models/Vector2';
 import type { DrawCommand } from '@models/DrawCommand';
 import type { CanvasSketchPartialAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';

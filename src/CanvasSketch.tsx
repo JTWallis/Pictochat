@@ -1,6 +1,6 @@
 import { useEffect, useImperativeHandle, useRef } from 'react';
 import './CanvasSketch.css'
-import { Vector2 } from './Vector2';
+import { Vector2 } from '@models/Vector2';
 import type { CanvasSketchFullAPI } from './CanvasAPI';
 import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
 

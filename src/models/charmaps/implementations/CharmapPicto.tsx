@@ -1,5 +1,5 @@
 import { CharmapBaseSingle } from '../base/CharmapBaseSingle';
-import { Vector2 } from '../../../Vector2';
+import { Vector2 } from '@models/Vector2';
 
 import alpha1 from '@assets/CharacterMaps/Latin/img_alpha_1.png';
 import alpha2 from '@assets/CharacterMaps/Latin/img_alpha_2.png';

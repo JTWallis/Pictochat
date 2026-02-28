@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
-import { Vector2 } from './Vector2';
+import { Vector2 } from '@models/Vector2';
 import { DrawingCommandType } from '@models/DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';

@@ -1,5 +1,5 @@
 import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
-import { Vector2 } from "../../../Vector2";
+import { Vector2 } from "@models/Vector2";
 
 export abstract class CharmapBase {
     protected rowRangeIndices: Vector2[] = [];

@@ -1,5 +1,5 @@
 import { CharmapBaseSingle } from '../base/CharmapBaseSingle';
-import { Vector2 } from '../../../Vector2';
+import { Vector2 } from '@models/Vector2';
 
 import exclamation from '@assets/CharacterMaps/Special/img_special_exclamation.png';
 import question from '@assets/CharacterMaps/Special/img_special_question.png';
