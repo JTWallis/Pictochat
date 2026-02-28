@@ -7,7 +7,7 @@ import type { DrawCommand } from '@models/DrawCommand';
 import type { CanvasSketchPartialAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import { postMessage } from './MessageController';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const INIT_HEIGHT_PERCENT = 100;
 

@@ -2,7 +2,7 @@ import './MessageDisplay.css';
 import Canvas from "./Canvas";
 import { CanvasTypes } from './CanvasAPI';
 import { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const INIT_HEIGHT_PERCENT = 50;
 

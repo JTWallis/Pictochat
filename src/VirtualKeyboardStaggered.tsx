@@ -3,7 +3,7 @@ import { useContext, useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseDouble } from '@models/charmaps/base/CharmapBaseDouble';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const SPECIAL_CAPS = "CAPS";
 const SPECIAL_SHIFT = "SHIFT";

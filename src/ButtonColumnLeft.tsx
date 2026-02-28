@@ -14,7 +14,7 @@ import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from '@enums/CharmapStates';
 import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const PenModes = {
     PEN_MODE_WRITE: 0,

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import './ScrollList.css';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 

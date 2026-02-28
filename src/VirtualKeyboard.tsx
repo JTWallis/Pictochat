@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import VirtualKeyboardOrtholinear from './VirtualKeyboardOrtholinear';
 import VirtualKeyboardStaggered from './VirtualKeyboardStaggered';
 import imgBorder from './assets/img_keyboard_border.png';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 
 function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {

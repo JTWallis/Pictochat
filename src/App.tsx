@@ -28,7 +28,7 @@ import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
 import type { MessageFetchDto } from './MessageFetchDto';
 import type { UserRegisterDto } from './UserRegisterDto';
-import { themes, type Theme, ThemeContext } from './ThemeContext'
+import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
 
 function isAlpha(char: string): boolean {
   return ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z"));

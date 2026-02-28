@@ -4,7 +4,7 @@ import './MessageDisplay.css';
 import { CanvasTypes, type CanvasSpecialPartialAPI } from './CanvasAPI';
 import type { Vector2 } from '@models/Vector2';
 import { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const INIT_HEIGHT_PERCENT = 50;
 

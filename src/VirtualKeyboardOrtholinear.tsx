@@ -1,7 +1,7 @@
 import './VirtualKeyboardOrtholinear.css'
 import VirtualKeyboardButton from './VirtualKeyboardButton';
 import type { CharmapBaseSingle } from '@models/charmaps/base/CharmapBaseSingle';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 import { useContext } from 'react';
 
 function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any) {

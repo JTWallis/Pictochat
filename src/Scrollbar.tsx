@@ -1,6 +1,6 @@
 import { useContext, useImperativeHandle, useRef, useState, type JSX } from 'react';
 import './Scrollbar.css';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext } from '@contexts/ThemeContext';
 
 const segmentColorDefault = "#8AF";
 const segmentColorSpecialDefault = "#888";
