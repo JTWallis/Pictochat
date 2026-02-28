@@ -26,8 +26,8 @@ import convertTextToCharRepresentations from '@utils/CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
-import type { MessageFetchDto } from './MessageFetchDto';
-import type { UserRegisterDto } from './UserRegisterDto';
+import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
+import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
 import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
 
 function isAlpha(char: string): boolean {

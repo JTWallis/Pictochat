@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import type { UserRegisterDto } from '../UserRegisterDto';
+import type { UserRegisterDto } from './dtos/UserRegisterDto';
 
 const url = "ws://localhost:8100/pictochat"
 

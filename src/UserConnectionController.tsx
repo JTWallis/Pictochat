@@ -1,6 +1,6 @@
 import type { IMessage } from "@stomp/stompjs";
-import type { RoomsDto } from "./RoomsDto";
-import type { RoomDto } from "./RoomDto";
+import type { RoomsDto } from "./services/dtos/RoomsDto";
+import type { RoomDto } from "./services/dtos/RoomDto";
 import { stompClient } from "./services/StompClient";
 import type { UserConnectionDto } from "./UserConnectionDto";
 import { createMessageTextJoin, createMessageTextLeave } from "@utils/MessageSpecialHelper";
