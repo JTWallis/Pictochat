@@ -1,7 +1,7 @@
 import './VirtualKeyboardStaggered.css'
 import { useContext, useImperativeHandle, useState } from 'react';
 import VirtualKeyboardButton from './VirtualKeyboardButton';
-import type { CharmapBaseDouble } from './CharmapBaseDouble';
+import type { CharmapBaseDouble } from '@models/charmaps/base/CharmapBaseDouble';
 import type { CharRepresentation } from './CharRepresentation';
 import { ThemeContext } from './ThemeContext';
 

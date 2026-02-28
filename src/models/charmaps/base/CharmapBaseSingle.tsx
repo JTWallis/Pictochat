@@ -1,6 +1,6 @@
 import { CharmapBase } from "./CharmapBase";
-import type { CharRepresentation } from "./CharRepresentation";
-import { Vector2 } from "./Vector2";
+import type { CharRepresentation } from "../../../CharRepresentation";
+import { Vector2 } from "../../../Vector2";
 
 export abstract class CharmapBaseSingle extends CharmapBase {
     protected representations: CharRepresentation[] = [];

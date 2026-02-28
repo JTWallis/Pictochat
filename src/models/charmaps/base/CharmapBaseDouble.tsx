@@ -1,7 +1,7 @@
 import { CharmapBase } from "./CharmapBase";
-import type { CharRepresentation } from "./CharRepresentation";
-import type { CharRepresentationLowerUpper } from "./CharRepresentationLowerUpper";
-import { Vector2 } from "./Vector2";
+import type { CharRepresentation } from "../../../CharRepresentation";
+import type { CharRepresentationLowerUpper } from "../../../CharRepresentationLowerUpper";
+import { Vector2 } from "../../../Vector2";
 
 export abstract class CharmapBaseDouble extends CharmapBase {
     protected representations: CharRepresentationLowerUpper[] = [];

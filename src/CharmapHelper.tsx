@@ -1,6 +1,6 @@
-import type { CharmapBase } from "./CharmapBase";
-import { CharmapBaseDouble } from "./CharmapBaseDouble";
-import { CharmapBaseSingle } from "./CharmapBaseSingle";
+import type { CharmapBase } from "@models/charmaps/base/CharmapBase";
+import { CharmapBaseDouble } from "@models/charmaps/base/CharmapBaseDouble";
+import { CharmapBaseSingle } from "@models/charmaps/base/CharmapBaseSingle";
 import type { CharRepresentation } from "./CharRepresentation";
 
 function countNonEmptySlots(arr: any[]): number {
