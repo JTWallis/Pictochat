@@ -11,7 +11,7 @@ import VirtualKeyboard from './VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { CharmapBase } from '@models/charmaps/base/CharmapBase';
 import type { CharmapBaseJapanese } from '@models/charmaps/base/CharmapBaseJapanese';
-import { CharmapStates } from './CharmapStates';
+import { CharmapStates } from '@enums/CharmapStates';
 import { CharmapLatin } from '@models/charmaps/implementations/CharmapLatin';
 import { CharmapAccent } from '@models/charmaps/implementations/CharmapAccent';
 import { CharmapJapaneseHiragana } from '@models/charmaps/implementations/CharmapJapaneseHiragana';

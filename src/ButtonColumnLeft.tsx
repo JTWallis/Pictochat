@@ -11,7 +11,7 @@ import ImageMapAccent from './assets/img_button_toolbox_charmap_accent.png';
 import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
 import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
-import { CharmapStates } from './CharmapStates';
+import { CharmapStates } from '@enums/CharmapStates';
 import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
 import { ThemeContext } from './ThemeContext';
