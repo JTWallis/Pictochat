@@ -1,7 +1,7 @@
 import './ButtonColumnRight.css';
-import ImageSend from './assets/img_button_large_send.png';
-import ImageCopy from './assets/img_button_large_copy.png';
-import ImageDiscard from './assets/img_button_large_discard.png';
+import ImageSend from '@assets/img_button_large_send.png';
+import ImageCopy from '@assets/img_button_large_copy.png';
+import ImageDiscard from '@assets/img_button_large_discard.png';
 
 function ButtonColumnRight( {canvasSketchRef}: any ) {
 
