@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { colors } from './Colors';
+import { colors } from '@enums/Colors';
 
 export type Theme = {
     background_primary: string,
