@@ -1,7 +1,7 @@
-import Canvas from './Canvas';
+import Canvas from '../../../Canvas';
 import './MessageSpecial.css';
-import './MessageDisplay.css';
-import { CanvasTypes, type CanvasSpecialPartialAPI } from './CanvasAPI';
+import '../display/MessageDisplay.css';
+import { CanvasTypes, type CanvasSpecialPartialAPI } from '../../../CanvasAPI';
 import type { Vector2 } from '@models/Vector2';
 import { useContext } from 'react';
 import { ThemeContext } from '@contexts/ThemeContext';

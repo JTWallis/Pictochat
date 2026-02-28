@@ -1,12 +1,12 @@
 import './MessageSketch.css';
-import Canvas from "./Canvas";
+import Canvas from "../../../Canvas";
 import { useContext, useState } from 'react';
 import { Message } from '@models/Message';
 import type { Vector2 } from '@models/Vector2';
 import type { DrawCommand } from '@models/DrawCommand';
-import type { CanvasSketchPartialAPI } from './CanvasAPI';
-import { CanvasTypes } from './CanvasAPI';
-import { postMessage } from './MessageController';
+import type { CanvasSketchPartialAPI } from '../../../CanvasAPI';
+import { CanvasTypes } from '../../../CanvasAPI';
+import { postMessage } from '../../../MessageController';
 import { ThemeContext } from '@contexts/ThemeContext';
 
 const INIT_HEIGHT_PERCENT = 100;
