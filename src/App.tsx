@@ -6,7 +6,7 @@ import type { Props } from './Props';
 import ScrollList from './ScrollList';
 import type { Message } from '@models/Message';
 import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
-import Scrollbar from './Scrollbar';
+import Scrollbar from '@components/scrollbar/Scrollbar';
 import VirtualKeyboard from './VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { CharmapBase } from '@models/charmaps/base/CharmapBase';
