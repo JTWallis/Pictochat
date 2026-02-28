@@ -1,4 +1,4 @@
-import { Vector2 } from "./Vector2";
+import { Vector2 } from "../Vector2";
 
 export const DrawingCommandType = {
     LINE_STROKE: 0,

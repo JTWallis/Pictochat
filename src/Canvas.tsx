@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from './Vector2';
-import { DrawingCommandType } from './DrawCommand';
+import { DrawingCommandType } from '@models/DrawCommand';
 import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';

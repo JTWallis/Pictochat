@@ -1,4 +1,4 @@
-import { DrawCommand } from "./DrawCommand";
+import { DrawCommand } from "@models/DrawCommand";
 
 export class MessageDto {
     public commands: DrawCommand[];

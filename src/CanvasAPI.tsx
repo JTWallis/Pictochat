@@ -1,5 +1,5 @@
 import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
-import type { DrawCommand } from "./DrawCommand";
+import type { DrawCommand } from "@models/DrawCommand";
 import type { Vector2 } from "./Vector2";
 
 export const CanvasTypes = {
