@@ -1,8 +1,8 @@
 import type { IMessage } from "@stomp/stompjs";
 import { Message } from "@models/Message";
-import { MessageDto } from "./services/dtos/MessageDto";
-import { clientEstablished, stompClient } from "./services/StompClient";
-import { MessageFetchDto } from "./services/dtos/MessageFetchDto";
+import { MessageDto } from "../dtos/MessageDto";
+import { clientEstablished, stompClient } from "../StompClient";
+import { MessageFetchDto } from "../dtos/MessageFetchDto";
 
 const listenEndpoint = "/topic/room/a/messages";
 

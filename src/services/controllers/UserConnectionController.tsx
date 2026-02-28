@@ -1,8 +1,8 @@
 import type { IMessage } from "@stomp/stompjs";
-import type { RoomsDto } from "./services/dtos/RoomsDto";
-import type { RoomDto } from "./services/dtos/RoomDto";
-import { stompClient } from "./services/StompClient";
-import type { UserConnectionDto } from "./UserConnectionDto";
+import type { RoomsDto } from "../dtos/RoomsDto";
+import type { RoomDto } from "../dtos/RoomDto";
+import { stompClient } from "../StompClient";
+import type { UserConnectionDto } from "../dtos/UserConnectionDto";
 import { createMessageTextJoin, createMessageTextLeave } from "@utils/MessageSpecialHelper";
 
 type totalConnectCallbackType = (counts: number[]) => void;

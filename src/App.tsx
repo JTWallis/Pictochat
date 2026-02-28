@@ -24,8 +24,8 @@ import MessageSpecial from '@components/message/special/MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
-import { subscribeMessages } from './MessageController';
-import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
+import { subscribeMessages } from '@services/controllers/MessageController';
+import { subscribeTotalConnections, subscribeRoomConnections } from '@services/controllers/UserConnectionController';
 import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
 import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
 import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
