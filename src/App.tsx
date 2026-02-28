@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import ScrollList from './ScrollList';
 import type { Message } from '@models/Message';
-import ButtonColumnRight from './ButtonColumnRight';
+import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
 import Scrollbar from './Scrollbar';
 import VirtualKeyboard from './VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
