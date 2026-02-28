@@ -1,5 +1,5 @@
 import './App.css'
-import ButtonColumnLeft from './ButtonColumnLeft';
+import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
 import FloatingKey from './FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';

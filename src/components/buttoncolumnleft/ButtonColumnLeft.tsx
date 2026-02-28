@@ -1,16 +1,16 @@
 import './ButtonColumnLeft.css'
 
-import ImgScrollUp from './assets/img_button_toolbox_scroll_up.png';
-import ImgScrollDown from './assets/img_button_toolbox_scroll_down.png';
-import ImagePenDraw from './assets/img_button_toolbox_pen_draw.png';
-import ImagePenErase from './assets/img_button_toolbox_pen_erase.png';
-import ImagePenBig from './assets/img_button_toolbox_pen_big.png';
-import ImagePenSmall from './assets/img_button_toolbox_pen_small.png';
-import ImageMapLatin from './assets/img_button_toolbox_charmap_latin.png';
-import ImageMapAccent from './assets/img_button_toolbox_charmap_accent.png';
-import ImageMapJapan from './assets/img_button_toolbox_charmap_japanese.png';
-import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
-import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
+import ImgScrollUp from '@assets/img_button_toolbox_scroll_up.png';
+import ImgScrollDown from '@assets/img_button_toolbox_scroll_down.png';
+import ImagePenDraw from '@assets/img_button_toolbox_pen_draw.png';
+import ImagePenErase from '@assets/img_button_toolbox_pen_erase.png';
+import ImagePenBig from '@assets/img_button_toolbox_pen_big.png';
+import ImagePenSmall from '@assets/img_button_toolbox_pen_small.png';
+import ImageMapLatin from '@assets/img_button_toolbox_charmap_latin.png';
+import ImageMapAccent from '@assets/img_button_toolbox_charmap_accent.png';
+import ImageMapJapan from '@assets/img_button_toolbox_charmap_japanese.png';
+import ImageMapSpecial from '@assets/img_button_toolbox_charmap_special.png';
+import ImageMapPicto from '@assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from '@enums/CharmapStates';
 import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
