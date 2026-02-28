@@ -2,7 +2,6 @@ import './App.css'
 import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
 import FloatingKey from '@components/floatingkey/FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
-import type { Props } from './Props';
 import ScrollList from '@components/scrolllist/ScrollList';
 import type { Message } from '@models/Message';
 import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
