@@ -22,7 +22,7 @@ import MessageSketch from './MessageSketch';
 import MessageDisplay from './MessageDisplay';
 import MessageSpecial from './MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
-import convertTextToCharRepresentations from './CharmapHelper';
+import convertTextToCharRepresentations from '@utils/CharmapHelper';
 import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
