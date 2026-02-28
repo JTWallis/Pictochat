@@ -1,6 +1,6 @@
 import './MessageDisplay.css';
-import Canvas from "../../../Canvas";
-import { CanvasTypes } from '../../../CanvasAPI';
+import Canvas from "../canvas/Canvas";
+import { CanvasTypes } from '../canvas/CanvasAPI';
 import { useContext } from 'react';
 import { ThemeContext } from '@contexts/ThemeContext';
 
