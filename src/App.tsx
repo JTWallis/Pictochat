@@ -1,6 +1,6 @@
 import './App.css'
 import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
-import FloatingKey from './FloatingKey';
+import FloatingKey from '@components/floatingkey/FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import ScrollList from './ScrollList';
