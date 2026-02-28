@@ -4,7 +4,7 @@ import FloatingKey from './FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import type { Props } from './Props';
 import ScrollList from './ScrollList';
-import type { Message } from './Message';
+import type { Message } from '@models/Message';
 import ButtonColumnRight from './ButtonColumnRight';
 import Scrollbar from './Scrollbar';
 import VirtualKeyboard from './VirtualKeyboard';

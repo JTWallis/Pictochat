@@ -1,5 +1,5 @@
 import { MessageDto } from "./MessageDto";
-import { Message } from "./Message";
+import { Message } from "@models/Message";
 
 export class MessageFetchDto extends MessageDto {
     public creatorUuid: string;

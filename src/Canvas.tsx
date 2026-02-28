@@ -6,7 +6,7 @@ import CanvasSketch from './CanvasSketch';
 import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
-import type { Message } from './Message';
+import type { Message } from '@models/Message';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import CanvasSpecial from './CanvasSpecial';
 

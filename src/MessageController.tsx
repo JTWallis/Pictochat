@@ -1,5 +1,5 @@
 import type { IMessage } from "@stomp/stompjs";
-import { Message } from "./Message";
+import { Message } from "@models/Message";
 import { MessageDto } from "./MessageDto";
 import { clientEstablished, stompClient } from "./StompClient";
 import { MessageFetchDto } from "./MessageFetchDto";

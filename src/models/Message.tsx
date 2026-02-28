@@ -1,5 +1,5 @@
-import { DrawingCommandType, DrawCommand } from "./DrawCommand";
-import type { Vector2 } from "./Vector2";
+import { DrawingCommandType, DrawCommand } from "../DrawCommand";
+import type { Vector2 } from "../Vector2";
 
 export class Message {
 

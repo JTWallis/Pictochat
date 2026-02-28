@@ -1,4 +1,4 @@
-import { Message } from "./Message";
+import { Message } from "@models/Message";
 
 export function createSpecialMesssage(creator: string): Message {
     return new Message([], creator, true);
