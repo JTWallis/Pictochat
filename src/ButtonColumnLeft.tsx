@@ -13,7 +13,7 @@ import ImageMapSpecial from './assets/img_button_toolbox_charmap_special.png';
 import ImageMapPicto from './assets/img_button_toolbox_charmap_pictochat.png';
 import { CharmapStates } from './CharmapStates';
 import { useContext, useEffect, useState, type CSSProperties } from 'react';
-import { getTickRainbowHex, incrementTickRainbow } from './RainbowHelper';
+import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
 import { ThemeContext } from './ThemeContext';
 
 const PenModes = {
