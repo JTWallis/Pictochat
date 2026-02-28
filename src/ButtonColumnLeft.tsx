@@ -50,7 +50,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
 
     useEffect(() => {
         if(selectionPenModeRainbow) {
-            setRainbowInterval(() => setInterval(tickRainbow, 200));
+            setRainbowInterval(() => window.setInterval(tickRainbow, 200));
         } else {
             if(rainbowInterval >= 0) clearInterval(rainbowInterval);
             setRainbowInterval(-1);
