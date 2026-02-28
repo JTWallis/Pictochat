@@ -1,0 +1,82 @@
+
+
+.marginTop {
+    margin-top: 5%;
+}
+
+.marginBot {
+    margin-bottom: 5%;
+}
+
+.borderTop {
+    border-top: 3px solid black;
+}
+
+.borderBot {
+    border-bottom: 3px solid black;
+}
+
+.borderDotted {
+    width: 100%;
+    border-top: none;
+    border-bottom: 2px dotted black;
+}
+
+.borderInvisible {
+    width: 100%;
+    border: 2px none black;
+}
+
+.pixelated {
+    image-rendering: pixelated;
+}
+
+.button {
+    width: 100%;
+    height: 100%;
+    grid-area: 1 / 1;
+}
+
+.button:hover {
+    cursor: default;
+}
+
+.buttonContainer {
+    display: grid;
+    height: 8%;
+    aspect-ratio: 1 / 1;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttonContainer:hover {
+    filter: brightness(0.8);
+    cursor: default;
+}
+
+.maskRounded {
+    --mask-rounded: url('@assets/img_button_toolbox_background_rounded.png') no-repeat center;
+    -webkit-mask: var(--mask-rounded);
+    mask: var(--mask-rounded);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.maskFull {
+    --mask-full: url('@assets/img_button_toolbox_background_full.png') no-repeat center;
+    -webkit-mask: var(--mask-full);
+    mask: var(--mask-full);
+    -webkit-mask-size: cover;
+    mask-size: cover;
+}
+
+.roundTopLeft {
+    border-top-left-radius: 4px;
+}
+
+.buttonColumn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4px;
+}

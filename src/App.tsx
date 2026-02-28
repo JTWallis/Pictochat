@@ -1,34 +1,33 @@
 import './App.css'
-import ButtonColumnLeft from './ButtonColumnLeft';
-import FloatingKey from './FloatingKey';
+import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
+import FloatingKey from '@components/floatingkey/FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
-import type { Props } from './Props';
-import ScrollList from './ScrollList';
-import type { Message } from './Message';
-import ButtonColumnRight from './ButtonColumnRight';
-import Scrollbar from './Scrollbar';
-import VirtualKeyboard from './VirtualKeyboard';
-import type { CharRepresentation } from './CharRepresentation';
-import { CharmapBase } from './CharmapBase';
-import type { CharmapBaseJapanese } from './CharmapBaseJapanese';
-import { CharmapStates } from './CharmapStates';
-import { CharmapLatin } from './CharmapLatin';
-import { CharmapAccent } from './CharmapAccent';
-import { CharmapJapaneseHiragana } from './CharmapJapaneseHiragana';
-import { CharmapJapaneseKatakana } from './CharmapJapaneseKatakana';
-import { CharmapSpecial } from './CharmapSpecial';
-import { CharmapPicto } from './CharmapPicto';
-import MessageSketch from './MessageSketch';
-import MessageDisplay from './MessageDisplay';
-import MessageSpecial from './MessageSpecial';
-import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from './MessageSpecialHelper';
-import convertTextToCharRepresentations from './CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
-import { subscribeMessages } from './MessageController';
-import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
-import type { MessageFetchDto } from './MessageFetchDto';
-import type { UserRegisterDto } from './UserRegisterDto';
-import { themes, type Theme, ThemeContext } from './ThemeContext'
+import ScrollList from '@components/scrolllist/ScrollList';
+import type { Message } from '@models/Message';
+import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
+import Scrollbar from '@components/scrollbar/Scrollbar';
+import VirtualKeyboard from '@components/virtualkeyboard/VirtualKeyboard';
+import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
+import { CharmapBase } from '@models/charmaps/base/CharmapBase';
+import type { CharmapBaseJapanese } from '@models/charmaps/base/CharmapBaseJapanese';
+import { CharmapStates } from '@enums/CharmapStates';
+import { CharmapLatin } from '@models/charmaps/implementations/CharmapLatin';
+import { CharmapAccent } from '@models/charmaps/implementations/CharmapAccent';
+import { CharmapJapaneseHiragana } from '@models/charmaps/implementations/CharmapJapaneseHiragana';
+import { CharmapJapaneseKatakana } from '@models/charmaps/implementations/CharmapJapaneseKatakana';
+import { CharmapSpecial } from '@models/charmaps/implementations/CharmapSpecial';
+import { CharmapPicto } from '@models/charmaps/implementations/CharmapPicto';
+import MessageSketch from '@components/message/sketch/MessageSketch';
+import MessageDisplay from '@components/message/display/MessageDisplay';
+import MessageSpecial from '@components/message/special/MessageSpecial';
+import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
+import convertTextToCharRepresentations from '@utils/CharmapHelper';
+import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
+import { subscribeMessages } from '@services/controllers/MessageController';
+import { subscribeTotalConnections, subscribeRoomConnections } from '@services/controllers/UserConnectionController';
+import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
+import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
+import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
 
 function isAlpha(char: string): boolean {
   return ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z"));

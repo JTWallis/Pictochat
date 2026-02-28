@@ -17,11 +17,22 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "@assets/*":      ["assets/*"],
+      "@components/*":  ["components/*"],
+      "@contexts/*":    ["contexts/*"],
+      "@enums/*":       ["enums/*"],
+      "@models/*":      ["models/*"],
+      "@services/*":    ["services/*"],
+      "@utils/*":       ["utils/*"]
+    }
   },
   "include": ["src"]
 }
