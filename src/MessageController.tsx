@@ -1,7 +1,7 @@
 import type { IMessage } from "@stomp/stompjs";
 import { Message } from "@models/Message";
 import { MessageDto } from "./MessageDto";
-import { clientEstablished, stompClient } from "./StompClient";
+import { clientEstablished, stompClient } from "./services/StompClient";
 import { MessageFetchDto } from "./MessageFetchDto";
 
 const listenEndpoint = "/topic/room/a/messages";

@@ -23,7 +23,7 @@ import MessageDisplay from '@components/message/display/MessageDisplay';
 import MessageSpecial from '@components/message/special/MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply } from './StompClient';
+import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
 import { subscribeMessages } from './MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from './UserConnectionController';
 import type { MessageFetchDto } from './MessageFetchDto';
