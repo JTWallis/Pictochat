@@ -83,8 +83,7 @@ button {
 }
 
 .buttonColumnRightContainer {
-    background-color: blueviolet;
-    width: 7.5%;
+    aspect-ratio: 1 / 2.5;
 }
 
 .keyboardRow {
