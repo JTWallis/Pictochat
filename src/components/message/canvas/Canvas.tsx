@@ -431,6 +431,16 @@ function Canvas(props: CanvasProps) {
         pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
     }
 
+    function pushWhitespace() {
+        if (!props.sketchProperties) {
+            console.log("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
+            return;
+        }
+
+        incrementCanvasTextPosX();
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, canvasTextPosRef.current, canvasTextPosRef.current, "SPACE", 0.0, "");
+    }
+
     function getCanvasSubComponent() {
         const className = "canvasTypeContainer";
 
