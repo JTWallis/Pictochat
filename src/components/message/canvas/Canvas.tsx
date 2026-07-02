@@ -438,7 +438,8 @@ function Canvas(props: CanvasProps) {
         }
 
         incrementCanvasTextPosX();
-        pushMessageCommand(DrawingCommandType.FLOATING_KEY, canvasTextPosRef.current, canvasTextPosRef.current, "SPACE", 0.0, "");
+        const normalized = normalizeCanvasPos(canvasTextPosRef.current);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalized, normalized, "SPACE", 0.0, "");
     }
 
     function getCanvasSubComponent() {
