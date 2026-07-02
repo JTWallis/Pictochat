@@ -22,6 +22,7 @@ export interface CanvasSketchFullAPI extends CanvasSketchPartialAPI  {
     drawPushText: (pos: Vector2, value: string) => void;
     drawPushImage: (img: HTMLImageElement, pos: Vector2, colorFill: string) => void;
     pushWhitespace: () => void;
+    pushNewline: () => void;
     createAppendFloatingKeyImage: (src: string, value: string, colorFill: string) => Promise<void>;
     reconstructMessage: () => void;
     clearCanvas: () => void;

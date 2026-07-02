@@ -190,6 +190,7 @@ function Canvas(props: CanvasProps) {
             drawPushText,
             drawPushImage,
             pushWhitespace,
+            pushNewline,
             createAppendFloatingKeyImage,
             reconstructMessage,
             clearCanvas,
