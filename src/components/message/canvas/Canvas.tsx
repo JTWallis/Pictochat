@@ -454,6 +454,18 @@ function Canvas(props: CanvasProps) {
         pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalized, normalized, "", 0.0, "");
     }
 
+    function pushNewline() {
+        if (!props.sketchProperties) {
+            console.error("ERROR: Unhandled case of calling pushNewline function with no sketchProperties!");
+            return;
+        }
+
+        const pos = getNewlinePos();
+        setCanvasTextPos(pos);
+        const normalized = normalizeCanvasPos(pos);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalized, normalized, "", 0.0, "");
+    }
+
     function getCanvasSubComponent() {
         const className = "canvasTypeContainer";
 
