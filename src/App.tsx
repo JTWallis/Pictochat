@@ -195,6 +195,7 @@ function App() {
     } else {
       switch (key.toLowerCase()) {
         case "enter":
+          setCanvasText(prev => prev + "\n");
           break;
         case "backspace":
         case "back":
