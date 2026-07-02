@@ -247,12 +247,11 @@ function Canvas(props: CanvasProps) {
 
     function incrementCanvasTextPosX(incrementFrom?: Vector2) {
         const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
-        const pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
+        let pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
         pos.x += buttonWidth;
 
         if (pos.x >= maxWidth) {
-            pos.x = canvasTextPosXOffset;
-            pos.y += getCanvasHeight() / (stripeCount + 1);
+            pos = getNewlinePos();
         }
 
         setCanvasTextPos(pos);
