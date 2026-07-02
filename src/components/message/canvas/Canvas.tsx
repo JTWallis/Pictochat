@@ -433,7 +433,7 @@ function Canvas(props: CanvasProps) {
 
     function pushWhitespace() {
         if (!props.sketchProperties) {
-            console.log("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
             return;
         }
 
