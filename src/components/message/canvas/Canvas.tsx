@@ -134,6 +134,10 @@ function Canvas(props: CanvasProps) {
         return canvasRef.current?.width!;
     }
 
+    function getCanvasHeight(): number {
+        return canvasRef.current?.height!;
+    }
+
     function getCanvasContext(): CanvasRenderingContext2D | null | undefined {
         return canvasRef?.current?.getContext("2d");
     }
@@ -235,7 +239,7 @@ function Canvas(props: CanvasProps) {
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosRef.current.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            pos.y += getCanvasHeight() / (stripeCount + 1);
         }
 
         setCanvasTextPos(pos);
@@ -314,8 +318,7 @@ function Canvas(props: CanvasProps) {
 
     function clearCanvas() {
         const context = getCanvasContext();
-        const height = canvasRef.current?.height!;
-        context?.clearRect(0, 0, getCanvasWidth(), height);
+        context?.clearRect(0, 0, getCanvasWidth(), getCanvasHeight());
     }
 
     async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
