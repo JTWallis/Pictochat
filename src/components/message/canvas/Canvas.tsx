@@ -318,8 +318,7 @@ function Canvas(props: CanvasProps) {
 
     function clearCanvas() {
         const context = getCanvasContext();
-        const height = canvasRef.current?.height!;
-        context?.clearRect(0, 0, getCanvasWidth(), height);
+        context?.clearRect(0, 0, getCanvasWidth(), getCanvasHeight());
     }
 
     async function createAppendFloatingKeyImage(src: string, value: string, colorFill: string) {
