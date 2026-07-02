@@ -102,10 +102,7 @@ function Canvas(props: CanvasProps) {
         if (props.sketchProperties) {
             const lastTextCommand = props.sketchProperties.api.getLastMessageText();
             if (lastTextCommand) {
-                const width = canvasContainerRef.current?.clientWidth!;
-                const x = lastTextCommand.getStartPos().x * width;
-                const y = (lastTextCommand.getStartPos().y + lastTextCommand.getEndPos().y) / 2 * height;
-                const pos = new Vector2(x, y);
+                const pos = unNormalizePos(lastTextCommand.getStartPos());
                 incrementCanvasTextPosX(pos);
                 return;
             }

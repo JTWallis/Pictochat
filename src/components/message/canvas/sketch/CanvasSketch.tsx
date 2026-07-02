@@ -173,9 +173,6 @@ function CanvasSketch(props: CanvasSketchProps) {
             if (!command) return;
             if (command.getValue().length !== 1) return;
 
-            const pos = unNormalizePos(command.getStartPos());
-            props.api.setCanvasTextPos(pos);
-
             props.api.clearCanvas();
             props.api.reconstructMessage();
         }
