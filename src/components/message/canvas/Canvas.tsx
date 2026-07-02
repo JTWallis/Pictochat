@@ -134,6 +134,10 @@ function Canvas(props: CanvasProps) {
         return canvasRef.current?.width!;
     }
 
+    function getCanvasHeight(): number {
+        return canvasRef.current?.height!;
+    }
+
     function getCanvasContext(): CanvasRenderingContext2D | null | undefined {
         return canvasRef?.current?.getContext("2d");
     }
