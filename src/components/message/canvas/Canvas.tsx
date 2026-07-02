@@ -239,7 +239,7 @@ function Canvas(props: CanvasProps) {
 
         if (pos.x >= maxWidth) {
             pos.x = canvasTextPosXOffset;
-            pos.y = canvasTextPosRef.current.y + canvasContainerRef?.current?.clientHeight! / (stripeCount + 1);
+            pos.y += getCanvasHeight() / (stripeCount + 1);
         }
 
         setCanvasTextPos(pos);
