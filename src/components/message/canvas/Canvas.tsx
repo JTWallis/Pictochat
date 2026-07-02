@@ -14,7 +14,7 @@ const stripeCount = 4;
 const lineCharSize = 1 / 24;
 const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above a stripe will be drawn cut off.
 const canvasTextPosXOffset = 5;
-const canvasDisplayMarginPx = 2;
+const canvasDisplayMarginPx = 16;
 
 interface CanvasSketchProperties {
     canvasText: string,
@@ -482,7 +482,7 @@ function Canvas(props: CanvasProps) {
             display: "flex",
             height: `${containerHeightPercent}%`,
             aspectRatio: "16 / 9",
-            margin: `${props.canvasType === CanvasTypes.CANVAS_SKETCH ? 0 : canvasDisplayMarginPx}px auto`,
+            margin: `${props.canvasType === CanvasTypes.CANVAS_SKETCH ? 0 : canvasDisplayMarginPx}px auto 0 auto`,
         }}
         >
             <div className="canvasContainer">
