@@ -142,6 +142,17 @@ function Canvas(props: CanvasProps) {
         return canvasRef?.current?.getContext("2d");
     }
 
+    /**
+     * @param incrementFromY Unnormalized y-pos to increment the line from. If null, uses the current canvasTextPosY
+     * @returns Unnormalized position with x set to line-start and y set to an incremented line-height
+     */
+    function getNewlinePos(incrementFromY?: number): Vector2 {
+        const x = canvasTextPosXOffset;
+        let y = incrementFromY ? incrementFromY : canvasTextPosRef.current.y;
+        y += getCanvasHeight() / (stripeCount + 1);
+        return new Vector2(x, y);
+    }
+
     function unNormalizePos(pos: Vector2): Vector2 {
         const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
         return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
