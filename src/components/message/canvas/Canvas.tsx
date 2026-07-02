@@ -142,6 +142,17 @@ function Canvas(props: CanvasProps) {
         return canvasRef?.current?.getContext("2d");
     }
 
+    /**
+     * @param incrementFromY Unnormalized y-pos to increment the line from. If null, uses the current canvasTextPosY
+     * @returns Unnormalized position with x set to line-start and y set to an incremented line-height
+     */
+    function getNewlinePos(incrementFromY?: number): Vector2 {
+        const x = canvasTextPosXOffset;
+        let y = incrementFromY ? incrementFromY : canvasTextPosRef.current.y;
+        y += getCanvasHeight() / (stripeCount + 1);
+        return new Vector2(x, y);
+    }
+
     function unNormalizePos(pos: Vector2): Vector2 {
         const height = originalCanvasHeightRef.current < 0 ? canvasSize.y : originalCanvasHeightRef.current;
         return new Vector2(pos.x * getCanvasWidth(), pos.y * height);
@@ -189,6 +200,8 @@ function Canvas(props: CanvasProps) {
             drawPushStroke,
             drawPushText,
             drawPushImage,
+            pushWhitespace,
+            pushNewline,
             createAppendFloatingKeyImage,
             reconstructMessage,
             clearCanvas,
@@ -234,12 +247,11 @@ function Canvas(props: CanvasProps) {
 
     function incrementCanvasTextPosX(incrementFrom?: Vector2) {
         const maxWidth = canvasContainerRef.current?.clientWidth! - canvasTextPosXOffset;
-        const pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
+        let pos = incrementFrom ? incrementFrom : canvasTextPosRef.current;
         pos.x += buttonWidth;
 
         if (pos.x >= maxWidth) {
-            pos.x = canvasTextPosXOffset;
-            pos.y += getCanvasHeight() / (stripeCount + 1);
+            pos = getNewlinePos();
         }
 
         setCanvasTextPos(pos);
@@ -428,6 +440,29 @@ function Canvas(props: CanvasProps) {
         const normalizedEndPos = normalizeCanvasPos(new Vector2(pos.x + img.width, pos.y + img.height));
         const value = img.alt.length > 0 ? img.alt : img.src;
         pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalizedStartPos, normalizedEndPos, value, 0.0, colorFill);
+    }
+
+    function pushWhitespace() {
+        if (!props.sketchProperties) {
+            console.error("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
+            return;
+        }
+
+        incrementCanvasTextPosX();
+        const normalized = normalizeCanvasPos(canvasTextPosRef.current);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalized, normalized, "", 0.0, "");
+    }
+
+    function pushNewline() {
+        if (!props.sketchProperties) {
+            console.error("ERROR: Unhandled case of calling pushNewline function with no sketchProperties!");
+            return;
+        }
+
+        const pos = getNewlinePos();
+        setCanvasTextPos(pos);
+        const normalized = normalizeCanvasPos(pos);
+        pushMessageCommand(DrawingCommandType.FLOATING_KEY, normalized, normalized, "", 0.0, "");
     }
 
     function getCanvasSubComponent() {
