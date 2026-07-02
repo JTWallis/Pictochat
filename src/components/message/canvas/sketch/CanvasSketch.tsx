@@ -175,6 +175,8 @@ function CanvasSketch(props: CanvasSketchProps) {
 
             props.api.clearCanvas();
             props.api.reconstructMessage();
+        } else if(value === "\n") {
+            props.api.pushNewline();
         } else if(value === " ") {
             props.api.pushWhitespace();
         }
