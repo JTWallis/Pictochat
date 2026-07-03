@@ -29,22 +29,14 @@ import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
 import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
 import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
 
-function isAlpha(char: string): boolean {
-  return ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z"));
-}
-
-function isNumeric(char: string): boolean {
-  return char >= "0" && char <= "9";
-}
-
-function isSpecialSupported(char: string): boolean {
-  const supported = [",", ".", "/", ";", "´", "[", "]", " "];
-  return supported.includes(char);
-}
-
-function isKeyValidChar(char: string) {
-  return char.length === 1 &&
-    (isAlpha(char) || isNumeric(char) || isSpecialSupported(char));
+function isKeySpecial(key: string) {
+  key = key.toLowerCase();
+  return key.length > 1 && (
+    key === "enter" ||
+    key === "backspace" ||
+    key === "back" ||
+    key === "space"
+  );
 }
 
 const charmapLatin = new CharmapLatin();
@@ -187,7 +179,7 @@ function App() {
   }
 
   function handleKeyDown(key: string) {
-    if (isKeyValidChar(key)) {
+    if (!isKeySpecial(key)) {
       setCanvasText(prev => prev + key);
       const charRep = findCharRepFromValue(key);
       if(!charRep) return;
