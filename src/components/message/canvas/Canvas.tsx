@@ -199,7 +199,6 @@ function Canvas(props: CanvasProps) {
         return {
             ...props.sketchProperties!.api,
             drawPushStroke,
-            drawPushText,
             drawPushImage,
             pushWhitespace,
             pushNewline,
@@ -417,17 +416,6 @@ function Canvas(props: CanvasProps) {
         const drawDot = posSrc.equals(posDst);
         drawStroke(posSrc, posDst, drawDot, penSize, penColor);
         pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
-    }
-
-    function drawPushText(pos: Vector2, value: string) {
-        if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
-            return;
-        }
-
-        drawText(pos, value);
-        const normalizedPos = normalizeCanvasPos(pos);
-        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
     }
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
