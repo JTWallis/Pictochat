@@ -28,7 +28,7 @@ import { subscribeTotalConnections, subscribeRoomConnections } from '@services/c
 import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
 import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
 import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
-import type { CanvasSketchHandle } from '@components/message/canvas/sketch/CanvasSketch';
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 import type { VirtualKeyboardStaggeredHandle } from '@components/virtualkeyboard/staggered/VirtualKeyboardStaggered';
 
 function isKeySpecial(key: string) {
