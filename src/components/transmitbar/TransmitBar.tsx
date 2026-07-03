@@ -2,7 +2,7 @@ import './TransmitBar.css';
 import ImageSend from '@assets/img_button_large_send.png';
 import ImageCopy from '@assets/img_button_large_copy.png';
 import ImageDiscard from '@assets/img_button_large_discard.png';
-import type { CanvasSketchHandle } from '@components/message/canvas/sketch/CanvasSketch';
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 
 type TransmitBarProps = {
     canvasSketchRef: React.RefObject<CanvasSketchHandle | null>;

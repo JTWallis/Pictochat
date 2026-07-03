@@ -1,4 +1,4 @@
-import type { CanvasSketchHandle } from '@components/message/canvas/sketch/CanvasSketch';
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 import './FloatingKey.css'
 import { useImperativeHandle, useRef, useState } from "react";
 

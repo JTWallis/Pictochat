@@ -8,7 +8,7 @@ import { CanvasTypes } from './canvas/CanvasAPI';
 import { postMessage } from '@services/controllers/MessageController';
 import { ThemeContext } from '@contexts/ThemeContext';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
-import type { CanvasSketchHandle } from '../canvas/sketch/CanvasSketch';
+import type { CanvasSketchHandle } from './canvas/CanvasSketch';
 import type { FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 
 const INIT_HEIGHT_PERCENT = 100;

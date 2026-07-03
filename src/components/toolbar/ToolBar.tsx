@@ -16,7 +16,7 @@ import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
 import { ThemeContext } from '@contexts/ThemeContext';
 import type { ScrollListHandle } from '@components/scrolllist/ScrollList';
-import type { CanvasSketchHandle } from '@components/message/canvas/sketch/CanvasSketch';
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 
 const PenModes = {
     PEN_MODE_WRITE: 0,
