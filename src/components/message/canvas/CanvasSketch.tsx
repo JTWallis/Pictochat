@@ -31,6 +31,13 @@ export type CanvasSketchHandle = {
     replaceLastTextValue: (newVal: string) => void;
 }
 
+/**
+ * A CanvasDisplay is responsible for sketching-related functions to construct a {@link Message}.
+ * It decides what to do with mouse-strokes, floating-keys and text-changes,
+ * and holds states about the pen-mode that can be changed via the handle functions.
+ * Additionally, the Message can be discarded, copy and merge another Message onto it and
+ * finally send the currently constructed Message.
+ */
 function CanvasSketch(props: CanvasSketchProps) {
 
     let mouseDown = false;

@@ -16,6 +16,16 @@ export type MessageSpecialProps = {
     convertTextToCharReps: (text: string) => CharRepresentation[];
 }
 
+/**
+ * A MessageSpecial is an abstraction-wrapper between the App and a {@link CanvasSpecial}.
+ * It delegates the props and preset configurations to the {@link Canvas}.
+ * 
+ * Ultimately it is responsible for constructing and displaying a special {@link Message}
+ * from a message-string, by pushing multiple {@link DrawCommand}.
+ * The Message instance still belongs to the caller.
+ * It offers no sketching-capabilites, resizes itself to the minimum height-steps,
+ * and paints the background-color black.
+ */
 function MessageSpecial(props: MessageSpecialProps) {
 
     const api: CanvasSpecialPartialAPI = {

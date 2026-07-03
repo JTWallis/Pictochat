@@ -13,6 +13,11 @@ const UserConnectionTypes = {
     DISCONNECT: "DISCONNECT"
 }
 
+/**
+ * Triggers the callback, whenever a new user has joined any room.
+ * Useful for displaying different chatroom user-counts in one page.
+ * @param onReceivedTotalConnectionsCallback Callback, receiving an array of user-counts per room
+ */
 export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (counts: number[]) => void) {
     stompClient.subscribe("/topic/connections", (e: IMessage) => {
         console.log("New room subscription!", e.body);
@@ -20,6 +25,11 @@ export function subscribeTotalConnections(onReceivedTotalConnectionsCallback: (c
     });
 }
 
+/**
+ * Joins a room and triggers the callback, when a new user has joined/left this room.
+ * @param room The supported room to join. Should be a single character.
+ * @param onReceivedRoomConnectionCallback Callback, receiving a connect/disconnect message with the message-creator's uuid
+ */
 export function subscribeRoomConnections(room: string, onReceivedRoomConnectionCallback: roomConnectCallbackType) {
     console.log("Subscribing RoomConnections");
     stompClient.subscribe("/topic/room/a/connections", (e: IMessage) => {

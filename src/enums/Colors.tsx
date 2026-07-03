@@ -1,3 +1,6 @@
+/**
+ * Preset colors that provide a uniform theme across the app.
+ */
 export const colors = {
     white: "#FFFFFF",
     black: "#000000",

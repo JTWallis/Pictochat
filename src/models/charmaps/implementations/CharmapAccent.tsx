@@ -64,6 +64,11 @@ import enter from '@assets/CharacterMaps/Misc/img_misc_enter_vertical.png';
 import space from '@assets/CharacterMaps/Misc/img_misc_space_small.png';
 import { CharmapBaseSingle } from '../base/CharmapBaseSingle';
 
+/**
+ * Implementation of a {@link CharmapBaseSingle},
+ * that initializes the set of representations with
+ * a pair of accented encoding to sprite.
+ */
 export class CharmapAccent extends CharmapBaseSingle {
 
     constructor() {

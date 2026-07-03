@@ -43,6 +43,14 @@ type CanvasProps = {
     specialProperties?: CanvasSpecialProperties
 }
 
+/**
+ * A Canvas in the context of this app represents an HtmlCanvas element,
+ * that is wrapped within a grid, along another Canvas*-subcomponent
+ * ({@link CanvasSketch}, {@link CanvasDisplay}, {@link CanvasSpecial}),
+ * as well as additional styling elements.
+ * This component is responsible for drawing a {@link Message}, displaying the username,
+ * exposing functions for delegation to its subcomponents and other styling functions (e.g. resizing itself).
+ */
 function Canvas(props: CanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);

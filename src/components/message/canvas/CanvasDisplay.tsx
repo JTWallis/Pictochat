@@ -6,6 +6,19 @@ type CanvasDisplayProps = {
     api: CanvasDisplayAPI
 }
 
+/**
+ * A CanvasDisplay is responsible for displaying non-special messages,
+ * essentially disallowing sketching capabilities.
+ * It is wrapped in a {@link MessageDisplay} component.
+ * Additionally, it calculates its height in steps and passes the result to the
+ * {@link Canvas} for resizing.
+ * 
+ * More precisely, this component goes through all {@link DrawCommand} positions
+ * on mount to find the lowest and highest y-position.
+ * It then matches these values with the y-positions of the nearest stripes, to
+ * get a percentage height to resize to.
+ * This means, that Canvas heights conform to a set of fixed percentage values.
+ */
 function CanvasDisplay(props: CanvasDisplayProps ) {
 
     const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -18,9 +31,8 @@ function CanvasDisplay(props: CanvasDisplayProps ) {
      * Scales the Canvas in steps of stripe heights, based on the drawing height.
      * Gets the lowest and highest position from all DrawingCommands and rounds them towards the last
      *   stripe height they would exceed or subceed.
-     * Then calls applySizeStyles() to rescale the height of the Canvas- and Name container into px values.
-     * When reconstructing a Message, it would then start from the Canvas beginning with an offset from the lowest
-     *   exceeding stripe. The displayed Canvas is then as high as the drawing, with some extra height for the next stripe.
+     * Then sets the Canvas drawOffsetY and stripeSteps to rescale the height of the Canvas.
+     * The displayed Canvas is then as high as the drawing, with some extra height for the next stripe.
      */
     function initHeight() {
         let lowestY = 1.0;

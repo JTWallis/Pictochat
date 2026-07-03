@@ -8,6 +8,10 @@ type TransmitBarProps = {
     canvasSketchRef: React.RefObject<CanvasSketchHandle | null>;
 }
 
+/**
+ * The TransmitBar provides buttons to the user, that interact with the {@link CanvasSketch},
+ * by delegating functions to copy, discard and send the currently constructed {@link Message}.
+ */
 function TransmitBar(props: TransmitBarProps ) {
 
     return(

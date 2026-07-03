@@ -15,6 +15,10 @@ export type ScrollListHandle = {
     getBottomMessageIndex: () => number;
 }
 
+/**
+ * A ScrollList is a scrollable area, composed of {@link MessageDisplay} and {@link MessageSpecial}
+ * components. The scroll-position is tied to a segment in the {@link Scrollbar}.
+ */
 function ScrollList(props: ScrollListProps ) {
 
     const theme = useContext(ThemeContext);

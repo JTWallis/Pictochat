@@ -62,7 +62,14 @@ function findCharRepsFromTextValues(charmaps: CharmapBase[], values: string[]) {
     return charReps;
 }
 
-function convertTextToCharRepresentations(charmaps: CharmapBase[], text: string): CharRepresentation[] {
+/**
+ * Takes a text-string and converts each char-value into a {@link CharRepresentation}.
+ * Some special char-values have a length bigger than 1 and must be escaped with the syntax '${text$}'.
+ * @param charmaps All Charmaps to lookup the char-value from.
+ * @param text Convertable string with supported (escaped) char-values. E.g. 'Pict${PICTO_DPAD$}chat'
+ * @returns Array of converted CharRepresentations.
+ */
+export function convertTextToCharRepresentations(charmaps: CharmapBase[], text: string): CharRepresentation[] {
     const values: string[] = [];
 
     const escapeChar = "$";
@@ -98,5 +105,3 @@ function convertTextToCharRepresentations(charmaps: CharmapBase[], text: string)
 
     return findCharRepsFromTextValues(charmaps, values);
 }
-
-export default convertTextToCharRepresentations;

@@ -21,6 +21,11 @@ export type VirtualKeyboardStaggeredHandle = {
     onCapsDown: () => void;
 }
 
+/**
+ * The VirtualKeyboardStaggered is a layout of the {@link VirtualKeyboard},
+ * that displays a set of {@link VirtualKeyboardButton} in a QWERTY-layout.
+ * It is tied to a {@link CharmapBaseDouble} and thus for latin-layout.
+ */
 function VirtualKeyboardStaggered(props: VirtualKeyboardStaggeredProps) {
 
     useImperativeHandle(props.ref, () => ({

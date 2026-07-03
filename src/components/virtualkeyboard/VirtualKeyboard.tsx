@@ -17,6 +17,13 @@ export type VirtualKeyboardProps = {
     charmapState: number
 }
 
+/**
+ * The VirtualKeyboard is an onscreen keyboard, that is either of subtype
+ * {@link VirtualKeyboardStaggered} or {@link VirtualKeyboardOrtholinear}.
+ * Based on subtype, it displays a set of {@link VirtualKeyboardButton} in a grid or QWERTY-layout.
+ * It is responsible for creating a {@link FloatingKey} through drag&drop of a char,
+ * or emulating a keydown-event (and in turn draw a new char onto the {@link CanvasSketch}).
+ */
 function VirtualKeyboard(props: VirtualKeyboardProps) {
     let mouseDown = false;
     let mouseDragged = false;

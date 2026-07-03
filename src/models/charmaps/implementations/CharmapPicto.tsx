@@ -64,6 +64,11 @@ import backspace from '@assets/CharacterMaps/Misc/img_misc_backspace_small.png';
 import enter from '@assets/CharacterMaps/Misc/img_misc_enter_vertical.png';
 import space from '@assets/CharacterMaps/Misc/img_misc_space_small.png';
 
+/**
+ * Implementation of a {@link CharmapBaseSingle},
+ * that initializes the set of representations with
+ * a pair of "picto-char" encoding (basically emoticon) to sprite.
+ */
 export class CharmapPicto extends CharmapBaseSingle {
 
     constructor() {

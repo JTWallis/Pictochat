@@ -3,6 +3,15 @@ import type { CharRepresentation } from "@models/charrepresentations/CharReprese
 import type { CharRepresentationLowerUpper } from "@models/charrepresentations/CharRepresentationLowerUpper";
 import { Vector2 } from "@models/Vector2";
 
+/**
+ * Subclass of a {@link CharmapBase}, changing the interpretation of a Charmap,
+ * so that two different {@link CharRepresentation} are tied together as a {@link CharRepresentationLowerUpper}.
+ * 
+ * E.g. the chars 'a' and 'A' are normally treated as separate CharReps,
+ * since they have a different encoding and sprite.
+ * But as a CharRepLowerUpper they are tied together,
+ * making it is easy to interchange between them on activated SHIFT/CAPS.
+ */
 export abstract class CharmapBaseDouble extends CharmapBase {
     protected representations: CharRepresentationLowerUpper[] = [];
     protected shiftIncludedIndices: number[] = [];

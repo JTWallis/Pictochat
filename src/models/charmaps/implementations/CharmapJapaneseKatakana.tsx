@@ -110,6 +110,12 @@ import dakuten from '@assets/CharacterMaps/Misc/img_misc_japanese_dakuten.png';
 import handakuten from '@assets/CharacterMaps/Misc/img_misc_japanese_handakuten.png';
 import smallLetters from '@assets/CharacterMaps/Misc/img_misc_japanese_small_letters.png';
 
+/**
+ * Implementation of a {@link CharmapBaseJapanese},
+ * that initializes the set of representations with
+ * a pair of katakana encoding to sprite,
+ * along certain dakuten/handakuten/small variants.
+ */
 export class CharmapJapaneseKatakana extends CharmapBaseJapanese {
 
     constructor() {

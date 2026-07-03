@@ -65,6 +65,11 @@ import backspace from '@assets/CharacterMaps/Misc/img_misc_backspace_small.png';
 import enter from '@assets/CharacterMaps/Misc/img_misc_enter_vertical.png';
 import space from '@assets/CharacterMaps/Misc/img_misc_space_small.png';
 
+/**
+ * Implementation of a {@link CharmapBaseSingle},
+ * that initializes the set of representations with
+ * a pair of special-char encoding to sprite.
+ */
 export class CharmapSpecial extends CharmapBaseSingle {
 
     constructor() {

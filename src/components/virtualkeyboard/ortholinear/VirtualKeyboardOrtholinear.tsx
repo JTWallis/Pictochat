@@ -10,6 +10,12 @@ type VirtualKeyboardOrtholinearProps = {
     onButtonClick: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
+/**
+ * The VirtualKeyboardOrtholinear is a layout of the {@link VirtualKeyboard},
+ * that displays a set of {@link VirtualKeyboardButton} in a grid.
+ * It is tied to a {@link CharmapBaseSingle} and thus for the
+ * accented, japanese, special-char and picto layouts.
+ */
 function VirtualKeyboardOrtholinear(props: VirtualKeyboardOrtholinearProps) {
 
     const theme = useContext(ThemeContext);

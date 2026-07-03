@@ -12,6 +12,13 @@ type MessageDisplayProps = {
     findCharRepFromValue: (value: string) => CharRepresentation | undefined;
 }
 
+/**
+ * A MessageDisplay is an abstraction-wrapper between the App and a {@link CanvasDisplay}.
+ * It delegates the props and preset configurations to the {@link Canvas}.
+ * 
+ * Ultimately it is responsible for displaying a non-special {@link Message},
+ * without sketching-capabilites, and resizing itself based on every {@link DrawCommand}.
+ */
 function MessageDisplay(props: MessageDisplayProps) {
 
     const theme = useContext(ThemeContext);

@@ -19,6 +19,10 @@ function onReceivedMessage(message: IMessage, onReceivedMessageCallback: (msg: M
     onReceivedMessageCallback(receivedDto);
 }
 
+/**
+ * Listens for new messages to fetch and triggers the callback with the message, when receiving one.
+ * @param onReceivedMessageCallback Callback, receiving the fetched Message + creator-uuid
+ */
 export function subscribeMessages(onReceivedMessageCallback: (msg: MessageFetchDto) => void) {
     if(!clientEstablished()) return;
 
@@ -27,6 +31,10 @@ export function subscribeMessages(onReceivedMessageCallback: (msg: MessageFetchD
     });
 }
 
+/**
+ * Sends a {@link Message} to the server, to which it will be distributed across the currently subscribed room.
+ * @param message Fully constructed Message of {@link DrawCommand} and other metadata like the username (not uuid)
+ */
 export async function postMessage(message: Message) {
     if(!clientEstablished()) return;
 
