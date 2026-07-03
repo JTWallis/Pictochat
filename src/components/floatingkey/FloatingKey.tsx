@@ -19,6 +19,13 @@ export type FloatingKeyHandle = {
     apply: () => void;
 }
 
+/**
+ * A FloatingKey represents a temporary sprite, that is dragged onto the CanvasSketch area to draw it.
+ * It stays invisible, until a non-special character from the virtual keyboard is clicked,
+ * and dragged while holding down the left mouse button.
+ * During that state, it will become an HtmlImage element of the character and follow the mouse cursor.
+ * After drawing, it becomes invisible again.
+ */
 function FloatingKey(props: FloatingKeyProps) {
 
     const [posX, setPosX] = useState<number>(0);

@@ -2,6 +2,11 @@ import { CharmapBase } from "./CharmapBase";
 import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 import { Vector2 } from "@models/Vector2";
 
+/**
+ * Subclass of a {@link CharmapBase}, changing the interpretation of a Charmap,
+ * to single-value chars, that are not tied with another.
+ * See {@link CharmapBaseDouble} for further explanation on what this means.
+ */
 export abstract class CharmapBaseSingle extends CharmapBase {
     protected representations: CharRepresentation[] = [];
     protected ignoreGridCellIndices: Vector2[] = [];    // Explicit empty grid cells with indices starting from 1.

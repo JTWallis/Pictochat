@@ -5,7 +5,17 @@ export const DrawingCommandType = {
     FLOATING_KEY: 1
 }
 
-
+/**
+ * A DrawCommand represents a single, reconstructable drawing-part.
+ * This can be either of type "line-stroke", or a "floating-key" (char-sprite).
+ * The DrawCommand has a normalized start- and end-xy-pos, mostly useful for a line-stroke.
+ * Floating-keys instead only use the start-pos, along a value that dictates their sprite.
+ * The pen-size is only relevant for the thickness of a line-stroke.
+ * Lastly, the pen-color is a hex-string, depicting the color of the drawn line-stroke or floating-key.
+ * 
+ * A list of many DrawCommands make up a {@link Message}, which can be sent around a network
+ * and reconstructed onto a {@link Canvas}, by parsing and unnormalizing the values.
+ */
 export class DrawCommand {
     private id: number;
     private type: number;

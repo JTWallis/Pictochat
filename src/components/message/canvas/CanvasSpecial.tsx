@@ -9,6 +9,13 @@ type CanvasSpecialProps = {
     api: CanvasSpecialFullAPI
 }
 
+/**
+ * A CanvasDisplay is responsible for displaying special messages.
+ * It is wrapped in a {@link MessageSpecial} component.
+ * This component essentially constructs a {@link Message} out of a list of
+ * {@link CharRepresentation}, sets its size to the minimum height-step
+ * and paints the background black.
+ */
 function CanvasSpecial(props: CanvasSpecialProps) {
 
     const [firstMount, setFirstMount] = useState(false);

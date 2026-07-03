@@ -1,6 +1,10 @@
 import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 import { Vector2 } from "@models/Vector2";
 
+/**
+ * Base class for a Charmap, which represents a set of many {@link CharRepresentation},
+ * providing a specific alphabet for the {@link VirtualKeyboard}.
+ */
 export abstract class CharmapBase {
     protected rowRangeIndices: Vector2[] = [];
 

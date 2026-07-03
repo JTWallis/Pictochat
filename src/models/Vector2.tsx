@@ -1,4 +1,6 @@
-
+/**
+ * Represents a pair of x- and y-numerical value.
+ */
 export class Vector2 {
     public x: number;
     public y: number;

@@ -1,3 +1,6 @@
+/**
+ * Supported states of a Charmap, that will be rendered onto a {@link VirtualKeyboard}.
+ */
 export const CharmapStates = {
     LATIN: 0,
     ACCENT: 1,

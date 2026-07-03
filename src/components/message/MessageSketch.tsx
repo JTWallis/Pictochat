@@ -23,6 +23,15 @@ type MessageSketchProps = {
     floatingKeyRef: React.RefObject<FloatingKeyHandle | null>;
 } 
 
+/**
+ * A MessageSketch is an abstraction-wrapper between the App and a {@link CanvasSketch}.
+ * It delegates the props and preset configurations to the {@link Canvas}.
+ * 
+ * Ultimately it is responsible for constructing a new {@link Message}, 
+ * by handling user-interactions, such as mouse-strokes, a dragged {@link FloatingKey},
+ * changes in pen-mode state, copying, discarding and finally
+ * sending the currently constructed Message.
+ */
 function MessageSketch(props: MessageSketchProps) {
 
     const api: CanvasSketchPartialAPI = {

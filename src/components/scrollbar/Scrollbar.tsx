@@ -32,6 +32,18 @@ export type ScrollbarHandle = {
     scrollUp: () => void;
 }
 
+/**
+ * A Scrollbar in this app context replaces the browser's scrollbar for the
+ * {@link ScrollList} component.
+ * Instead, a list of {@link MessageDisplay} and {@link MessageSpecial} components is
+ * additionally represented as small segments within the Scrollbar area.
+ * This allows for different coloring of the segment, based on if it's a special message
+ * and if it's currently scrolled at (providing visual feedback,
+ * which message would be copied onto the {@link CanvasSketch}).
+ * 
+ * Additionally, it exposes functions to scroll up/down via buttons in the {@link ToolBar},
+ * to which the ScrollList's scroll position is jumped to that MessageDisplay.
+ */
 function Scrollbar(props: ScrollbarProps ) {
     const theme = useContext(ThemeContext)
 

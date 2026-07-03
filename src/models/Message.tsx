@@ -1,6 +1,15 @@
 import { DrawingCommandType, DrawCommand } from "./DrawCommand";
 import type { Vector2 } from "./Vector2";
 
+/**
+ * A Message represents a list of many {@link DrawCommand},
+ * along some metadata like the sender-username and a flag if it's a special message.
+ * Messages are constructed by the {@link CanvasSketch}, passed around (app-internally or via a network)
+ * and finally reconstructed onto any Canvas-type.
+ * 
+ * This allows to write + draw a message (containing a mix of characters and line-strokes),
+ * that can be redrawn onto a Canvas, independent of screen resolution (if the aspect-ratio matches).
+ */
 export class Message {
 
     public commands: DrawCommand[];

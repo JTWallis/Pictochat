@@ -1,6 +1,11 @@
 import { CharmapBaseSingle } from "./CharmapBaseSingle";
 import type { CharRepresentation } from "@models/charrepresentations/CharRepresentation";
 
+/**
+ * Subclass of a {@link CharmapBaseSingle}, that extends the class with behaviour
+ * unique to japanese characters (e.g. transforming chars between Hiragana and Kana,
+ * adding a Dakuten/Handakuten, or transforming certain chars into smaller variants).
+ */
 export abstract class CharmapBaseJapanese extends CharmapBaseSingle {
     protected representationsDakuten: Map<number, CharRepresentation> = new Map();
     protected representationsHandakuten: Map<number, CharRepresentation> = new Map();

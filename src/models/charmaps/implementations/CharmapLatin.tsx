@@ -102,6 +102,11 @@ import miscEnter from '@assets/CharacterMaps/Misc/img_misc_enter_horizontal.png'
 import miscShift from '@assets/CharacterMaps/Misc/img_misc_shift.png';
 import miscSpace from '@assets/CharacterMaps/Misc/img_misc_space_big.png';
 
+/**
+ * Implementation of a {@link CharmapBaseDouble},
+ * that initializes the set of representations
+ * with a pair of latin encoding to sprite, along an uppercase variant.
+ */
 export class CharmapLatin extends CharmapBaseDouble {
 
     constructor() {

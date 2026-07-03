@@ -45,6 +45,12 @@ type ToolBarProps = {
     onCharmapButtonClick: (charmapState: number) => void;
 }
 
+/**
+ * The ToolBar provides buttons to the user,
+ * to scroll up/down in the {@link ScrollList} + {@link Scrollbar},
+ * change the state of pen-mode in the {@link CanvasSketch} and
+ * switch the current Charmap- and thus {@link VirtualKeyboard}-layout.
+ */
 function ToolBar(props: ToolBarProps) {
 
     const theme = useContext(ThemeContext);
