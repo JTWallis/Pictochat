@@ -10,10 +10,10 @@ const sizeSmall = 1.0;
 const sizeLarge = 3.0;
 const incrImgSizeRatio = 0.75;
 
-interface CanvasSketchProps {
+type CanvasSketchProps = {
     className: string,
     canvasText: string,
-    canvasSketchRef: React.RefObject<any>,
+    ref: React.Ref<CanvasSketchHandle>,
     canvasTextPos: Vector2,
     api: CanvasSketchFullAPI
 };
@@ -45,7 +45,7 @@ function CanvasSketch(props: CanvasSketchProps) {
     const rainbowTickRef = useRef<number>(0);
 
 
-    useImperativeHandle(props.canvasSketchRef, () => ({
+    useImperativeHandle(props.ref, () => ({
         drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },

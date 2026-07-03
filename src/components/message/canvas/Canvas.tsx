@@ -17,20 +17,20 @@ const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above
 const canvasTextPosXOffset = 5;
 const canvasDisplayMarginPx = 16;
 
-interface CanvasSketchProperties {
+type CanvasSketchProperties = {
     canvasText: string,
     api: CanvasSketchPartialAPI,
     canvasSketchRef: React.Ref<CanvasSketchHandle>
     floatingKeyRef: React.RefObject<FloatingKeyHandle | null>
 }
 
-interface CanvasSpecialProperties {
+type CanvasSpecialProperties = {
     messageText: string,
     textColor: string,
     api: CanvasSpecialPartialAPI
 }
 
-interface CanvasProps {
+type CanvasProps = {
     defaultHeightPercent: number,
     backgroundColor?: string,
     canvasType: number,
