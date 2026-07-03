@@ -1,12 +1,23 @@
 import './VirtualKeyboard.css'
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, type Ref } from 'react';
 import VirtualKeyboardOrtholinear from './ortholinear/VirtualKeyboardOrtholinear';
 import VirtualKeyboardStaggered from './staggered/VirtualKeyboardStaggered';
 import imgBorder from '@assets/img_keyboard_border.png';
 import { ThemeContext } from '@contexts/ThemeContext';
+import type { FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
+import type { CharmapBase } from '@models/charmaps/base/CharmapBase';
+import type { CharmapBaseDouble } from '@models/charmaps/base/CharmapBaseDouble';
+import type { CharmapBaseSingle } from '@models/charmaps/base/CharmapBaseSingle';
 
+export type VirtualKeyboardProps = {
+    vkeyboardStaggeredRef: any,
+    floatingKeyRef: React.RefObject<FloatingKeyHandle | null>,
+    onKeyboardButtonClick: (e: React.MouseEvent<HTMLInputElement>) => void,
+    charmap: CharmapBase,
+    charmapState: number
+}
 
-function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButtonClick, charmap, charmapState}: any) {
+function VirtualKeyboard(props: VirtualKeyboardProps) {
     let mouseDown = false;
     let mouseDragged = false;
 
@@ -34,18 +45,18 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
         isMouseDown ? bindWindowMouse() : unbindWindowMouse();
     }
 
-    function handleButtonMouseDown(event: any) {
+    function handleButtonMouseDown(event: React.MouseEvent<HTMLInputElement>) {
         if (mouseDown) return;
         // TODO: Find better check for special button. Classname too brittle. Maybe there is a good metadata HTML property?
-        if((event.target.className as string).toLowerCase().includes("special")) return;
+        if(event.currentTarget.className.toLowerCase().includes("special")) return;
         setMouseDown(true);
 
-        const targetType = event.target.nodeName;
+        const targetType = event.currentTarget.nodeName;
 
         if (targetType === "INPUT") {
-            floatingKeyRef.current.setImg(event.target.src, event.target.value);
+            props.floatingKeyRef.current!.setImg(event.currentTarget.src, event.currentTarget.value);
         } else if (targetType === "BUTTON") {
-            floatingKeyRef.current.setChar(event.target.value);
+            props.floatingKeyRef.current!.setChar(event.currentTarget.value);
         }
     }
 
@@ -54,17 +65,17 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
         setMouseDown(false);
         if(!mouseDragged) return;
         mouseDragged = false;
-        floatingKeyRef.current.apply();
+        props.floatingKeyRef.current!.apply();
     }
 
     function window_mousemove(event: MouseEvent) {
         if (!mouseDown) return;
         mouseDragged = true;
-        floatingKeyRef.current.setPos(event.pageX, event.pageY);
+        props.floatingKeyRef.current!.setPos(event.pageX, event.pageY);
     }
 
-    function handleOnClick(e: any) {
-        onKeyboardButtonClick(e);
+    function handleOnClick(e: React.MouseEvent<HTMLInputElement>) {
+        props.onKeyboardButtonClick(e);
         e.currentTarget.blur();
     }
 
@@ -74,18 +85,18 @@ function VirtualKeyboard( {vkeyboardStaggeredRef, floatingKeyRef, onKeyboardButt
                 <input type="image" src={imgBorder} className="keyboardBorder" />
                 <div className="keyboardMaskedContainer">
                     {
-                    charmapState > 0 ?
+                    props.charmapState > 0 ?
                         <VirtualKeyboardOrtholinear
-                            charmap={charmap}
+                            charmap={props.charmap as CharmapBaseSingle}
                             onButtonMouseDown={handleButtonMouseDown}
-                            onClick={handleOnClick}
+                            onButtonClick={handleOnClick}
                         />
                         :
                         <VirtualKeyboardStaggered
-                            vkeyboardStaggeredRef={vkeyboardStaggeredRef}
-                            charmap={charmap}
+                            ref={props.vkeyboardStaggeredRef}
+                            charmap={props.charmap as CharmapBaseDouble}
                             onButtonMouseDown={handleButtonMouseDown}
-                            onClick={handleOnClick}
+                            onButtonClick={handleOnClick}
                         />
                     }
                 </div>

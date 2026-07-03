@@ -1,15 +1,28 @@
-import { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useContext, useEffect, useImperativeHandle, useRef, type JSX } from 'react';
 import './ScrollList.css';
 import { ThemeContext } from '@contexts/ThemeContext';
+import type { ScrollbarHandle } from '@components/scrollbar/Scrollbar';
 
-function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
+type ScrollListProps = {
+    ref: React.Ref<ScrollListHandle>;
+    scrollListElements: JSX.Element[];
+    scrollbarRef: React.RefObject<ScrollbarHandle | null>;
+}
+
+export type ScrollListHandle = {
+    scrollDown: () => void;
+    scrollUp: () => void;
+    getBottomMessageIndex: () => number;
+}
+
+function ScrollList(props: ScrollListProps ) {
 
     const theme = useContext(ThemeContext);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     let scrollIndex = 0;
 
-    useImperativeHandle(scrollListRef, () => ({
+    useImperativeHandle(props.ref, () => ({
         scrollDown: () => {
             const scrollDown = true;
             scrollToNeighbor(scrollDown);
@@ -36,7 +49,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
 
     useEffect(() => {
         scrollToLast();
-    }, [scrollListElements]);
+    }, [props.scrollListElements]);
 
     /**
      * Helper function, to check if a child-rect-boundary touches a ScrollList-boundary
@@ -93,7 +106,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
      */
     function scrollToLast() {
         scrollTo(scrollContainerRef.current!.children.length - 1);
-        scrollbarRef.current.scrollReset();
+        props.scrollbarRef.current!.scrollReset();
     }
 
     /**
@@ -109,11 +122,11 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
         if(scrollDown) {
             indexNext = scrollIndex + 1;
             if(indexNext >= scrollChildren.length) return;
-            scrollbarRef.current.scrollDown();
+            props.scrollbarRef.current!.scrollDown();
         } else {
             indexNext = scrollIndex - 1;
             if(indexNext < boundLower) return;
-            scrollbarRef.current.scrollUp();
+            props.scrollbarRef.current!.scrollUp();
         }
         
         scrollTo(indexNext);
@@ -122,7 +135,7 @@ function ScrollList( {scrollListRef, scrollListElements, scrollbarRef}: any ) {
     return (
         <div ref={scrollContainerRef} className="scrollList" style={{backgroundColor: theme.background_primary}}>
             <div className="scrollPadding" style={{backgroundColor: theme.background_primary}} />
-            {scrollListElements}
+            {props.scrollListElements}
         </div>
     );
 }

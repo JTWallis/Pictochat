@@ -1,14 +1,21 @@
+type VirtualKeyboardButtonProps = {
+    value: string;
+    src: string;
+    className: string;
+    onMouseDown: (e: React.MouseEvent<HTMLInputElement>) => void;
+    onClick: (e: React.MouseEvent<HTMLInputElement>) => void;
+}
 
-function VirtualKeyboardButton( {value, src, className, handleButtonMouseDown, handleOnClick }: any ) {
+function VirtualKeyboardButton(props: VirtualKeyboardButtonProps ) {
     return (
         <input
             type="image"
-            value={value}
-            alt={value}
-            src={src}
-            className={className}
-            onMouseDown={handleButtonMouseDown}
-            onClick={handleOnClick}
+            value={props.value}
+            alt={props.value}
+            src={props.src}
+            className={props.className}
+            onMouseDown={props.onMouseDown}
+            onClick={props.onClick}
         />
     );
 }

@@ -8,9 +8,22 @@ import { ThemeContext } from '@contexts/ThemeContext';
 const SPECIAL_CAPS = "CAPS";
 const SPECIAL_SHIFT = "SHIFT";
 
-function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMouseDown, onClick }: any) {
+type VirtualKeyboardStaggeredProps = {
+    ref: React.Ref<VirtualKeyboardStaggeredHandle>;
+    charmap: CharmapBaseDouble;
+    onButtonMouseDown: (e: React.MouseEvent<HTMLInputElement>) => void;
+    onButtonClick: (e: React.MouseEvent<HTMLInputElement>) => void;
+}
 
-    useImperativeHandle(vkeyboardStaggeredRef, () => ({
+export type VirtualKeyboardStaggeredHandle = {
+    onShiftDown: () => void;
+    onShiftUp: () => void;
+    onCapsDown: () => void;
+}
+
+function VirtualKeyboardStaggered(props: VirtualKeyboardStaggeredProps) {
+
+    useImperativeHandle(props.ref, () => ({
         onShiftDown(): void {
             setIsShift(true);
         },
@@ -29,7 +42,7 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
     const [isShift, setIsShift] = useState(false);
     const [isUpper, setIsUpper] = useState(false);
 
-    function handleOnVirtualKeyboardButtonClick(e: MouseEvent) {
+    function handleOnVirtualKeyboardButtonClick(e: React.MouseEvent<HTMLInputElement>) {
         const value = (e.target as HTMLInputElement).value;
         console.log(value);
         switch (value) {
@@ -42,14 +55,14 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
                 break;
             default:
                 setIsShift(false);
-                onClick(e);
+                props.onButtonClick(e);
                 break;
         }
     }
 
     function getButtonContainers() {
-        const rowRangeIndices = (charmap as CharmapBaseDouble).getRowRangeIndices();
-        const representations = (charmap as CharmapBaseDouble).getCharRepresentations();
+        const rowRangeIndices = props.charmap.getRowRangeIndices();
+        const representations = props.charmap.getCharRepresentations();
         const rows: any[] = [];
 
         function getRep(index: number): CharRepresentation {
@@ -59,7 +72,7 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
             if(upper.value.length === 0) return lower;
             if(isUpper) return upper;
 
-            if(isShift && (charmap as CharmapBaseDouble).isCharShiftIncluded(lower.value)) {
+            if(isShift && props.charmap.isCharShiftIncluded(lower.value)) {
                 return upper;
             }
 
@@ -116,8 +129,8 @@ function VirtualKeyboardStaggered({ vkeyboardStaggeredRef, charmap, onButtonMous
                             className={imageClass}
                             value={getValue(i)}
                             src={getSrc(i)}
-                            handleButtonMouseDown={onButtonMouseDown}
-                            handleOnClick={handleOnVirtualKeyboardButtonClick}
+                            onMouseDown={props.onButtonMouseDown}
+                            onClick={handleOnVirtualKeyboardButtonClick}
                         />
                     </div>
 

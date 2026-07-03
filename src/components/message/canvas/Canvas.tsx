@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from '@models/Vector2';
 import { DrawingCommandType } from '@models/DrawCommand';
-import CanvasSketch from './sketch/CanvasSketch';
+import CanvasSketch, { type CanvasSketchHandle } from './sketch/CanvasSketch';
 import CanvasDisplay from './display/CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import type { Message } from '@models/Message';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import CanvasSpecial from './special/CanvasSpecial';
+import type { FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
@@ -19,8 +20,8 @@ const canvasDisplayMarginPx = 16;
 interface CanvasSketchProperties {
     canvasText: string,
     api: CanvasSketchPartialAPI,
-    canvasSketchRef: React.RefObject<any>
-    floatingKeyRef: React.RefObject<any>
+    canvasSketchRef: React.Ref<CanvasSketchHandle>
+    floatingKeyRef: React.RefObject<FloatingKeyHandle | null>
 }
 
 interface CanvasSpecialProperties {
@@ -478,7 +479,7 @@ function Canvas(props: CanvasProps) {
                     <CanvasSketch
                         className={className}
                         canvasText={props.sketchProperties.canvasText}
-                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        ref={props.sketchProperties.canvasSketchRef}
                         canvasTextPos={canvasTextPosRef.current}
                         api={buildCanvasSketchFullAPI()}
                     />

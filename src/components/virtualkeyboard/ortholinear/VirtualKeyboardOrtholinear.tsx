@@ -4,14 +4,20 @@ import type { CharmapBaseSingle } from '@models/charmaps/base/CharmapBaseSingle'
 import { ThemeContext } from '@contexts/ThemeContext';
 import { useContext } from 'react';
 
-function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any) {
+type VirtualKeyboardOrtholinearProps = {
+    charmap: CharmapBaseSingle;
+    onButtonMouseDown: (e: React.MouseEvent<HTMLInputElement>) => void;
+    onButtonClick: (e: React.MouseEvent<HTMLInputElement>) => void;
+}
+
+function VirtualKeyboardOrtholinear(props: VirtualKeyboardOrtholinearProps) {
 
     const theme = useContext(ThemeContext);
 
     function getButtonContainers() {
         const rows: any = [];
-        const rowRangeIndices = (charmap as CharmapBaseSingle).getRowRangeIndices();
-        const representations = (charmap as CharmapBaseSingle).getCharRepresentations();
+        const rowRangeIndices = props.charmap.getRowRangeIndices();
+        const representations = props.charmap.getCharRepresentations();
 
         for (let k = 0; k < rowRangeIndices.length; k++) {
             for (let i = rowRangeIndices[k].x; i <= rowRangeIndices[k].y; i++) {
@@ -27,7 +33,7 @@ function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any)
                     isRightEdge = true;
 
                     if(value === "ENTER") containerClass += " keyboardColSpanTwo"
-                } else if((charmap as CharmapBaseSingle).isGridCellSpecial(i)) {
+                } else if(props.charmap.isGridCellSpecial(i)) {
                     buttonClass = "keyboardImageButtonSpecial";
                     bgColor = theme.button_special;
                 } else {
@@ -49,8 +55,8 @@ function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any)
                             className={buttonClass}
                             value={representations[i].value}
                             src={representations[i].src}
-                            handleButtonMouseDown={onButtonMouseDown}
-                            handleOnClick={onClick}
+                            onMouseDown={props.onButtonMouseDown}
+                            onClick={props.onButtonClick}
                         />
                     </div>
                 );
@@ -63,7 +69,7 @@ function VirtualKeyboardOrtholinear( {charmap, onButtonMouseDown, onClick}: any)
     function getIgnoreGridCellContainers() {
         const ignoreGridCellContainers: any[] = [];
 
-        (charmap as CharmapBaseSingle).getIgnoreGridCellIndices().forEach((e, index) => {
+        props.charmap.getIgnoreGridCellIndices().forEach((e, index) => {
             ignoreGridCellContainers.push(
                 <div
                     key={"Keyboard-Button-Container-Ignore-" + index}

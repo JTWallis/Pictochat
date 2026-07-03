@@ -18,6 +18,20 @@ interface CanvasSketchProps {
     api: CanvasSketchFullAPI
 };
 
+export type CanvasSketchHandle = {
+    drawImg: (img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) => void;
+    createDrawImgAppend: (src: string, value: string, colorFill: string) => void;
+    usePenDraw: () => void;
+    usePenErase: () => void;
+    usePenSmall: () => void;
+    usePenBig: () => void;
+    sendMessage: () => void;
+    copyMessage: () => void;
+    discardMessage: () => void;
+    getLastTextValue: () => string | null;
+    replaceLastTextValue: (newVal: string) => void;
+}
+
 function CanvasSketch(props: CanvasSketchProps) {
 
     let mouseDown = false;
