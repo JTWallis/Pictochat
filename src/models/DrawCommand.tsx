@@ -2,8 +2,7 @@ import { Vector2 } from "./Vector2";
 
 export const DrawingCommandType = {
     LINE_STROKE: 0,
-    TEXT: 1,
-    FLOATING_KEY: 2
+    FLOATING_KEY: 1
 }
 
 
