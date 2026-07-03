@@ -1,5 +1,5 @@
 import './App.css'
-import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
+import ToolBar from '@components/toolbar/ToolBar';
 import FloatingKey, { type FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
 import ScrollList, { type ScrollListHandle } from '@components/scrolllist/ScrollList';
@@ -353,7 +353,7 @@ function App() {
         </div>
         <div className="bottom">
           <div className="botLeft">
-            <ButtonColumnLeft 
+            <ToolBar 
               userColor={userColor}
               scrollListRef={scrollListRef}
               canvasSketchRef={canvasSketchRef}

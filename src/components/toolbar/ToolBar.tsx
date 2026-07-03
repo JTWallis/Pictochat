@@ -1,4 +1,4 @@
-import './ButtonColumnLeft.css'
+import './ToolBar.css'
 
 import ImgScrollUp from '@assets/img_button_toolbox_scroll_up.png';
 import ImgScrollDown from '@assets/img_button_toolbox_scroll_down.png';
@@ -38,14 +38,14 @@ const Charmaps = {
 
 const defaultBackgroundColor = "#a2a2a2";
 
-type ButtomColumnLeft = {
+type ToolBarProps = {
     userColor: string;
     scrollListRef: React.RefObject<ScrollListHandle | null>;
     canvasSketchRef: React.RefObject<CanvasSketchHandle | null>;
     onCharmapButtonClick: (charmapState: number) => void;
 }
 
-function ButtonColumnLeft(props: ButtomColumnLeft ) {
+function ToolBar(props: ToolBarProps) {
 
     const theme = useContext(ThemeContext);
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
@@ -274,4 +274,4 @@ function ButtonColumnLeft(props: ButtomColumnLeft ) {
     );
 }
 
-export default ButtonColumnLeft;
+export default ToolBar;
