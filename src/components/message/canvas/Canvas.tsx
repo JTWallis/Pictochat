@@ -409,7 +409,7 @@ function Canvas(props: CanvasProps) {
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
         if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling drawPushStroke with no sketchProperties!");
             return;
         }
 
@@ -420,7 +420,7 @@ function Canvas(props: CanvasProps) {
 
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
         if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling drawPushImage with no sketchProperties!");
             return;
         }
 
@@ -433,7 +433,7 @@ function Canvas(props: CanvasProps) {
 
     function pushWhitespace() {
         if (!props.sketchProperties) {
-            console.error("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling pushWhitespace with no sketchProperties!");
             return;
         }
 
@@ -444,7 +444,7 @@ function Canvas(props: CanvasProps) {
 
     function pushNewline() {
         if (!props.sketchProperties) {
-            console.error("ERROR: Unhandled case of calling pushNewline function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling pushNewline with no sketchProperties!");
             return;
         }
 
