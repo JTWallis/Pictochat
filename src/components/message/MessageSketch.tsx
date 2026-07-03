@@ -1,10 +1,10 @@
-import Canvas from "../canvas/Canvas";
+import Canvas from "./canvas/Canvas";
 import { useContext, useState } from 'react';
 import { Message } from '@models/Message';
 import type { Vector2 } from '@models/Vector2';
 import type { DrawCommand } from '@models/DrawCommand';
-import type { CanvasSketchPartialAPI } from '../canvas/CanvasAPI';
-import { CanvasTypes } from '../canvas/CanvasAPI';
+import type { CanvasSketchPartialAPI } from './canvas/CanvasAPI';
+import { CanvasTypes } from './canvas/CanvasAPI';
 import { postMessage } from '@services/controllers/MessageController';
 import { ThemeContext } from '@contexts/ThemeContext';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';

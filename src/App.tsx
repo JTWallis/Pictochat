@@ -17,9 +17,9 @@ import { CharmapJapaneseHiragana } from '@models/charmaps/implementations/Charma
 import { CharmapJapaneseKatakana } from '@models/charmaps/implementations/CharmapJapaneseKatakana';
 import { CharmapSpecial } from '@models/charmaps/implementations/CharmapSpecial';
 import { CharmapPicto } from '@models/charmaps/implementations/CharmapPicto';
-import MessageSketch from '@components/message/sketch/MessageSketch';
-import MessageDisplay from '@components/message/display/MessageDisplay';
-import MessageSpecial from '@components/message/special/MessageSpecial';
+import MessageSketch from '@components/message/MessageSketch';
+import MessageDisplay from '@components/message/MessageDisplay';
+import MessageSpecial from '@components/message/MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
 import { registerUsername, startClient, stopClient as stopStompClient, subscribeQueueReply } from '@services/StompClient';
