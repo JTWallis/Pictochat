@@ -22,7 +22,7 @@ import MessageDisplay from '@components/message/display/MessageDisplay';
 import MessageSpecial from '@components/message/special/MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
+import { registerUsername, startClient, stopClient as stopStompClient, subscribeQueueReply } from '@services/StompClient';
 import { subscribeMessages } from '@services/controllers/MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from '@services/controllers/UserConnectionController';
 import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
@@ -335,7 +335,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
-      // DisconnectStompClient
+      stopStompClient();
     }
   }, []);
 
