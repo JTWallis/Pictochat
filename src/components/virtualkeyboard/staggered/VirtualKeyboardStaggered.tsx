@@ -44,7 +44,6 @@ function VirtualKeyboardStaggered(props: VirtualKeyboardStaggeredProps) {
 
     function handleOnVirtualKeyboardButtonClick(e: React.MouseEvent<HTMLInputElement>) {
         const value = (e.target as HTMLInputElement).value;
-        console.log(value);
         switch (value) {
             case SPECIAL_CAPS:
                 setIsShift(false);
