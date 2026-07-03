@@ -1,6 +1,4 @@
 import Canvas from '../canvas/Canvas';
-import './MessageSpecial.css';
-import '../display/MessageDisplay.css';
 import { CanvasTypes, type CanvasSpecialPartialAPI } from '../canvas/CanvasAPI';
 import type { Vector2 } from '@models/Vector2';
 import { useContext } from 'react';

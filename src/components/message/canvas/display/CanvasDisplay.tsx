@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import './CanvasDisplay.css';
 import type { CanvasDisplayAPI } from '../CanvasAPI';
 
 type CanvasDisplayProps = {

@@ -1,4 +1,3 @@
-import './MessageSketch.css';
 import Canvas from "../canvas/Canvas";
 import { useContext, useState } from 'react';
 import { Message } from '@models/Message';

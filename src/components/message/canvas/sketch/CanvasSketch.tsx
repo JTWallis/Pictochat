@@ -1,5 +1,4 @@
 import { useEffect, useImperativeHandle, useRef } from 'react';
-import './CanvasSketch.css'
 import { Vector2 } from '@models/Vector2';
 import type { CanvasSketchFullAPI } from '../CanvasAPI';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
@@ -121,12 +120,6 @@ function CanvasSketch(props: CanvasSketchProps) {
         if(!success) return;
         
         props.api.reconstructMessage();
-    }
-
-    function unNormalizePos(pos: Vector2): Vector2 {
-        const width = sketchContainerRef.current?.clientWidth!;
-        const height = sketchContainerRef.current?.clientHeight!;
-        return new Vector2(pos.x * width, pos.y * height);
     }
 
     /**
@@ -277,11 +270,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function canvas_mouseleave(event: any) {
         if (!mouseDown) return;
-
-        //draw(event);
-
-        //prevX = null;
-        //prevY = null;
     }
 
 
