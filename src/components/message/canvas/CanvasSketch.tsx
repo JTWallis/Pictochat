@@ -1,7 +1,6 @@
 import { useEffect, useImperativeHandle, useRef } from 'react';
-import './CanvasSketch.css'
 import { Vector2 } from '@models/Vector2';
-import type { CanvasSketchFullAPI } from '../CanvasAPI';
+import type { CanvasSketchFullAPI } from './CanvasAPI';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
 
 const colorBackground = "#FFF";
@@ -10,13 +9,27 @@ const sizeSmall = 1.0;
 const sizeLarge = 3.0;
 const incrImgSizeRatio = 0.75;
 
-interface CanvasSketchProps {
+type CanvasSketchProps = {
     className: string,
     canvasText: string,
-    canvasSketchRef: React.RefObject<any>,
+    ref: React.Ref<CanvasSketchHandle>,
     canvasTextPos: Vector2,
     api: CanvasSketchFullAPI
 };
+
+export type CanvasSketchHandle = {
+    drawImg: (img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) => void;
+    createDrawImgAppend: (src: string, value: string, colorFill: string) => void;
+    usePenDraw: () => void;
+    usePenErase: () => void;
+    usePenSmall: () => void;
+    usePenBig: () => void;
+    sendMessage: () => void;
+    copyMessage: () => void;
+    discardMessage: () => void;
+    getLastTextValue: () => string | null;
+    replaceLastTextValue: (newVal: string) => void;
+}
 
 function CanvasSketch(props: CanvasSketchProps) {
 
@@ -31,7 +44,7 @@ function CanvasSketch(props: CanvasSketchProps) {
     const rainbowTickRef = useRef<number>(0);
 
 
-    useImperativeHandle(props.canvasSketchRef, () => ({
+    useImperativeHandle(props.ref, () => ({
         drawImg(img: HTMLImageElement, screenX: number, screenY: number, colorFill: string) {
             handleFloatingKeyImage(img, new Vector2(screenX, screenY), colorFill);
         },
@@ -107,12 +120,6 @@ function CanvasSketch(props: CanvasSketchProps) {
         if(!success) return;
         
         props.api.reconstructMessage();
-    }
-
-    function unNormalizePos(pos: Vector2): Vector2 {
-        const width = sketchContainerRef.current?.clientWidth!;
-        const height = sketchContainerRef.current?.clientHeight!;
-        return new Vector2(pos.x * width, pos.y * height);
     }
 
     /**
@@ -263,11 +270,6 @@ function CanvasSketch(props: CanvasSketchProps) {
 
     function canvas_mouseleave(event: any) {
         if (!mouseDown) return;
-
-        //draw(event);
-
-        //prevX = null;
-        //prevY = null;
     }
 
 

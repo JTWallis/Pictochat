@@ -1,4 +1,4 @@
-import './ButtonColumnLeft.css'
+import './ToolBar.css'
 
 import ImgScrollUp from '@assets/img_button_toolbox_scroll_up.png';
 import ImgScrollDown from '@assets/img_button_toolbox_scroll_down.png';
@@ -15,6 +15,8 @@ import { CharmapStates } from '@enums/CharmapStates';
 import { useContext, useEffect, useState, type CSSProperties } from 'react';
 import { getTickRainbowHex, incrementTickRainbow } from '@utils/RainbowHelper';
 import { ThemeContext } from '@contexts/ThemeContext';
+import type { ScrollListHandle } from '@components/scrolllist/ScrollList';
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 
 const PenModes = {
     PEN_MODE_WRITE: 0,
@@ -36,7 +38,14 @@ const Charmaps = {
 
 const defaultBackgroundColor = "#a2a2a2";
 
-function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmapButtonClick}: any ) {
+type ToolBarProps = {
+    userColor: string;
+    scrollListRef: React.RefObject<ScrollListHandle | null>;
+    canvasSketchRef: React.RefObject<CanvasSketchHandle | null>;
+    onCharmapButtonClick: (charmapState: number) => void;
+}
+
+function ToolBar(props: ToolBarProps) {
 
     const theme = useContext(ThemeContext);
     const [selectionPenMode, setSelectionPenMode] = useState(PenModes.PEN_MODE_WRITE);
@@ -62,7 +71,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
     }, [selectionPenModeRainbow]);
 
     const styleBackgroundSelect = {
-        backgroundColor: userColor
+        backgroundColor: props.userColor
     } as CSSProperties;
 
     const styleBackgroundDefault = {
@@ -100,14 +109,14 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                 className="buttonContainer pixelated maskFull"
                 style={styleBackgroundDefault}
             >
-                <input type="image" className="button" src={ImgScrollUp} onClick={() => scrollListRef.current.scrollUp()} />
+                <input type="image" className="button" src={ImgScrollUp} onClick={() => props.scrollListRef.current!.scrollUp()} />
             </div>
 
             <div
                 className="buttonContainer pixelated marginTop maskFull"
                 style={styleBackgroundDefault}
             >
-                <input type="image" className="button" src={ImgScrollDown} onClick={() => scrollListRef.current.scrollDown()} />
+                <input type="image" className="button" src={ImgScrollDown} onClick={() => props.scrollListRef.current!.scrollDown()} />
             </div>
 
 
@@ -128,7 +137,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                             setSelectionPenModeRainbow(!selectionPenModeRainbow);
                         }
                         setSelectionPenMode(PenModes.PEN_MODE_WRITE);
-                        canvasSketchRef.current.usePenDraw();
+                        props.canvasSketchRef.current!.usePenDraw();
                     }}
                 />
             </div>
@@ -143,7 +152,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImagePenErase}
                     onClick={() => {
                         setSelectionPenMode(PenModes.PEN_MODE_ERASE);
-                        canvasSketchRef.current.usePenErase();
+                        props.canvasSketchRef.current!.usePenErase();
                     }}
                 />
             </div>
@@ -163,7 +172,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImagePenBig}
                     onClick={() => {
                         setSelectionPenSize(PenSizes.PEN_SIZE_BIG);
-                        canvasSketchRef.current.usePenBig();
+                        props.canvasSketchRef.current!.usePenBig();
                     }}
                 />
             </div>
@@ -178,7 +187,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImagePenSmall}
                     onClick={() => {
                         setSelectionPenSize(PenSizes.PEN_SIZE_SMALL);
-                        canvasSketchRef.current.usePenSmall();
+                        props.canvasSketchRef.current!.usePenSmall();
                     }}
                 />
             </div>
@@ -197,7 +206,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImageMapLatin} onClick={() => {
                         setSelectionCharmap(Charmaps.CHARMAP_LATIN);
-                        onCharmapButtonClick(CharmapStates.LATIN);
+                        props.onCharmapButtonClick(CharmapStates.LATIN);
                     }}
                 />
             </div>
@@ -211,7 +220,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     className="button"
                     src={ImageMapAccent} onClick={() => {
                         setSelectionCharmap(Charmaps.CHARMAP_ACCENT);
-                        onCharmapButtonClick(CharmapStates.ACCENT);
+                        props.onCharmapButtonClick(CharmapStates.ACCENT);
                     }}
                 />
             </div>
@@ -226,7 +235,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImageMapJapan}
                     onClick={() => {
                         setSelectionCharmap(Charmaps.CHARMAP_JAPANESE);
-                        onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
+                        props.onCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
                     }}
                 />
             </div>
@@ -241,7 +250,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImageMapSpecial}
                     onClick={() => {
                         setSelectionCharmap(Charmaps.CHARMAP_SPECIAL);
-                        onCharmapButtonClick(CharmapStates.SPECIAL);
+                        props.onCharmapButtonClick(CharmapStates.SPECIAL);
                     }}
                 />
             </div>
@@ -256,7 +265,7 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
                     src={ImageMapPicto}
                     onClick={() => {
                         setSelectionCharmap(Charmaps.CHARMAP_PICTO);
-                        onCharmapButtonClick(CharmapStates.PICTO);
+                        props.onCharmapButtonClick(CharmapStates.PICTO);
                     }}
                 />
             </div>
@@ -265,4 +274,4 @@ function ButtonColumnLeft( {userColor, scrollListRef, canvasSketchRef, onCharmap
     );
 }
 
-export default ButtonColumnLeft;
+export default ToolBar;

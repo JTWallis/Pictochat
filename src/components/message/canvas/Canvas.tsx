@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from '@models/Vector2';
 import { DrawingCommandType } from '@models/DrawCommand';
-import CanvasSketch from './sketch/CanvasSketch';
-import CanvasDisplay from './display/CanvasDisplay';
+import CanvasSketch, { type CanvasSketchHandle } from './CanvasSketch';
+import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import type { Message } from '@models/Message';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
-import CanvasSpecial from './special/CanvasSpecial';
+import CanvasSpecial from './CanvasSpecial';
+import type { FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 
 const stripeCount = 4;
 const lineCharSize = 1 / 24;
@@ -16,20 +17,20 @@ const canvasSizeAddPx = 8;      // Without this, a FloatingKey placed just above
 const canvasTextPosXOffset = 5;
 const canvasDisplayMarginPx = 16;
 
-interface CanvasSketchProperties {
+type CanvasSketchProperties = {
     canvasText: string,
     api: CanvasSketchPartialAPI,
-    canvasSketchRef: React.RefObject<any>
-    floatingKeyRef: React.RefObject<any>
+    canvasSketchRef: React.Ref<CanvasSketchHandle>
+    floatingKeyRef: React.RefObject<FloatingKeyHandle | null>
 }
 
-interface CanvasSpecialProperties {
+type CanvasSpecialProperties = {
     messageText: string,
     textColor: string,
     api: CanvasSpecialPartialAPI
 }
 
-interface CanvasProps {
+type CanvasProps = {
     defaultHeightPercent: number,
     backgroundColor?: string,
     canvasType: number,
@@ -198,7 +199,6 @@ function Canvas(props: CanvasProps) {
         return {
             ...props.sketchProperties!.api,
             drawPushStroke,
-            drawPushText,
             drawPushImage,
             pushWhitespace,
             pushNewline,
@@ -409,7 +409,7 @@ function Canvas(props: CanvasProps) {
 
     function drawPushStroke(posSrc: Vector2, posDst: Vector2, penSize: number, penColor: string) {
         if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling drawPushStroke with no sketchProperties!");
             return;
         }
 
@@ -418,20 +418,9 @@ function Canvas(props: CanvasProps) {
         pushMessageCommand(DrawingCommandType.LINE_STROKE, normalizeCanvasPos(posSrc), normalizeCanvasPos(posDst), "", penSize, penColor);
     }
 
-    function drawPushText(pos: Vector2, value: string) {
-        if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
-            return;
-        }
-
-        drawText(pos, value);
-        const normalizedPos = normalizeCanvasPos(pos);
-        pushMessageCommand(DrawingCommandType.TEXT, normalizedPos, normalizedPos, value, 0.0, "#000");
-    }
-
     function drawPushImage(img: HTMLImageElement, pos: Vector2, colorFill: string) {
         if (!props.sketchProperties && !props.specialProperties) {
-            console.log("ERROR: Unhandled case of calling drawPush* function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling drawPushImage with no sketchProperties!");
             return;
         }
 
@@ -444,7 +433,7 @@ function Canvas(props: CanvasProps) {
 
     function pushWhitespace() {
         if (!props.sketchProperties) {
-            console.error("ERROR: Unhandled case of calling pushWhitespace function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling pushWhitespace with no sketchProperties!");
             return;
         }
 
@@ -455,7 +444,7 @@ function Canvas(props: CanvasProps) {
 
     function pushNewline() {
         if (!props.sketchProperties) {
-            console.error("ERROR: Unhandled case of calling pushNewline function with no sketchProperties!");
+            console.error("ERROR: Unhandled case of calling pushNewline with no sketchProperties!");
             return;
         }
 
@@ -478,7 +467,7 @@ function Canvas(props: CanvasProps) {
                     <CanvasSketch
                         className={className}
                         canvasText={props.sketchProperties.canvasText}
-                        canvasSketchRef={props.sketchProperties.canvasSketchRef}
+                        ref={props.sketchProperties.canvasSketchRef}
                         canvasTextPos={canvasTextPosRef.current}
                         api={buildCanvasSketchFullAPI()}
                     />

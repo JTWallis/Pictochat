@@ -1,11 +1,11 @@
 import './App.css'
-import ButtonColumnLeft from '@components/buttoncolumnleft/ButtonColumnLeft';
-import FloatingKey from '@components/floatingkey/FloatingKey';
+import ToolBar from '@components/toolbar/ToolBar';
+import FloatingKey, { type FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 import { useEffect, useRef, useState, type JSX } from 'react';
-import ScrollList from '@components/scrolllist/ScrollList';
+import ScrollList, { type ScrollListHandle } from '@components/scrolllist/ScrollList';
 import type { Message } from '@models/Message';
-import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
-import Scrollbar from '@components/scrollbar/Scrollbar';
+import TransmitBar from '@components/transmitbar/TransmitBar';
+import Scrollbar, { type ScrollbarHandle } from '@components/scrollbar/Scrollbar';
 import VirtualKeyboard from '@components/virtualkeyboard/VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
 import { CharmapBase } from '@models/charmaps/base/CharmapBase';
@@ -17,34 +17,28 @@ import { CharmapJapaneseHiragana } from '@models/charmaps/implementations/Charma
 import { CharmapJapaneseKatakana } from '@models/charmaps/implementations/CharmapJapaneseKatakana';
 import { CharmapSpecial } from '@models/charmaps/implementations/CharmapSpecial';
 import { CharmapPicto } from '@models/charmaps/implementations/CharmapPicto';
-import MessageSketch from '@components/message/sketch/MessageSketch';
-import MessageDisplay from '@components/message/display/MessageDisplay';
-import MessageSpecial from '@components/message/special/MessageSpecial';
+import MessageSketch from '@components/message/MessageSketch';
+import MessageDisplay from '@components/message/MessageDisplay';
+import MessageSpecial from '@components/message/MessageSpecial';
 import { createMessageTextJoin, createMessageTextWelcome, createSpecialMesssage } from '@utils/MessageSpecialHelper';
 import convertTextToCharRepresentations from '@utils/CharmapHelper';
-import { registerUsername, startClient, subscribeQueueReply } from '@services/StompClient';
+import { registerUsername, startClient, stopClient as stopStompClient, subscribeQueueReply } from '@services/StompClient';
 import { subscribeMessages } from '@services/controllers/MessageController';
 import { subscribeTotalConnections, subscribeRoomConnections } from '@services/controllers/UserConnectionController';
 import type { MessageFetchDto } from '@services/dtos/MessageFetchDto';
 import type { UserRegisterDto } from '@services/dtos/UserRegisterDto';
 import { themes, type Theme, ThemeContext } from '@contexts/ThemeContext'
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
+import type { VirtualKeyboardStaggeredHandle } from '@components/virtualkeyboard/staggered/VirtualKeyboardStaggered';
 
-function isAlpha(char: string): boolean {
-  return ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z"));
-}
-
-function isNumeric(char: string): boolean {
-  return char >= "0" && char <= "9";
-}
-
-function isSpecialSupported(char: string): boolean {
-  const supported = [",", ".", "/", ";", "´", "[", "]", " "];
-  return supported.includes(char);
-}
-
-function isKeyValidChar(char: string) {
-  return char.length === 1 &&
-    (isAlpha(char) || isNumeric(char) || isSpecialSupported(char));
+function isKeySpecial(key: string) {
+  key = key.toLowerCase();
+  return key.length > 1 && (
+    key === "enter" ||
+    key === "backspace" ||
+    key === "back" ||
+    key === "space"
+  );
 }
 
 const charmapLatin = new CharmapLatin();
@@ -108,11 +102,11 @@ function App() {
   const [theme, setTheme] = useState<Theme>(themes.light)
 
   const uuidRef = useRef<string>("");
-  const floatingKeyRef = useRef<any>(null);
-  const canvasSketchRef = useRef<any>(null);
-  const scrollListRef = useRef<any>(null);
-  const scrollbarRef = useRef<any>(null);
-  const vkeyboardStaggeredRef = useRef<any>(null);
+  const floatingKeyRef = useRef<FloatingKeyHandle>(null);
+  const canvasSketchRef = useRef<CanvasSketchHandle>(null);
+  const scrollListRef = useRef<ScrollListHandle>(null);
+  const scrollbarRef = useRef<ScrollbarHandle>(null);
+  const vkeyboardStaggeredRef = useRef<VirtualKeyboardStaggeredHandle>(null);
 
   function initStompClient() {
     startClient(stompClientConnectedCallback);
@@ -136,10 +130,10 @@ function App() {
   function onKeyDown(event: any) {
     switch(event.key) {
       case KEY_SHIFT:
-        vkeyboardStaggeredRef.current.onShiftDown();
+        vkeyboardStaggeredRef.current!.onShiftDown();
         break;
       case KEY_CAPS:
-        vkeyboardStaggeredRef.current.onCapsDown();
+        vkeyboardStaggeredRef.current!.onCapsDown();
         break;
       default:
         handleKeyDown(event.key);
@@ -150,15 +144,15 @@ function App() {
   function onKeyUp(event: any) {
     switch(event.key) {
       case KEY_SHIFT:
-        vkeyboardStaggeredRef.current.onShiftUp();
+        vkeyboardStaggeredRef.current!.onShiftUp();
         break;
       default:
         break;
     }
   }
 
-  function onKeyboardButtonClick(e: any) {
-    switch(e.target.value) {
+  function onKeyboardButtonClick(e: React.MouseEvent<HTMLInputElement>) {
+    switch(e.currentTarget.value) {
       case "HIRAGANA":
         handleCharmapButtonClick(CharmapStates.JAPANESE_HIRAGANA);
         break;
@@ -168,10 +162,10 @@ function App() {
       case "゛":
       case "゜":
       case "SMALL":
-        transformKana(e.target.value);
+        transformKana(e.currentTarget.value);
         break;
       default:
-        handleKeyDown(e.target.value);
+        handleKeyDown(e.currentTarget.value);
         break;
     }
   }
@@ -187,11 +181,11 @@ function App() {
   }
 
   function handleKeyDown(key: string) {
-    if (isKeyValidChar(key)) {
+    if (!isKeySpecial(key)) {
       setCanvasText(prev => prev + key);
       const charRep = findCharRepFromValue(key);
       if(!charRep) return;
-      canvasSketchRef.current.createDrawImgAppend(charRep.src, key, "#000");
+      canvasSketchRef.current!.createDrawImgAppend(charRep.src, key, "#000");
     } else {
       switch (key.toLowerCase()) {
         case "enter":
@@ -238,7 +232,7 @@ function App() {
   }
 
   function getBottomScrollMessage() {
-    const index = scrollListRef.current.getBottomMessageIndex();
+    const index = scrollListRef.current!.getBottomMessageIndex();
     if(index < 0 || index >= messages.length) return null;
     return messages[index];
   }
@@ -334,8 +328,8 @@ function App() {
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      window.addEventListener("keyup", onKeyUp);
-      // DisconnectStompClient
+      window.removeEventListener("keyup", onKeyUp);
+      stopStompClient();
     }
   }, []);
 
@@ -346,12 +340,12 @@ function App() {
           <div className="topLeft">
 
             <div className="scrollwheel">
-              <Scrollbar scrollbarRef={scrollbarRef}/>
+              <Scrollbar ref={scrollbarRef}/>
             </div>
           </div>
           <div className="topRight" style={{backgroundColor: theme.background_primary}}>
             <div className="totalMessagesScreen">
-              <ScrollList scrollListRef={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
+              <ScrollList ref={scrollListRef} scrollListElements={messageDisplays} scrollbarRef={scrollbarRef} /> 
             </div>
           </div>
 
@@ -359,7 +353,7 @@ function App() {
         </div>
         <div className="bottom">
           <div className="botLeft">
-            <ButtonColumnLeft 
+            <ToolBar 
               userColor={userColor}
               scrollListRef={scrollListRef}
               canvasSketchRef={canvasSketchRef}
@@ -388,13 +382,13 @@ function App() {
                 charmapState={selectedCharmapState}
                 />
               <div className="buttonColumnRightContainer">
-                <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
+                <TransmitBar canvasSketchRef={canvasSketchRef} />
               </div>
               <div className="emptyRightKeyboardContainer" />
             </div>
           </div>
         </div>
-        <FloatingKey floatingKeyRef={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
+        <FloatingKey ref={floatingKeyRef} canvasSketchRef={canvasSketchRef} />
       </ThemeContext.Provider>
     </>
   )

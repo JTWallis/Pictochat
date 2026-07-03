@@ -1,11 +1,25 @@
+import type { CanvasSketchHandle } from '@components/message/canvas/CanvasSketch';
 import './FloatingKey.css'
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useImperativeHandle, useRef, useState } from "react";
 
 
 const VISIBLE = "visible";
 const HIDDEN = "hidden";
 
-function FloatingKey(props: any) {
+type FloatingKeyProps = {
+    ref: React.Ref<FloatingKeyHandle>,
+    canvasSketchRef: React.RefObject<CanvasSketchHandle | null>
+}
+
+export type FloatingKeyHandle = {
+    setPos: (x: number, y: number) => void;
+    setChar: (char: string) => void;
+    setImg: (src: string, value: string) => void;
+    setSize: (size: number) => void;
+    apply: () => void;
+}
+
+function FloatingKey(props: FloatingKeyProps) {
 
     const [posX, setPosX] = useState<number>(0);
     const [posY, setPosY] = useState<number>(0);
@@ -18,7 +32,7 @@ function FloatingKey(props: any) {
     const [imgDrawColor, setImgDrawColor] = useState("#000");
     const imageRef = useRef<HTMLImageElement>(null);
 
-    useImperativeHandle(props.floatingKeyRef, () => ({
+    useImperativeHandle(props.ref, () => ({
         setPos: (x: number, y: number) => {
             setPosX(x);
             setPosY(y);
@@ -41,7 +55,7 @@ function FloatingKey(props: any) {
         },
 
         apply: () => {
-            props.canvasSketchRef.current.drawImg(imageRef.current, posX, posY, imgDrawColor);
+            props.canvasSketchRef.current!.drawImg(imageRef.current!, posX, posY, imgDrawColor);
             hide();
             resetPos();
         }

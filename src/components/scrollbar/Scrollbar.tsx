@@ -21,7 +21,18 @@ function Scrollsegment( {color, width}: any ) {
     );
 }
 
-function Scrollbar( {scrollbarRef}: any ) {
+type ScrollbarProps = {
+    ref: React.Ref<ScrollbarHandle>;
+}
+
+export type ScrollbarHandle = {
+    addScrollsegment: (isSpecial?: boolean) => void;
+    scrollReset: () => void;
+    scrollDown: () => void;
+    scrollUp: () => void;
+}
+
+function Scrollbar(props: ScrollbarProps ) {
     const theme = useContext(ThemeContext)
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -33,7 +44,7 @@ function Scrollbar( {scrollbarRef}: any ) {
 
     const scrollbarContainerRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(scrollbarRef, () => ({
+    useImperativeHandle(props.ref, () => ({
         addScrollsegment: (isSpecial?: boolean) => {
             addSegment(isSpecial);
         },

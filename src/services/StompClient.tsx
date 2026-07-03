@@ -18,6 +18,11 @@ export function startClient(onConnectCallback: any) {
     stompClient.activate();
 }
 
+export function stopClient() {
+    if(!stompClient) return;
+    stompClient.deactivate();
+}
+
 export function registerUsername(username: string, registeredCallback: (userRegisterDto: UserRegisterDto) => void) {
     console.log("Publish Register");
 
