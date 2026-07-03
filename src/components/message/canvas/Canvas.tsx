@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Canvas.css'
 import { Vector2 } from '@models/Vector2';
 import { DrawingCommandType } from '@models/DrawCommand';
-import CanvasSketch, { type CanvasSketchHandle } from './sketch/CanvasSketch';
-import CanvasDisplay from './display/CanvasDisplay';
+import CanvasSketch, { type CanvasSketchHandle } from './CanvasSketch';
+import CanvasDisplay from './CanvasDisplay';
 import type { CanvasSketchFullAPI, CanvasSketchPartialAPI, CanvasDisplayAPI, CanvasSpecialPartialAPI, CanvasSpecialFullAPI } from './CanvasAPI';
 import { CanvasTypes } from './CanvasAPI';
 import type { Message } from '@models/Message';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
-import CanvasSpecial from './special/CanvasSpecial';
+import CanvasSpecial from './CanvasSpecial';
 import type { FloatingKeyHandle } from '@components/floatingkey/FloatingKey';
 
 const stripeCount = 4;
