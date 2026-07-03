@@ -4,7 +4,7 @@ import FloatingKey, { type FloatingKeyHandle } from '@components/floatingkey/Flo
 import { useEffect, useRef, useState, type JSX } from 'react';
 import ScrollList, { type ScrollListHandle } from '@components/scrolllist/ScrollList';
 import type { Message } from '@models/Message';
-import ButtonColumnRight from '@components/buttoncolumnright/ButtonColumnRight';
+import TransmitBar from '@components/transmitbar/TransmitBar';
 import Scrollbar, { type ScrollbarHandle } from '@components/scrollbar/Scrollbar';
 import VirtualKeyboard from '@components/virtualkeyboard/VirtualKeyboard';
 import type { CharRepresentation } from '@models/charrepresentations/CharRepresentation';
@@ -382,7 +382,7 @@ function App() {
                 charmapState={selectedCharmapState}
                 />
               <div className="buttonColumnRightContainer">
-                <ButtonColumnRight canvasSketchRef={canvasSketchRef} />
+                <TransmitBar canvasSketchRef={canvasSketchRef} />
               </div>
               <div className="emptyRightKeyboardContainer" />
             </div>
